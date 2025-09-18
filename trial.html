@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 style="display: flex; color: darkred">Trial0</h1>
+    <p style="color: chartreuse">Hello world</p>
+    <input type="number" min="0" max="10" />
+    <button type="submit">Done</button>
+    <br /><br />Name :
+    <input type="text" />
+    <br /><br />Email :
+    <input type="email" />
+    <br /><br />Phone Number :
+    <input type="tel" />
+    <br /><br />
+    Password :
+    <input type="Password" />
+    <br /><br />Link :
+    <input type="url" />
+    <br /><br />Age:
+    <input type="number" />
+    <br /><br />Payment Options:
+    <input type="radio" name="Payment_Options" value="Net_Banking" />Net Banking
+    <input type="radio" name="Payment_Options" value="upi" />Upi
+    <input type="radio" name="Payment_Options" value="card" />card
+    <br /><br />Task to do:
+    <input type="checkbox" name="task" value="call_father" />Call Father
+    <input type="checkbox" name="task" value="buy_groceries" />Buy Groceries
+    <input type="checkbox" name="task" value="meet_doctor" />Meet Doctor
+    <input type="date" />
+    <br /><br />
+    <input type="time" />
+    <br /><br />
+    <input type="datetime-local" />
+    <br /><br />
+    <input type="week" />
+    <br /><br />
+    <input type="month" />
+    <br /><br />
+    <select name="language">
+      <option value="hindi">Hindi</option>
+      <option value="english">English</option>
+      <option value="spanish">Spanish</option>
+      <option value="french">French</option>
+      <option value="german">German</option>
+    </select>
+    <br /><br />
+    <button type="button">Button</button>
+    <button type="submit">submit</button>
+    <button type="reset">Reset</button>
+    <br /><br />
+    <textarea name="comment" cols="30" rows="5"></textarea>
+
+    <br /><br />
+    Appointment booking form:-
+    <h1 style="color: brown">Book Appointment</h1>
+    <label
+      for="appointment_form"
+      style="color: blue; background-color: aquamarine; border-radius: 1rem"
+      >Patient Details:-</label
+    >
+    <form onsubmit="handleFormSubmit(event)" id="appointment_form">
+      <br />
+      <label for="name" >Name: </label>
+      <input type="text" id="name" name="name" required/>
+      <br /><br />
+      <label for="email">Email :</label>
+      <input type="email" id="email" name="email" required/>
+      <br /><br />
+      <label for="p_number">Phone Number: </label>
+      <input type="tel" id="p_number" name="phoneNumber"/>
+      <br /><br />
+      <label for="appointment_date">Date of Appointment: </label>
+      <input type="date" id="appointment_date" name="a_date"/>
+      <br /><br />
+      <label for="appointment_time">Time of appointment: </label>
+      <input type="time" id="appointment_time" name="a_time"/>
+      <br />
+      <label><button type="submit">Submit</button></label>
+      <label><button type="reset">Reset</button></label>
+    </form>
+    <p>hi there</p>
+<br>
+    <button type="button" onclick="greetText(event)">Greet</button>
+  </body>
+  <script src="trial0.js"></script>
+</html>
