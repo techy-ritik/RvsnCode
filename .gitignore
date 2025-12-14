@@ -1,0 +1,11 @@
+temp/
+dist/
+node_modules/
+Backend_Dev/
+FirstSharpGit/
+notes(ntpd++)/
+Practice_Projects/
+rvsn\projects/
+trial/
+.gitignore/
+settings.json/

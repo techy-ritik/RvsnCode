@@ -1,0 +1,6 @@
+{
+    "files.exclude": {
+        "**/../OtherProjects/**\": true": true
+    },
+    "workbench.colorTheme": "Shades of Purple (Super Dark)"
+}
