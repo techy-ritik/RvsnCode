@@ -1,0 +1,64 @@
+body {
+  background-color: rgb(228, 179, 114);
+  background-image: url(https://images.pexels.com/photos/1242348/pexels-photo-1242348.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500);
+  background-size: cover;
+}
+
+h1 {
+  color: darkgreen;
+  font-weight: 800;
+  margin-top: 10px;
+  border-radius: 10px;
+} 
+
+
+#productDetails {
+  background-image: url(https://images.pexels.com/photos/1242348/pexels-photo-1242348.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500);
+  background-size: cover;
+  border-radius: 2rem;
+  border-style: dashed;
+  width: 300px;
+  height: 350px;
+  margin: 50px auto;
+}
+
+input,
+label,
+body form button {
+  border-radius: 10px;
+  margin-left: 11%;
+  font-style: italic;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  color: brown;
+  font-weight: bold;
+}
+
+input {
+  color: cadetblue;
+  font-style: normal;
+  text-align: center;
+}
+
+ul {
+  font-size: 20px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: purple;
+}
+
+ul button {
+  border-radius: 10px;
+  background-color: coral;
+  color: cornsilk;
+  border-color: blueviolet;
+  border-style: inset;
+}
+
+h3 {
+  color: rgb(78, 1, 1);
+  font-weight: bold;
+  background-color: rgb(221, 246, 175);
+  width: fit-content;
+  margin: auto;
+  padding: 30px; 
+  border-radius: 50%;
+}
