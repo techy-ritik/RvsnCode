@@ -1,40 +1,44 @@
 const http = require("http");
+const fs = require("fs");
+
 
 const server = http.createServer((req, res) => {
   console.log(req.url,req.method,req.headers);
 
   const url = req.url;
+  const method = req.method;
   if (url === "/") {
     res.write("<html>");
     res.write("<head><title>node.Js revision</title></head>");
     res.write(
-      '<body><form action="/message" method="POST"><input type="text" name="enterName"></input><button type="submit">submit</button></form></body>',
+      '<body><form action="/message" method="POST"><input type="text" name="enterName" id="name"></input><button type="submit">submit</button></form></body>',
     );
     res.write("</html>");
     return res.end();
-  } else if (url === "/home") {
-    res.write("<html>");
-    res.write("<head><title>node.Js revision</title></head>");
-    res.write("<body><h1>Welcome Home</h1></body>");
-    res.write("</html>");
-    return res.end();
-  } else if (url === "/home") {
-    res.write("<html>");
-    res.write("<head><title>node.Js revision</title></head>");
-    res.write("<body><h1>Welcome Home</h1></body>");
-    res.write("</html>");
-    return res.end();
-  } else if (url === "/about") {
-    res.write("<html>");
-    res.write("<head><title>node.Js revision</title></head>");
-    res.write("<body><h1> Welcome to About Us page</h1></body>");
-    res.write("</html>");
-    return res.end();
-  } else if (url === "/node") {
-    res.write("<html>");
-    res.write("<head><title>node.Js revision</title></head>");
-    res.write("<body><h1>Welcome to my Node Js project</h1></body>");
-    res.write("</html>");
+  } 
+
+  if(url==='/message' && method === 'POST'){
+    
+    const body = [];
+
+    req.on('data',(chunk)=>{
+      console.log(chunk);
+      body.push(chunk);
+    })
+
+    req.on('end',()=>{
+      const parsedBody = Buffer.concat(body).toString();
+      console.log(parsedBody);
+      const inputData = parsedBody.split('=')[1];
+      const originalInput = inputData.replaceAll('+'," ")
+      console.log(originalInput);
+      fs.writeFileSync("testFiles",originalInput);
+      
+    })
+
+    
+    res.statusCode=302;
+    res.setHeader('Location',"/");
     return res.end();
   }
 
