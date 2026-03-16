@@ -1,0 +1,17 @@
+{
+  "name": "kickstartnodejs",
+  "version": "1.0.0",
+  "description": "Node.js practice",
+  "license": "ISC",
+  "author": "Ritikesh",
+  "type": "commonjs",
+  "main": "firstApp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon firstApp.js",
+    "start-server": "node firstApp.js"
+  },
+  "dependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
