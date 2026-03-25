@@ -1,11 +1,10 @@
 const express = require("express");
+const path = require("path");
 
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-  console.log("in the 3rd middleware");
-  //   console.log("URL:", req.url, "Method:", req.method);
-  res.send("<h1>Jay Hanuman Gyan Gun sagar</h1>"); // send default html responses to the server without manually setting the content type Header
+  res.sendFile(path.join(__dirname,'..','views','shop.html'))  //we can use '../' or '..' to go to one level upper folder
 });
 
 
