@@ -10,6 +10,8 @@ app.use(bodyParser.urlencoded({extended:false}));  // It is used to parse reciev
                                                     // urlencoded means data is parsed as such it can be used to send in url as querry parameters
                                                     // extended : false is used here to keep the parsing format simple and if it change to true the parsing would become advanced and the result output data format got changed
 
+app.use(express.static(path.join(__dirname,'public')))  // with express.static() builtin middleware, folder is statically handled and set as global root of the files inside it by the express for accessing the files inside it anywhere directly , here this set the public folder as static folder globally and files inside this, can we accessed anywhere directly
+
 const adminRoutes = require('./routes/admin')
 const shopRoutes = require("./routes/shop");
 
