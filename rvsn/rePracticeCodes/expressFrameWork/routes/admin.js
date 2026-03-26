@@ -15,6 +15,19 @@ router.post("/add-product", (req, res, next) => {// we can use .get or .post in 
   res.redirect("/");
 });
 
+router.get('/contactus',(req,res)=>{
+  res.sendFile(path.join(rootDir,'views/contactUs.html'))
+})
+
+router.post('/contactus',(req,res)=>{
+  res.redirect("/success");
+  // res.sendFile(path.join(rootDir, "views/successMsg.html"));
+})
+
+router.post("/success", (req, res) => {
+  res.sendFile(path.join(rootDir, "views/successMsg.html"));
+});
+
 //here we using same route name in both of the above middleware but the method is different so it's executing separately at different method call
 
 module.exports = router;
