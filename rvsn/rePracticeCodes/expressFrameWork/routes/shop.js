@@ -1,14 +1,13 @@
 const express = require("express");
-const path = require("path");
+// const path = require('path');
 
-const rootDir = require("../util/path");
+// const rootDir = require('../util/path')  // ass middleware moved to controllers so all the functionalities are defined in their taht's why path package and util/path import is of no use here
 
 const router = express.Router();
 
-router.get(["/",'/shop'], (req, res, next) => {
-  // res.sendFile(path.join(__dirname,'..','views','shop.html'))  //we can use '../' or '..' to go to one level upper folder
-  res.sendFile(path.join(rootDir, "views", "shop.html"));
-});
+const productController = require("../controllers/products");
+
+router.get(["/",'/shop'], productController.getProductShop);
 
 
 module.exports = router;

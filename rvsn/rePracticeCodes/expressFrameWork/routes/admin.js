@@ -1,32 +1,22 @@
 const express = require('express');
-const path = require('path');
+// const path = require('path');
 
-const rootDir = require('../util/path')
+// const rootDir = require('../util/path')  // ass middleware moved to controllers so all the functionalities are defined in their taht's why path package and util/path import is of no use here
 
 const router = express.Router();
 
-router.get("/add-product", (req, res, next) => { 
-  console.log("in the add product middleware");
-  res.sendFile(path.join(rootDir,'views','add-product.html'))
-});
+const productController = require('../controllers/products')
+const contactController = require('../controllers/contact')
 
-router.post("/add-product", (req, res, next) => {// we can use .get or .post in place of .use as for which method incoming request we are using this middleware and route. (Here .post is used bcz incoming request is post method of the form)
-  console.log(req.body); // data sent back by the server which we Post on the server can we recived through req.body
-  res.redirect("/");
-});
+router.get("/add-product", productController.getAddProduct);
 
-router.get('/contactus',(req,res)=>{
-  res.sendFile(path.join(rootDir,'views/contactUs.html'))
-})
+router.post("/add-product", productController.postAddProduct);
 
-router.post('/contactus',(req,res)=>{
-  res.redirect("/success");
-  // res.sendFile(path.join(rootDir, "views/successMsg.html"));
-})
+router.get('/contactus',contactController.getContact);
 
-router.post("/success", (req, res) => {
-  res.sendFile(path.join(rootDir, "views/successMsg.html"));
-});
+router.post('/contactus',contactController.postContact);
+
+router.post("/success" ,contactController.postSuccess);
 
 //here we using same route name in both of the above middleware but the method is different so it's executing separately at different method call
 
