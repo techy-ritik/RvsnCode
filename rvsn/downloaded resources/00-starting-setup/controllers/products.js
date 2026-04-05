@@ -22,14 +22,17 @@ exports.postAddProduct = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
   //   const products = adminData.products;     // not required to use products array through admin.products by import methd after moving this middleware in the controller where products array decalaration is already present
 
-  const fetchedProducts = Product.fetchAll(); // here .fetchAll() method fetch all the products that is stored in the Product array and store in the fetchedProducts
-    console.log(fetchedProducts);
-  res.render("shop", {
-    prods: fetchedProducts,
-    pageTitle: "Shop",
-    path: "/",
-    hasProducts: fetchedProducts.length > 0,
-    activeShop: true,
-    productCSS: true,
-  });
+  // const fetchedProducts = Product.fetchAll(); // here .fetchAll() method fetch all the products that is stored in the Product array and store in the fetchedProducts
+  //   console.log(fetchedProducts);
+
+  Product.fetchAll(fetchedProducts => {
+    res.render("shop", {
+      prods: fetchedProducts,
+      pageTitle: "Shop",
+      path: "/",
+      hasProducts: fetchedProducts.length > 0,
+      activeShop: true,
+      productCSS: true,
+    });
+  }); 
 };
