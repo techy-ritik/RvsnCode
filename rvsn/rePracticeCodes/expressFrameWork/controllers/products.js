@@ -19,8 +19,9 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.getProductShop = (req, res, next) => {
   // res.sendFile(path.join(__dirname,'..','views','shop.html'))  //we can use '../' or '..' to go to one level upper folder
-  const storedProducts=productModel.fetchAll()
-  console.log(storedProducts);
-  // console.log(storedProducts[0].title);
-  res.sendFile(path.join(rootDir, "views", "shop.html"));
+  productModel.fetchAll((storedProducts)=>{
+    console.log(storedProducts);
+    res.sendFile(path.join(rootDir, "views", "shop.html"));
+  })
+  
 };
