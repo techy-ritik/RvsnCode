@@ -20,7 +20,7 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  //   const products = adminData.products;     // not required to use products array through admin.products by import methd after moving this middleware in the controller where products array decalaration is already present
+  //   const products = adminData.products;     // not required to use products array through admin.products by import method after moving this middleware in the controller where products array decalaration is already present
 
   // const fetchedProducts = Product.fetchAll(); // here .fetchAll() method fetch all the products that is stored in the Product array and store in the fetchedProducts
   //   console.log(fetchedProducts);
