@@ -14,7 +14,8 @@ const readFileData=(callback)=>{
       console.log("productList", productList);
       callback(productList);
     });
-  }
+  }   // this function can also be created inside class but as the fetchAll() is ststic method and save() is normal so we would have been setting more logic to call in both place so it's more conveneient to define it here outside class
+
 
 module.exports = class Product {
   constructor(t) {
