@@ -10,6 +10,12 @@ exports.getProducts = (req, res, next) => {
   });
 };
 
+exports.getProduct = (req,res,next)=>{
+  const prodId = req.params.productId;  // we use req.params to extract values of the dynamic part available in the url and the productId is the variable we set which we can use in the route file for adding dynamic value in the url and it is attached with colon
+  console.log("prodId", prodId);
+  res.redirect('/');
+}
+
 exports.getIndex = (req, res, next) => {
   Product.fetchAll(products => {
     res.render('shop/index', {
