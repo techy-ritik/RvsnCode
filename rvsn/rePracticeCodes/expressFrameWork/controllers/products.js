@@ -19,9 +19,14 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.getProductShop = (req, res, next) => {
   // res.sendFile(path.join(__dirname,'..','views','shop.html'))  //we can use '../' or '..' to go to one level upper folder
-  productModel.fetchAll((storedProducts)=>{
+  productModel.fetchAll((storedProducts) => {
     console.log(storedProducts);
     res.sendFile(path.join(rootDir, "views", "shop.html"));
-  })
-  
+  });
 };
+
+exports.getOneProduct = (req,res,next)=>{
+  const currentProductId = req.param.productId; // we use req.params to extract values from the dynamic part available in the url and the productId is the variable to be set same as which is used in the route so that we can extract it's value
+  console.log("currentProductId", currentProductId);
+  res.redirect("/");
+}
