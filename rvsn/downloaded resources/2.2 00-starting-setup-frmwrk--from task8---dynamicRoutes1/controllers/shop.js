@@ -11,8 +11,11 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getProduct = (req,res,next)=>{
-  const prodId = req.params.productId;  // we use req.params to extract values of the dynamic part available in the url and the productId is the variable we set which we can use in the route file for adding dynamic value in the url and it is attached with colon
+  const prodId = req.params.productId;  // we use req.params to extract values from the dynamic part available in the url and the productId is the variable to be set same as which is used in the route so that we can extract it's value
   console.log("prodId", prodId);
+  Product.findById(prodId,(foundProduct)=>{   // here id is sent back to findById by passing prodId and product data received through callback function which is defined here and got stored in the foundProduct
+    console.log("foundProduct", foundProduct);
+  })
   res.redirect('/');
 }
 
