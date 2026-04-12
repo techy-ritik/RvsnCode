@@ -26,7 +26,11 @@ exports.getProductShop = (req, res, next) => {
 };
 
 exports.getOneProduct = (req,res,next)=>{
-  const currentProductId = req.param.productId; // we use req.params to extract values from the dynamic part available in the url and the productId is the variable to be set same as which is used in the route so that we can extract it's value
+  const currentProductId = req.params.productId; // we use req.params to extract values from the dynamic part available in the url and the productId is the variable to be set same as which is used in the route so that we can extract it's value
   console.log("currentProductId", currentProductId);
+  productModel.fetchOneProduct(currentProductId,(fetchedProductById)=>{
+    // here id of the product is sent to fetchOneProduct() by passing currentProductId and product data received through callback function which is defined here and got stored in the fetchedProductById
+    console.log("fetchedProductById", fetchedProductById);
+  })
   res.redirect("/");
-}
+}  // in console we are getting productList output before fetchedproductById because while executing getOneProduct synchronously when readFileData in fetchOneProduct() is executing then there is a callback registered for which js doesnot wait for it's execution and finishes the execution of getOneProduct in which productList get logged due to  res.redirect('/') 
