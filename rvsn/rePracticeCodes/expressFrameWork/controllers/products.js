@@ -32,5 +32,5 @@ exports.getOneProduct = (req,res,next)=>{
     // here id of the product is sent to fetchOneProduct() by passing currentProductId and product data received through callback function which is defined here and got stored in the fetchedProductById
     console.log("fetchedProductById", fetchedProductById);
   })
-  res.redirect("/");
+  res.sendFile(path.join(rootDir, "views", "productDetails.html"));
 }  // in console we are getting productList output before fetchedproductById because while executing getOneProduct synchronously when readFileData in fetchOneProduct() is executing then there is a callback registered for which js doesnot wait for it's execution and finishes the execution of getOneProduct in which productList get logged due to  res.redirect('/') 
