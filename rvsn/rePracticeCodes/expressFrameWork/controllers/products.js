@@ -34,3 +34,14 @@ exports.getOneProduct = (req,res,next)=>{
   })
   res.sendFile(path.join(rootDir, "views", "productDetails.html"));
 }  // in console we are getting productList output before fetchedproductById because while executing getOneProduct synchronously when readFileData in fetchOneProduct() is executing then there is a callback registered for which js doesnot wait for it's execution and finishes the execution of getOneProduct in which productList get logged due to  res.redirect('/') 
+
+
+exports.postCart=(req,res,next)=>{
+  const currentProdId = req.body.productId; // here as the user is hitting add to cart through form for any particular product so the req.body contain input data of that form of single product only and productId is the name of the input value for id of that item which can be extracted and used here
+  console.log(currentProdId);
+  res.redirect("/cart");
+}
+
+exports.getCart=(req,res,next)=>{
+  res.sendFile(path.join(rootDir,'views','cart.html'));
+}
