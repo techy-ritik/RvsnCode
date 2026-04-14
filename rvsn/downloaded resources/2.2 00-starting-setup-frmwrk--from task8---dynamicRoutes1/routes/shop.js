@@ -14,6 +14,8 @@ router.get('/products/:productId',shopController.getProduct)  //here when we use
                                                                 // here the variable name productId which is used for handling dynamic value in the url is to set same as we set in the controller while extarcting the dynamic value at req.params line 
 router.get('/cart', shopController.getCart);
 
+router.post('/cart',shopController.postCart);
+
 router.get('/orders', shopController.getOrders);
 
 router.get('/checkout', shopController.getCheckout);
