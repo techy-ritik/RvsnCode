@@ -1,4 +1,5 @@
 const Product = require("../models/product");
+const Cart = require("../models/cart");
 
 exports.getProducts = (req, res, next) => {
   Product.fetchAll((products) => {
@@ -16,11 +17,12 @@ exports.getProduct = (req, res, next) => {
   Product.findById(prodId, (foundProduct) => {
     // here id is sent back to findById by passing prodId and product data received through callback function which is defined here and got stored in the foundProduct
     console.log("foundProduct", foundProduct);
-    res.render("shop/product-detail", {  // as res.render specially desgined for ejs files so when we call it we don't need to enter full path, as it always look into views folder so we just need to enter folder and file name inside of views
+    res.render("shop/product-detail", {
+      // as res.render specially desgined for ejs files so when we call it we don't need to enter full path, as it always look into views folder so we just need to enter folder and file name inside of views
       product: foundProduct, // here product is the key which is set so that it can be accessed in the view
       pageTitle: foundProduct.title,
-      path: "/products",   // sending path variable like this for active navigation links works only with ejs.
-    }); 
+      path: "/products", // sending path variable like this for active navigation links works only with ejs.
+    });
   });
 };
 
@@ -41,11 +43,15 @@ exports.getCart = (req, res, next) => {
   });
 };
 
-exports.postCart = (req,res,next)=>{
-  const prodId = req.body.productId;
+exports.postCart = (req, res, next) => {
+  const prodId = req.body.productId; // here as the user is hitting add to cart through form for any particular product so the req.body contain input data of that form of single product only and productId is the name of the input value for id of that item which can be extracted and used here
   console.log(prodId);
-  res.redirect('/cart');
-}
+
+  Product.findById(prodId, (foundProduct) => {
+    Cart.addProduct(prodId, foundProduct.price);
+    res.redirect("/cart");
+  }); // here for passing product price we have to fetch single product from the id for that we have to call findById and then we can pass id and price in the addProduct method of cart model
+};
 
 exports.getOrders = (req, res, next) => {
   res.render("shop/orders", {
