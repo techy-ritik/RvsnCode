@@ -17,16 +17,18 @@ const readFileData = (callback) => {
 }; // this function can also be created inside class but as the fetchAll() is ststic method and save() is normal so we would have been setting more logic to call in both place so it's more conveneient to define it here outside class
 
 module.exports = class Product {
-  constructor(t) {
-    this.title = t; // here "this" refers to the object which is created with the use of the contructor and "t" parameter get value from the addProduct form input which is sent back by the server and passed in while object creation
-  } //  here title is the key set for the values that is getting stored in the object
+  constructor(t,price) {
+    this.title = t; // here "this" refers to the object which is created with the use of the contructor and the parameters('t','price') get value from the addProduct form input which is sent back by the server and passed in while object creation
+    this.price = price;
+    //  here ("title","price") is the key set for the values that is getting stored as object in the file
+  } // and here now our product object is ready with all the input values added inside it and it is referenced with 'this' keyword for accessing it
 
   save() {
     //  save() is same as function but without function keyword
 
     this.id = Math.random().toString(); // id should be assigned outside the readFile because it should not depend on the file handling as the id is permanent property of object
     readFileData((savedProductsArr) => {
-      // here inner callback function is getting the readFile data from cb1 of getProductsFromFile where it is defined and store it in the new variable which we have passed in callback function
+      // here inner callback function is getting the readFile data from cb1 of getProductsFromFile where it is defined, and store it in the new variable which we have passed in callback function
 
       savedProductsArr.push(this); //as the savedProductsArr is new variable passed in and the data which is got and stored through readFile in it is in array so it becomes array data Type and then new product can also be pushed into it
       fs.writeFile(p, JSON.stringify(savedProductsArr), (err, data) => {
@@ -48,7 +50,7 @@ module.exports = class Product {
       // so it means allProducts argument contain list of all the products
 
       const extractedProductById = allProducts.find((crntProdOfArray) => {
-        // here .find() is inbuilt method of js which traverse over the array internally and each index element get temp. stored in, by creating new variable with each loop which is to be passed as argument in .find() method
+        // here .find() is inbuilt method of js which traverse over the array internally and each index element get temp. stored in, by creating new variable with each loop which is to be passed as argument in .find() method and that variable here is - 'crntProductOfArray'
 
         return crntProdOfArray.id === currentId; //  so, as here the elements of the allProducts array is in object form, .find() traverse through array and check for id of each element object through 'crntProdOfArray.id' by matching it with the 'currentId' which is recieved as argument-> when it's passed while calling fetchOneProduct() method
       });
