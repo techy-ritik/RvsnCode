@@ -2,6 +2,7 @@ const path = require("path");
 const rootDir = require("../util/path");
 
 const productModel = require("../models/product");
+const cartModel = require("../models/cart");
 
 exports.getAddProduct = (req, res, next) => {
   console.log("in the add product middleware");
@@ -13,7 +14,7 @@ exports.postAddProduct = (req, res, next) => {
   console.log("req.body", req.body); // data sent back by the server which we Post on the server can we recived through req.body
 
   const newProduct = new productModel(req.body.title, req.body.prc); // here ('title','prc') is the name attribute which we set in the form input as we know the input value get stored as the (set name sttribute = the input value).
-    //                                                                  we can store multiple details of the product in the database by getting inout through the form and passing it in the constructor while creating new object like this
+  //                                                                  we can store multiple details of the product in the database by getting input through the form and passing it in the constructor while creating new object like this
   newProduct.save();
   res.redirect("/");
 };
@@ -39,6 +40,11 @@ exports.getOneProduct = (req, res, next) => {
 exports.postCart = (req, res, next) => {
   const currentProdId = req.body.productId; // here as the user is hitting add to cart through form for any particular product so the req.body contain input data of that form of single product only and productId is the name of the input value for id of that item which can be extracted and used here
   console.log(currentProdId);
+
+  productModel.getOneProduct(currentProdId, (fetchedProduct) => {    // here we are calling getOneProduct() for passing product's price in the cart modelto store it in the cart database file
+    cartModel.addProductToCart(currentProdId,fetchedProduct.price);
+  });
+
   res.redirect("/cart");
 };
 
