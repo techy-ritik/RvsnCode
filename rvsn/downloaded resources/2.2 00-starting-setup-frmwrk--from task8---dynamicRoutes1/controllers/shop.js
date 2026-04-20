@@ -47,11 +47,12 @@ exports.postCart = (req, res, next) => {
   const prodId = req.body.productId; // here as the user is hitting add to cart through form for any particular product so the req.body contain input data of that form of single product only and productId is the name of the input value for id of that item which can be extracted and used here
   console.log(prodId);
 
-  Product.findById(prodId, (foundProduct) => {
+  Product.findById(prodId, (foundProduct) => {    //  as we are storing product id and product price in the cart model(database) so we have to extract price by fetching the single product of that particular id
     Cart.addProduct(prodId, foundProduct.price);
     res.redirect("/cart");
   }); // here for passing product price we have to fetch single product from the id for that we have to call findById and then we can pass id and price in the addProduct method of cart model
 };
+
 
 exports.getOrders = (req, res, next) => {
   res.render("shop/orders", {
