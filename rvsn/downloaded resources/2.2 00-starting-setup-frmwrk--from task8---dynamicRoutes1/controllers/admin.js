@@ -41,7 +41,10 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.postEditProduct = (req,res,next) =>{
-  res.redirect('')
+  
+  
+
+  res.redirect('/products');
 }
 
 exports.getProducts = (req, res, next) => {

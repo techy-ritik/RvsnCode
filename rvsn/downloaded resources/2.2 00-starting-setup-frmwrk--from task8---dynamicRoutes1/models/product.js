@@ -8,8 +8,8 @@ const p = path.join(
 );
 
 const getProductsFromFile = cb => {
-  fs.readFile(p, (err, fileContent) => {
-    if (err) {
+  fs.readFile(p, 'utf-8', (err, fileContent) => {  // for handling if empty fileContent in if block we have to add "utf-8"
+    if (err || (!fileContent)) {
       cb([]);
     } else {
       cb(JSON.parse(fileContent));

@@ -27,7 +27,7 @@
                                     </p>
                                 </div>
                                 <div class="card__actions">
-                                    <a href="/admin/edit-product" class="btn">Edit</a>
+                                    <a href="/admin/edit-product/<%= product.id %>?edit=true" class="btn">Edit</a>        <!-- we can set route here for directing to specific product's edit page by adding product.id, and we are using product because it is the temporary variable we have used for traversing through all the prods and we have to add querry params here which is used as extra data of the url also to follow the correct middleware of the controller -->
                                     <form action="/admin/delete-product" method="POST">
                                         <button class="btn" type="submit">Delete</button>
                                     </form>
