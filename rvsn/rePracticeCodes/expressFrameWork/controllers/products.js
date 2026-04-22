@@ -19,6 +19,25 @@ exports.postAddProduct = (req, res, next) => {
   res.redirect("/");
 };
 
+exports.getEditProduct = (req, res, next) => {
+  const isEditable = req.query.edit; // req.query works like an object which check for the keys of query parameters available in the url for that we add the same variable after the req.query. which we like to get from the url and then value of that key get stored here in isEditable and if it can't find in the url then here isEditable remain undefined
+  if (!isEditable) {      // in this condition if no query params are found with this key irrespective of true or false then it will redirect it sends error msg file
+    return res.sendFile(path.join(rootDir, "views", "404.html"));
+  }
+  const productId = req.params.productId;
+  productModel.fetchOneProduct(productId, (fetchedProductById) => {
+    if (!fetchedProductById) {      //  here fetchedProductById will be negative only in case if fetchOneProduct is unable to fetch the product with the requested id and it will not be able to fetch the product only if the product of the requested id will not be there in the product.json file so if it will not be there in the file then it even not show up in admin page, so there is no way to hit edit button and request through admin page on any product for edit request which is not available in the admin page so in this logic this condition is useless but it work when url got manually changed and some invalid id got passed through that which is not in the database file so in that case this condition handles the application from crashing and shows the error whatever we want to show to the user
+      return res.status(404).send("Product not found");   // It's good to send customized error msg to the user by using correct status code so that error can be resolved easily
+    }
+    console.log(`
+      "fetchedProductById.title", ${fetchedProductById.title}  
+      " fetchedProductById.price", ${fetchedProductById.price} 
+      "fetchedProductById.id", ${fetchedProductById.id}
+    `);
+    res.sendFile(path.join(rootDir, "views", "edit-product.html"));   // currently not working on frontend part so just sending the static edit-product page with simple blank form without prepopulating the data
+  });
+};
+
 exports.getProductShop = (req, res, next) => {
   // res.sendFile(path.join(__dirname,'..','views','shop.html'))  //we can use '../' or '..' to go to one level upper folder
   productModel.fetchAll((storedProducts) => {
@@ -41,8 +60,9 @@ exports.postCart = (req, res, next) => {
   const currentProdId = req.body.productId; // here as the user is hitting add to cart through form for any particular product so the req.body contain input data of that form of single product only and productId is the name of the input value for id of that item which can be extracted and used here
   console.log(currentProdId);
 
-  productModel.getOneProduct(currentProdId, (fetchedProduct) => {    // here we are calling getOneProduct() for passing product's price in the cart modelto store it in the cart database file
-    cartModel.addProductToCart(currentProdId,fetchedProduct.price);
+  productModel.getOneProduct(currentProdId, (fetchedProduct) => {
+    // here we are calling getOneProduct() for passing product's price in the cart modelto store it in the cart database file
+    cartModel.addProductToCart(currentProdId, fetchedProduct.price);
   });
 
   res.redirect("/cart");

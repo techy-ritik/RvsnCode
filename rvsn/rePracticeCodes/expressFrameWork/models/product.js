@@ -5,7 +5,7 @@ const rootDir = require("../util/path");
 const p = path.join(rootDir, "data", "product-list.json"); //here we want to store data file in specific folder that's why we created path
 
 const readFileData = (callback) => {
-  fs.readFile(p, "utf-8", (err, data) => {
+  fs.readFile(p, "utf-8", (err, data) => { // here when we add "utf-8" encoding then only the data reutrns as string data type when there is no data and without utf-8 it returns as buffer, in that case data will not be considered as empty and if condition will not be fulfilled then with "!data" and no data error will not be handled in if block so execution passes in else block where JSON.parse tries to convert the data but due to no data program get crashed
     if (err || !data) {
       console.log(err);
       return callback([]); // here we pass empty array in callback so that when .fetchAll get called in for frontend use then the length of the products array is kept at count 0 atleast which will save the program from crash
