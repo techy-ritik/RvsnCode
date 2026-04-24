@@ -24,6 +24,9 @@
                 <label for="description">Description</label>
                 <textarea name="description" id="description" rows="5"><% if(editing) { %><%= productToEdit.description %><% }else{ %><%=  %><% } %></textarea>     <!-- those tag which have opening and closing tag then usually we add js code between the tags but those who have only one tag like input tag we add js code as string wherever double quotes are present -->
             </div>
+            <% if(editing){ %>
+                <input type="hidden" name="productId" value="<%= productToEdit.id %>">
+            <% } %>
 
             <button class="btn" type="submit"><% if(editing) { %>Update Product<% }else{ %>Add Product<% } %></button>      <!-- with this if condition we can display different button with same form using single view file -->
         </form>

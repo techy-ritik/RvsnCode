@@ -14,7 +14,7 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product(title, imageUrl, description, price);
+  const product = new Product(null,title, imageUrl, description, price);   // here we added null because in the constructor there is extra parameter of id is passed for ehich no argumrnt is there in this object creation so it's better to pass null
   product.save();
   res.redirect('/');
 };
@@ -42,7 +42,20 @@ exports.getEditProduct = (req, res, next) => {
 
 exports.postEditProduct = (req,res,next) =>{
   
+  const prodId = req.body.productId;
+  const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
+  const UpdatedImageUrl = req.body.imageUrl;
+  const updatedDescription = req.body.description;
   
+  const updatedProduct = new Product(
+    prodId,
+    updatedTitle,
+    UpdatedImageUrl,
+    updatedDescription,
+    updatedPrice,
+);
+  updatedProduct.save();
 
   res.redirect('/products');
 }
