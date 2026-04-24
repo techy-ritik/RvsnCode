@@ -17,10 +17,12 @@ const readFileData = (callback) => {
 }; // this function can also be created inside class but as the fetchAll() is ststic method and save() is normal so we would have been setting more logic to call in both place so it's more conveneient to define it here outside class
 
 module.exports = class Product {
-  constructor(t,price) {
+  constructor(t,price,productId) {
     this.title = t; // here "this" refers to the object which is created with the use of the contructor and the parameters('t','price') get value from the addProduct form input which is sent back by the server and passed in while object creation
     this.price = price;
-    //  here ("title","price") is the key set for the values that is getting stored as object in the file
+    this.id= productId;  
+     // we can add as many number of parameters in constructor as we want and while creating object we need not to pass exact same no. of arguments as only those arguments which is recieved through object is get value stored in it, and other parameter remain undefined or we can pass null for those parameters through object and it does not cause any error. e.g.(like in add product when save() is called only title and price get value but id remain undefined or null and later in the function id get it's value
+    //  here ("title","price","id") is the key set for the values that is getting stored as object in the file
   } // and here now our product object is ready with all the input values added inside it and it is referenced with 'this' keyword for accessing it
 
   save() {
@@ -37,6 +39,29 @@ module.exports = class Product {
     });
     //  Here at first we have retrieved available data from the file and then stored in a new array, every time readDFile runs and then push the newly added product object with the earlier data in the array after that saved that array in the file by converting it in string with writeFile method
   }
+
+  updateEditedProduct(){
+    readFileData((savedProductsArr)=>{
+      const editedProductIndex = savedProductsArr.findIndex(
+        (currentSavedProduct) => {
+          return currentSavedProduct.id == this.id;
+        },
+      ); // here we are extracting index of the product which is requested for edit through the id which is recieved through object which is created for edited product in the postEditProduct controller
+      console.log("editedProductIndex", editedProductIndex);
+
+      // savedProductsArr[editedProductIndex] = this;  // and as we know 'this' keyword refers to the current object which is created by using this model's constructor and passed to this model so here 'this' refers to the current edited product which is passed here by calling updateEditedProduct() method and so it has all the updated details of the updated product with that product's id so we can replace the previous saved product at that index from the newly edit product by string "this";
+
+      const updatedProductsArr = [...savedProductsArr];
+      updatedProductsArr[editedProductIndex] = this; // here as we can directly push 'this' object inside the saveedProductsArr array but it's more safer to save edited product by creating new coppied array with spread operator which prevents mutation(from modifying the original array)
+      //  here now array has all updated products
+      fs.writeFile(p, JSON.stringify(updatedProductsArr), (err) => {
+        console.log(err);
+      });
+    })
+  }
+    //   we can also impliment update functionality of edited product inside save() and it is done in the trainer's downloaded resources project
+
+
 
   static fetchAll(cb) {
     // static keyword is used here which assures that the method is called on the "products" class and don't touches the object

@@ -14,6 +14,8 @@ router.post("/add-product", productController.postAddProduct);
 
 router.get("/edit-product/:productId",productController.getEditProduct);   // we create dynamic raoute for the edit product because we have to edit details of different single product every time and we distinguish it with the help of productId
 
+router.post('/edit-product',productController.postEditProduct);
+
 router.get('/contactus',contactController.getContact);
 
 router.post('/contactus',contactController.postContact);

@@ -13,29 +13,43 @@ exports.postAddProduct = (req, res, next) => {
   // we can use .get or .post in place of .use as for which method incoming request we are using this middleware and route. (Here .post is used bcz incoming request is post method of the form)
   console.log("req.body", req.body); // data sent back by the server which we Post on the server can we recived through req.body
 
-  const newProduct = new productModel(req.body.title, req.body.prc); // here ('title','prc') is the name attribute which we set in the form input as we know the input value get stored as the (set name sttribute = the input value).
-  //                                                                  we can store multiple details of the product in the database by getting input through the form and passing it in the constructor while creating new object like this
+  const newProduct = new productModel(req.body.title, req.body.prc, null); // here ('title','prc') is the name attribute which we set in the form input as we know the input value get stored as the (set name sttribute = the input value).
+  //                                                                        here we added null because in the constructor there is extra parameter of id is passed for ehich no argumrnt is there in this object creation so it's better to pass null
+  //                                                                         we can store multiple details of the product in the database by getting input through the form and passing it in the constructor while creating new object like this
   newProduct.save();
   res.redirect("/");
 };
 
 exports.getEditProduct = (req, res, next) => {
   const isEditable = req.query.edit; // req.query works like an object which check for the keys of query parameters available in the url for that we add the same variable after the req.query. which we like to get from the url and then value of that key get stored here in isEditable and if it can't find in the url then here isEditable remain undefined
-  if (!isEditable) {      // in this condition if no query params are found with this key irrespective of true or false then it will redirect it sends error msg file
+  if (!isEditable) {
+    // in this condition if no query params are found with this key irrespective of true or false then it will redirect it sends error msg file
     return res.sendFile(path.join(rootDir, "views", "404.html"));
   }
   const productId = req.params.productId;
   productModel.fetchOneProduct(productId, (fetchedProductById) => {
-    if (!fetchedProductById) {      //  here fetchedProductById will be negative only in case if fetchOneProduct is unable to fetch the product with the requested id and it will not be able to fetch the product only if the product of the requested id will not be there in the product.json file so if it will not be there in the file then it even not show up in admin page, so there is no way to hit edit button and request through admin page on any product for edit request which is not available in the admin page so in this logic this condition is useless but it work when url got manually changed and some invalid id got passed through that which is not in the database file so in that case this condition handles the application from crashing and shows the error whatever we want to show to the user
-      return res.status(404).send("Product not found");   // It's good to send customized error msg to the user by using correct status code so that error can be resolved easily
+    if (!fetchedProductById) {
+      //  here fetchedProductById will be negative only in case if fetchOneProduct is unable to fetch the product with the requested id and it will not be able to fetch the product only if the product of the requested id will not be there in the product.json file so if it will not be there in the file then it even not show up in admin page, so there is no way to hit edit button and request through admin page on any product for edit request which is not available in the admin page so in this logic this condition is useless but it work when url got manually changed and some invalid id got passed through that which is not in the database file so in that case this condition handles the application from crashing and shows the error whatever we want to show to the user
+      return res.status(404).send("Product not found"); // It's good to send customized error msg to the user by using correct status code so that error can be resolved easily
     }
     console.log(`
       "fetchedProductById.title", ${fetchedProductById.title}  
       " fetchedProductById.price", ${fetchedProductById.price} 
       "fetchedProductById.id", ${fetchedProductById.id}
     `);
-    res.sendFile(path.join(rootDir, "views", "edit-product.html"));   // currently not working on frontend part so just sending the static edit-product page with simple blank form without prepopulating the data
+    res.sendFile(path.join(rootDir, "views", "edit-product.html")); // currently not working on frontend part so just sending the static edit-product page with simple blank form without prepopulating the data
   });
+};
+
+exports.postEditProduct = (req, res, next) => {
+  const updatedProductObject = new productModel(
+    req.body.title,
+    req.body.prc,
+    req.body.prodctId,
+  );    //  we have to pass all the product details through object and define parameters for them in constructor and those parameters which is not fulfilled by this object will remain undefined 
+  updatedProductObject.updateEditedProduct();
+
+  res.redirect('/')
 };
 
 exports.getProductShop = (req, res, next) => {
