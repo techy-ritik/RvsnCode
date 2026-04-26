@@ -27,9 +27,10 @@
                                     </p>
                                 </div>
                                 <div class="card__actions">
-                                    <a href="/admin/edit-product/<%= product.id %>?edit=true" class="btn">Edit</a>        <!-- we can set route here for directing to specific product's edit page by adding product.id, and we are using product because it is the temporary variable we have used for traversing through all the prods and we have to add querry params here which is used as extra data of the url also to follow the correct middleware of the controller -->
+                                    <a href="/admin/edit-product/<%= product.id %>?edit=true" class="btn">Edit</a>        <!-- we can set route here for directing to specific product's edit page by adding product.id, and we are using product.id because product is the temporary variable we have used here for traversing through all the prods above and we have to add querry params here which is used as extra data of the url also to follow the correct middleware of the controller -->
                                     <form action="/admin/delete-product" method="POST">
-                                        <button class="btn" type="submit">Delete</button>
+                                        <input type="hidden" name="productId" value="<%= product.id %>">
+                                        <button class="btn" type="submit">Delete</button>      <!-- we have to use form tag here for delete product as for deleting the product we need post request because with get request we only fetch data and doesn't change the data and in anchor tag it will send get request -->
                                     </form>
 
                                 </div>

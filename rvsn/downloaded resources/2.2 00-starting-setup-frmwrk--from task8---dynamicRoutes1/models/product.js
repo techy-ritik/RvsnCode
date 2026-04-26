@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const cartModel= require('./cart');
+
 const p = path.join(
   path.dirname(process.mainModule.filename),
   "data",
@@ -47,6 +49,22 @@ module.exports = class Product {
         });
       }
     });
+  }
+
+  static deleteProductById(id){
+    getProductsFromFile((products)=>{
+      const product = products.find((prod) => prod.id === id); // here we have to extract product so that we can pass that product price to deleteCartProductById();
+      const updatedProductList = products.filter((prod) => prod.id !== id); //  here we have used filter() method by which those products whose id does not match with the passed id are kept in the updatedProductList array and matching id product will be filtered out
+
+      fs.writeFile(p, JSON.stringify(updatedProductList), (err) => {
+        console.log(err);
+        if (!err) {
+          cartModel.deleteCartProductById(id, product.price);     //  we are calling this method here so that when we delete product from the admin page then that product should get deleted from the cart also and because as if the product is not available in the product list then it should not be there in the user's cart
+        }
+      });
+
+      // here we could have also used splice() method of removing element from array at any index for removing the product which is to be deleted
+    })
   }
 
   static fetchAll(cb) {
