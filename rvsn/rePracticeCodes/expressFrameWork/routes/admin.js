@@ -16,6 +16,9 @@ router.get("/edit-product/:productId",productController.getEditProduct);   // we
 
 router.post('/edit-product',productController.postEditProduct);
 
+router.post('/delete-product/:productId',productController.postDeleteProduct);  // same as edit product get route
+                                                                                //  we should always use post request for delete route as deletion of only those products are possible which is in the databse and that only can be displayed to the user on the webPage so the delete button can be hit for those products only and it's universal rule is that for changing data in the database, we should always use post request
+                                                                                // we can also send productId with the form input's hidden value which is also correct as it is used in trainer's downloaded project
 router.get('/contactus',contactController.getContact);
 
 router.post('/contactus',contactController.postContact);

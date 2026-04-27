@@ -52,6 +52,12 @@ exports.postEditProduct = (req, res, next) => {
   res.redirect('/')
 };
 
+exports.postDeleteProduct=(req,res,next)=>{
+  const productIdToDelete = req.params.productId;
+  productModel.deleteProductById(productIdToDelete);
+  res.redirect('/');
+}
+
 exports.getProductShop = (req, res, next) => {
   // res.sendFile(path.join(__dirname,'..','views','shop.html'))  //we can use '../' or '..' to go to one level upper folder
   productModel.fetchAll((storedProducts) => {

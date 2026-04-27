@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const rootDir = require("../util/path");
+const cartModel = require('./cart')
 
 const p = path.join(rootDir, "data", "product-list.json"); //here we want to store data file in specific folder that's why we created path
 
@@ -26,7 +27,7 @@ module.exports = class Product {
   } // and here now our product object is ready with all the input values added inside it and it is referenced with 'this' keyword for accessing it
 
   save() {
-    //  save() is same as function but without function keyword
+    //  save() is same as function but without function keyword and it's instance method type which van be called for objects only
 
     this.id = Math.random().toString(); // id should be assigned outside the readFile because it should not depend on the file handling as the id is permanent property of object
     readFileData((savedProductsArr) => {
@@ -62,9 +63,34 @@ module.exports = class Product {
     //   we can also impliment update functionality of edited product inside save() and it is done in the trainer's downloaded resources project
 
 
+    static deleteProductById(deleteProductId){
+      readFileData(savedProductsArr=>{
+        /** first approch */
+        // const productToDeleteIndex = savedProductsArr.findIndex(currentSavedProduct=>currentSavedProduct.id === deleteProducId)
+        // const updatedProductArr  = [...savedProductsArr];
+        // updatedProductArr.splice(productToDeleteIndex,1);  //  here .splice() method in js is used to remove element from the array in which first argument is the index of the starting element from which elements are to be deleted and 2nd argument is the number of elements to be removed after that index
+
+        /** other approch */
+        const existingProduct = savedProductsArr.find(
+          (currentSavedProduct) => (currentSavedProduct.id = deleteProductId),
+        ); // here we have to extract product so that we can pass that product price to deleteCartProductById();
+        const updatedProductArr = savedProductsArr.filter(
+          (currentSavedProduct) => currentSavedProduct.id != deleteProductId,
+        ); //  here we have used filter() method by which those products whose id does not match with the passed deleteProductId are kept in the updatedProductArr array and matching id product will be filtered out
+
+        fs.writeFile(p, JSON.stringify(updatedProductArr), (err) => {
+          console.log(err);
+
+          cartModel.deleteCartProductById(
+            deleteProductId,
+            existingProduct.price,
+          ); //  we are calling this method here so that when we delete product from the admin page then that product should get deleted from the cart also and because as if the product is not available in the product list then it should not be there in the user's cart
+        });
+      })
+    }
 
   static fetchAll(cb) {
-    // static keyword is used here which assures that the method is called on the "products" class and don't touches the object
+    // static keyword is used here which assures that this type of method is called for using functionalities of these methods of the "products" class and it's not called for excution of the object
 
     readFileData(cb); // ** dataFlow of callbacks :- as cb is actually an argument which carry the function which is passed in fetchAll when we call it anywhere, and then that function is transfered in readFileData() when we pass same cb in it and then that function is sent as callback by passing argument where readFileData() is defined so whatever readFileData() is returning it will be available for any function to use which is passed in the readFileData()
   } // here callback is passed because as we know js codes works on sync manner and doesn't wait for async codes to execute further so keep that in pending for later execution and the fs.readFile() is async proerty so when we returning the data from the readFile directly then it execute after the fetchAll() execution already get completed and wherever we call fetchAll() method then it shows undefined so to resolve this, we use callback as when we pass callback function, then while execution pointer get on fs.readFile() and finds the callback in argument then it keeps it in the memory and execute it by calling that cb function where it is defined so whatever we pass in the cb will be availabble for that function to use even when fetchAll() finished earlier
