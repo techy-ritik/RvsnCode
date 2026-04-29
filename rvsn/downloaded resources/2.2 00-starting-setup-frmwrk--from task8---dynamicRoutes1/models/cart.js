@@ -38,6 +38,9 @@ module.exports = class Cart {
 
         cart.products = [...cart.products]; // this line is not required at all as i've added here only bcz trainer did that
         cart.products[existingProductIndex] = updatedProduct; // here we are updating the products array of the cart as adding the updatedProduct with updated details in place of the existingProduct
+        
+        // existingProduct.qty++;   // here we can also update existing products data by directly making changes to it and there is no need make new copy of that product and then change data and then again save it at that index because the existingProduct is already the refernece of the array so whatever changes we make to existingProduct will get updated to the array directly and for that only product element is required and no need to get it's index
+      
       } else {
         updatedProduct = { id: id, qty: 1 }; //  as initially there will be no product in the cart so it starts with saving product with 'id' and here newly initialized 'qty' details only so there will be always only id, qty and totalprice data will be available in cart file
         console.log("updatedProduct of else", updatedProduct);
@@ -70,6 +73,18 @@ module.exports = class Cart {
       });
     });
   }
+
+  static getCart(cb){
+    fs.readFile(p,'utf-8',(err,fileContent)=>{
+      const cart = JSON.parse(fileContent);
+      if(err){
+        cb(null);
+      }else{
+        cb(cart);
+      }
+    })
+  }
+
 };
 
 // this model is for managing products data for the cart section of the project

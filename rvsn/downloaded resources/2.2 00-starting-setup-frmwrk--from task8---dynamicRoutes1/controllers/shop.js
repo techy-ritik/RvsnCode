@@ -37,10 +37,24 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  res.render("shop/cart", {
-    path: "/cart",
-    pageTitle: "Your Cart",
-  });
+  Cart.getCart(cart=>{
+    Product.fetchAll(adminProducts=>{     // we have to call product model also to display some more details of the product in the cart which is not available in the cart database
+      const cartProducts =[]
+      for(let product of adminProducts){
+
+        const cartProductData = cart.products.find(prod=>prod.id===product.id)  // here it will check through all the product of the adminProduct and try to match that product in the cart, and if it finds that product in the cart then return it and will get stored in cartProductData at each loop iteration
+        if(cartProductData){
+          //  and now if condition will be validated as true if the product found and if it is not found and nothing returned then if condition will be false
+          cartProducts.push({ productData: product, qty: cartProductData.qty }); //   here now cartProducts will store all those product of the adminProduct database file which is available in cart also but as the qty data is only available in cart databse so we have to pass qty separately through cartProductData as this is the product we are extracting with find method at each loop iteration
+        }   
+      }
+      res.render("shop/cart", {
+        path: "/cart",
+        pageTitle: "Your Cart",
+        products: cartProducts,
+      });
+    })
+  })
 };
 
 exports.postCart = (req, res, next) => {
