@@ -65,6 +65,9 @@ module.exports = class Cart {
       const updatedCart = {...cart};
       const product = updatedCart.products.find(prod=>prod.id===id)   // here we have to extract product so that we can get qty of the product added in the cart and with that we can update totalPrice according to no. of qty removed for that product
 
+      if(!product){
+        return;
+      }
       updatedCart.products = updatedCart.products.filter(prod=>prod.id !== id)   // with this filter method we have filtered out the matching id product as we have done in product model
       updatedCart.totalPrice = cart.totalPrice - productPrice * product.qty 
     

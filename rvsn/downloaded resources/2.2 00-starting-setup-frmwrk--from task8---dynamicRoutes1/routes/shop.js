@@ -16,6 +16,8 @@ router.get('/cart', shopController.getCart);
 
 router.post('/cart',shopController.postCart);
 
+router.post("/cart-delete-item",shopController.postCartDeleteProduct);   // here with this route of post request form is sent from the client to the server containing input data with them
+
 router.get('/orders', shopController.getOrders);
 
 router.get('/checkout', shopController.getCheckout);

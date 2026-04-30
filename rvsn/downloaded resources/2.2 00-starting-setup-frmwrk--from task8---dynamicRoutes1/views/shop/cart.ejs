@@ -7,7 +7,14 @@
             <% if(products.length>0){ %>
                 <ul>
                     <% products.forEach(crntP=>{ %>
-                        <li><%= crntP.productData.title %> (<%= crntP.qty %>)</li>   <!-- here we want to display only title and qty of the product so we have to pass them individually with the help of ejs and not complete product -->
+                        <li>
+                            <p><%= crntP.productData.title %> (<%= crntP.qty %>)</p>   <!-- here we want to display only title and qty of the product so we have to pass them individually with the help of ejs and not complete product -->
+                            <form action="/cart-delete-item" method="post">
+                                <input type="hidden" name="productId" id="productId" value="<%= crntP.productData.id %>">
+                                <!-- <input type="hidden" name="productPrice" id="productPrice" value="<%= crntP.productData.price %>">  -->
+                                <button type="submit" class="btn" >Delete</button>
+                            </form>
+                        </li>  
                     <% }) %>
                 </ul>
             <% }else{ %>

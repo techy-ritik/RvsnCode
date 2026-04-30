@@ -37,36 +37,50 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  Cart.getCart(cart=>{
-    Product.fetchAll(adminProducts=>{     // we have to call product model also to display some more details of the product in the cart which is not available in the cart database
-      const cartProducts =[]
-      for(let product of adminProducts){
-
-        const cartProductData = cart.products.find(prod=>prod.id===product.id)  // here it will check through all the product of the adminProduct and try to match that product in the cart, and if it finds that product in the cart then return it and will get stored in cartProductData at each loop iteration
-        if(cartProductData){
+  console.log("inside getCart");
+  Cart.getCart((cart) => {
+    Product.fetchAll((adminProducts) => {
+      // we have to call product model also to display some more details of the product in the cart which is not available in the cart database
+      const cartProducts = [];
+      for (let product of adminProducts) {
+        const cartProductData = cart.products.find(
+          (prod) => prod.id === product.id,
+        ); // here it will check through all the product of the adminProduct and try to match that product in the cart, and if it finds that product in the cart then return it and will get stored in cartProductData at each loop iteration
+        if (cartProductData) {
           //  and now if condition will be validated as true if the product found and if it is not found and nothing returned then if condition will be false
           cartProducts.push({ productData: product, qty: cartProductData.qty }); //   here now cartProducts will store all those product of the adminProduct database file which is available in cart also but as the qty data is only available in cart databse so we have to pass qty separately through cartProductData as this is the product we are extracting with find method at each loop iteration
-        }   
+        }
       }
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
         products: cartProducts,
       });
-    })
-  })
+    });
+  });
 };
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId; // here as the user is hitting add to cart through form for any particular product so the req.body contain input data of that form of single product only and productId is the name of the input value for id of that item which can be extracted and used here
   console.log(prodId);
 
-  Product.findById(prodId, (foundProduct) => {    //  as we are storing product id and product price in the cart model(database) so we have to extract price by fetching the single product of that particular id
+  Product.findById(prodId, (foundProduct) => {
+    //  as we are storing product id and product price in the cart model(database) so we have to extract price by fetching the single product of that particular id
     Cart.addProduct(prodId, foundProduct.price);
     res.redirect("/cart");
   }); // here for passing product price we have to fetch single product from the id for that we have to call findById and then we can pass id and price in the addProduct method of cart model
 };
 
+exports.postCartDeleteProduct = (req, res, next) => {
+  console.log("inside postCartDeleteProduct");
+  const prodId = req.body.productId;
+  // const ProdPrice = req.body.productPrice;      // we could have also extracted the product price by passing it through the form hidden input
+
+  Product.findById(prodId, (product) => {         // with this approch we can get product price without depending on the client side for sending the price data and it's good to remove dependency on client side for data, as much possible as it can be
+    Cart.deleteCartProductById(prodId, product.price);
+    res.redirect("/cart");
+  });
+};
 
 exports.getOrders = (req, res, next) => {
   res.render("shop/orders", {
