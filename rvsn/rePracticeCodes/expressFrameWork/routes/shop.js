@@ -16,5 +16,6 @@ router.post('/cart',productController.postCart);    // when user will hit add to
 
 router.get('/cart',productController.getCart);
 
+router.post('/delete-cartItem',productController.postDeleteCartProduct);      //  input data for the id will be fetched with the submitted form from the cart views
 
 module.exports = router;

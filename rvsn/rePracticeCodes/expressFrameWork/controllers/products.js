@@ -58,6 +58,15 @@ exports.postDeleteProduct=(req,res,next)=>{
   res.redirect('/');
 }
 
+exports.postDeleteCartProduct=(req,res,next)=>{
+  const prodId = req.body.ProductId;   // 'productId' will be the same which is input name for the id of the product in recieved form data
+
+  productModel.fetchOneProduct(prodId,(fetchedProdForDelete)=>{   // we have to fetch product of the recived id from the product model so that we can use other details of the product like it's price to pass in the deleteCartProductById so that totaltPrice of the cart got updated 
+    cartModel.deleteCartProductById(prodId, fetchedProdForDelete.price);
+  })
+  res.redirect('/cart');
+}
+
 exports.getProductShop = (req, res, next) => {
   // res.sendFile(path.join(__dirname,'..','views','shop.html'))  //we can use '../' or '..' to go to one level upper folder
   productModel.fetchAll((storedProducts) => {
@@ -80,7 +89,7 @@ exports.postCart = (req, res, next) => {
   const currentProdId = req.body.productId; // here as the user is hitting add to cart through form for any particular product so the req.body contain input data of that form of single product only and productId is the name of the input value for id of that item which can be extracted and used here
   console.log(currentProdId);
 
-  productModel.getOneProduct(currentProdId, (fetchedProduct) => {
+  productModel.fetchOneProduct(currentProdId, (fetchedProduct) => {
     // here we are calling getOneProduct() for passing product's price in the cart modelto store it in the cart database file
     cartModel.addProductToCart(currentProdId, fetchedProduct.price);
   });

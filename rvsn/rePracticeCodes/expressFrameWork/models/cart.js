@@ -66,6 +66,9 @@ module.exports = class Cart {
         (crntTrvrsProd) => crntTrvrsProd.cartProductId === deletedCartProdId,
       ); //  here we have to extract product which we have to delete so that we can get qty of the product added in the cart and with that we can update totalPrice according to no. of qty removed for that product
 
+      if(!deletedCartProd){    // we have to include this if condition as if the product which is got deleted from the admin product database is not available in the cart then we don't get any product data for that id so there is no sense of proceeding for deletion and if it is not handled and we exucute further then it gives error while fetching qty as there is no such value will be fetched
+        return;
+      }
       updatedCartProds.products = updatedCartProds.products.filter(
         (crntTrvrsProd) => crntTrvrsProd.cartProductId !== deletedCartProdId,
       ); //  here with this filter method we have filtered out the product whose id matching with deletedCartProdId, and like this, that product got deleted from the cart
