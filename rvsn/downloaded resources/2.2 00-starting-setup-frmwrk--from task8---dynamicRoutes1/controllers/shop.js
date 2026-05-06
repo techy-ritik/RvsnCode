@@ -1,40 +1,102 @@
 const Product = require("../models/product");
 const Cart = require("../models/cart");
 
-exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render("shop/product-list", {
-      prods: products,
-      pageTitle: "All Products",
-      path: "/products",
+exports.getIndex = (req, res, next) => {
+  Product.fetchAll()
+    .then(([rows, fieldData]) => {   // we can use .then and .catch for handling fetched data from database with promises here as we have exported promise from the database util with the sql database
+      // here we are using array destructuring as when output the fetched data in for of result in then block then we have to separately store the array's elements like 'const rows = res[0]; and cosnt fieldData = res[1]; ' but with array destructuring we can directly pullout those data in the passed arguments like 1st arg. get index 0 element stored and so on
+      console.log("rows", rows);
+      res.render("shop/index", {
+        prods: rows,
+        pageTitle: "Shop",
+        path: "/",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
+};
+
+exports.getProducts = (req, res, next) => {
+  Product.fetchAll()
+    .then(([rows, fieldData]) => {
+      // here we are using array destructuring as when output the fetched data in for of result in then block then we have to separately store the array's elements like 'const rows = res[0]; and cosnt fieldData = res[1]; ' but with array destructuring we can directly pullout those data in the passed arguments like 1st arg. get index 0 element stored and so on
+      //  so here rows will carry the actual products data which is saved in the table and fieldData will carry the metaData(cahracterisctic of each column about conditions that is set for the columns)
+      console.log("rows", rows);
+      console.log("fieldData", fieldData);
+      res.render("shop/product-list", {
+        prods: rows,
+        pageTitle: "All Products",
+        path: "/products",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId; // we use req.params to extract values from the dynamic part available in the url and the productId is the variable to be set same as which is used in the route so that we can extract it's value
   console.log("prodId", prodId);
-  Product.findById(prodId, (foundProduct) => {
-    // here id is sent back to findById by passing prodId and product data received through callback function which is defined here and got stored in the foundProduct
-    console.log("foundProduct", foundProduct);
-    res.render("shop/product-detail", {
-      // as res.render specially desgined for ejs files so when we call it we don't need to enter full path, as it always look into views folder so we just need to enter folder and file name inside of views
-      product: foundProduct, // here product is the key which is set so that it can be accessed in the view
-      pageTitle: foundProduct.title,
-      path: "/products", // sending path variable like this for active navigation links works only with ejs.
+  Product.findById(prodId)
+    .then(([product]) => {
+      console.log("rows of getProduct", product);
+      res.render("shop/product-detail", {
+        // as res.render specially desgined for ejs files so when we call it we don't need to enter full path, as it always look into views folder so we just need to enter folder and file name inside of views
+        product: product[0], // here product is the key which is set so that it can be accessed in the view
+                              // as when we pass only product then it still in array form and the product object get wrapped inside that array so we ahve to pass that object with index 0 as there will be only only element inside that product array        
+        pageTitle: product[0].title,
+        path: "/products", // sending path variable like this for active navigation links works only with ejs.
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
-exports.getIndex = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render("shop/index", {
-      prods: products,
-      pageTitle: "Shop",
-      path: "/",
-    });
-  });
-};
+
+
+
+
+/** initially worked with fileSystem database and now after adding sql database fileSystem is removed so I've commented it for the added comment notes*/
+
+// const Product = require("../models/product");
+// const Cart = require("../models/cart");
+
+// exports.getProducts = (req, res, next) => {
+//   Product.fetchAll((products) => {
+//     res.render("shop/product-list", {
+//       prods: products,
+//       pageTitle: "All Products",
+//       path: "/products",
+//     });
+//   });
+// };
+
+// exports.getProduct = (req, res, next) => {
+//   const prodId = req.params.productId; // we use req.params to extract values from the dynamic part available in the url and the productId is the variable to be set same as which is used in the route so that we can extract it's value
+//   console.log("prodId", prodId);
+//   Product.findById(prodId, (foundProduct) => {
+//     // here id is sent back to findById by passing prodId and product data received through callback function which is defined here and got stored in the foundProduct
+//     console.log("foundProduct", foundProduct);
+//     res.render("shop/product-detail", {
+//       // as res.render specially desgined for ejs files so when we call it we don't need to enter full path, as it always look into views folder so we just need to enter folder and file name inside of views
+//       product: foundProduct, // here product is the key which is set so that it can be accessed in the view
+//       pageTitle: foundProduct.title,
+//       path: "/products", // sending path variable like this for active navigation links works only with ejs.
+//     });
+//   });
+// };
+
+// exports.getIndex = (req, res, next) => {
+//   Product.fetchAll((products) => {
+//     res.render("shop/index", {
+//       prods: products,
+//       pageTitle: "Shop",
+//       path: "/",
+//     });
+//   });
+// };
 
 exports.getCart = (req, res, next) => {
   console.log("inside getCart");
@@ -76,7 +138,8 @@ exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
   // const ProdPrice = req.body.productPrice;      // we could have also extracted the product price by passing it through the form hidden input
 
-  Product.findById(prodId, (product) => {         // with this approch we can get product price without depending on the client side for sending the price data and it's good to remove dependency on client side for data, as much possible as it can be
+  Product.findById(prodId, (product) => {
+    // with this approch we can get product price without depending on the client side for sending the price data and it's good to remove dependency on client side for data, as much possible as it can be
     Cart.deleteCartProductById(prodId, product.price);
     res.redirect("/cart");
   });
