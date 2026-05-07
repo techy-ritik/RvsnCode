@@ -1,7 +1,6 @@
 const path = require("path");
 const rootDir = require("../util/path");
 const fs = require("fs");
-const { deleteProductById } = require("./product");
 
 const pCart = path.join(rootDir, "data", "cart.json"); //  we have to create new database file for every model to manage data of that model separately
 

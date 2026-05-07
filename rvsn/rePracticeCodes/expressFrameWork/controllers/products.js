@@ -55,6 +55,18 @@ exports.getOneProduct = (req, res, next) => {
       console.log(err);
     });
 };
+
+exports.postDeleteProduct = (req, res, next) => {
+  const productIdToDelete = req.params.productId;
+  productModel.deleteProductById(productIdToDelete)
+  .then(()=>{
+    res.redirect("/");
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+};
+
 //
 //
 //
@@ -119,11 +131,11 @@ exports.postEditProduct = (req, res, next) => {
   res.redirect("/");
 };
 
-exports.postDeleteProduct = (req, res, next) => {
-  const productIdToDelete = req.params.productId;
-  productModel.deleteProductById(productIdToDelete);
-  res.redirect("/");
-};
+// exports.postDeleteProduct = (req, res, next) => {
+//   const productIdToDelete = req.params.productId;
+//   productModel.deleteProductById(productIdToDelete);
+//   res.redirect("/");
+// };
 
 exports.postDeleteCartProduct = (req, res, next) => {
   const prodId = req.body.ProductId; // 'productId' will be the same which is input name for the id of the product in recieved form data

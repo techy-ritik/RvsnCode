@@ -22,7 +22,22 @@ module.exports = class Product {
 
   updateEditedProduct() {}
 
-  static deleteProductById(deleteProductId) {}
+  static deleteProductById(deleteProductId) {
+    sqlDb.execute("SELECT price FROM products where id =?", [deleteProductId])
+      .then(([priceObjectArr]) => {
+        const deletedProductPrice = priceObjectArr[0].price;
+        console.log("deletedProductPrice", deletedProductPrice);
+        cartModel.deleteCartProductById(deleteProductId, deletedProductPrice);
+      })
+      .catch((err) => {
+        console.log(err);
+      }); // here we have extracted price of the product only to pass in deleteCartProductById() so that it can be used in cart model to update cart price
+    //  we cannot store any output value from the sql query execution in any variable directly as because the sql send response of the result in form of promise so for getting the output data we must have to handle it through .then()
+
+    return sqlDb.execute("SELECT * FROM products WHERE id = ?", [
+      deleteProductId,
+    ]);
+  }
 
   static fetchAll() {
     return sqlDb.execute("SELECT * FROM products"); // here we can write the keywords in lowercase also as there is no restriction for that but writing it in uppercase only to differentiate the keywords and highlight them
