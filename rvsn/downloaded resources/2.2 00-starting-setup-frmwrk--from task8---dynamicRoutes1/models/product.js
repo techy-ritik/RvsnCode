@@ -16,11 +16,21 @@ module.exports = class Product {
       "INSERT INTO products (title,price,description,imageUrl)values(?,?,?,?)",
       [ this.title, this.price, this.description, this.imageUrl],
     );  // we have to follow this syntax for inserting values to the database 
-    // here we are not passing id because as we are not getting it from the user input and so nothing to save from here and the we ahve set id column as auto_increment in database so it will automatically set incrementing numbers as id
+    // here we are not passing id because as we are not getting it from the user input and so nothing to save from here and we have set id column as auto_increment in database so it will automatically set incrementing numbers as id
   }
 
   static deleteProductById(id) {
+    db.execute("SELECT price FROM products where id =?", [id])
+      .then(([priceObjectArr])=> {
+        const deletedProductPrice = priceObjectArr[0].price;
+        console.log("deletedProductPrice", deletedProductPrice);
+        cartModel.deleteCartProductById(id, deletedProductPrice);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
+    return db.execute('DELETE FROM products where id = ?',[id])
   }
 
   static fetchAll() {
@@ -28,7 +38,7 @@ module.exports = class Product {
   }
 
   static findById(id){
-    // return db.execute(`SELECT * FROM products WHERE id=${id}`)
+    // return db.execute(`SELECT * FROM products WHERE id=${id}`)    // we can execute the sql query with tmplate literals also as we can pass js variable here at the place where it needed without adding question mark and it also works fine
     return db.execute('SELECT * FROM products WHERE products.id=?',[id])
   }
 };

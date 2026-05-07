@@ -40,7 +40,7 @@ exports.getProduct = (req, res, next) => {
   console.log("prodId", prodId);
   Product.findById(prodId)
     .then(([product]) => {
-      console.log("rows of getProduct", product);
+      console.log("product of getProduct", product);
       res.render("shop/product-detail", {
         // as res.render specially desgined for ejs files so when we call it we don't need to enter full path, as it always look into views folder so we just need to enter folder and file name inside of views
         product: product[0], // here product is the key which is set so that it can be accessed in the view
