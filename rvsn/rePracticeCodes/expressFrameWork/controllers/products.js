@@ -16,9 +16,76 @@ exports.postAddProduct = (req, res, next) => {
   const newProduct = new productModel(req.body.title, req.body.prc, null); // here ('title','prc') is the name attribute which we set in the form input as we know the input value get stored as the (set name sttribute = the input value).
   //                                                                        here we added null because in the constructor there is extra parameter of id is passed for ehich no argumrnt is there in this object creation so it's better to pass null
   //                                                                         we can store multiple details of the product in the database by getting input through the form and passing it in the constructor while creating new object like this
-  newProduct.save();
-  res.redirect("/");
+  newProduct
+    .save()
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
+
+exports.getProductShop = (req, res, next) => {
+  // res.sendFile(path.join(__dirname,'..','views','shop.html'))  //we can use '../' or '..' to go to one level upper folder
+  productModel
+    .fetchAll()
+    .then(([storedProducts]) => {
+      // we can use .then and .catch for handling fetched data from database with promises here as we have exported promise from the database util with the sql database
+      // here we are using array destructuring as when output the fetched data in for of result in then block then we have to separately store the array's elements like 'const rows = res[0]; and cosnt fieldData = res[1]; ' but with array destructuring we can directly pullout those data in the passed arguments like 1st arg. get index 0 element stored and so on
+      console.log("storedProducts", storedProducts);
+      res.sendFile(path.join(rootDir, "views", "shop.html"));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.getOneProduct = (req, res, next) => {
+  const currentProductId = req.params.productId; // we use req.params to extract values from the dynamic part available in the url and the productId is the variable to be set same as which is used in the route so that we can extract it's value
+  console.log("currentProductId", currentProductId);
+  productModel
+    .fetchOneProduct(currentProductId)
+    .then(([fetchedProductById]) => {
+      // here id of the product is sent to fetchOneProduct() by passing currentProductId and product data received from returned response which is destructured here in .then() as the promise resonse result and got stored in the fetchedProductById
+      console.log("fetchedProductById", fetchedProductById);
+      res.sendFile(path.join(rootDir, "views", "productDetails.html"));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+//
+//
+//
+//
+//
+//
+//
+//
+/** initially worked with fileSystem database and now after adding sql database, fileSystem is removed so I've commented it for the added comment notes*/
+
+// const path = require("path");
+// const rootDir = require("../util/path");
+
+// const productModel = require("../models/product");
+// const cartModel = require("../models/cart");
+
+// exports.getAddProduct = (req, res, next) => {
+//   console.log("in the add product middleware");
+//   res.sendFile(path.join(rootDir, "views", "add-product.html"));
+// };
+
+// exports.postAddProduct = (req, res, next) => {
+//   // we can use .get or .post in place of .use as for which method incoming request we are using this middleware and route. (Here .post is used bcz incoming request is post method of the form)
+//   console.log("req.body", req.body); // data sent back by the server which we Post on the server can we recived through req.body
+
+//   const newProduct = new productModel(req.body.title, req.body.prc, null); // here ('title','prc') is the name attribute which we set in the form input as we know the input value get stored as the (set name sttribute = the input value).
+//   //                                                                        here we added null because in the constructor there is extra parameter of id is passed for ehich no argumrnt is there in this object creation so it's better to pass null
+//   //                                                                         we can store multiple details of the product in the database by getting input through the form and passing it in the constructor while creating new object like this
+//   newProduct.save();
+//   res.redirect("/");
+// };
 
 exports.getEditProduct = (req, res, next) => {
   const isEditable = req.query.edit; // req.query works like an object which check for the keys of query parameters available in the url for that we add the same variable after the req.query. which we like to get from the url and then value of that key get stored here in isEditable and if it can't find in the url then here isEditable remain undefined
@@ -46,44 +113,45 @@ exports.postEditProduct = (req, res, next) => {
     req.body.title,
     req.body.prc,
     req.body.prodctId,
-  );    //  we have to pass all the product details through object and define parameters for them in constructor and those parameters which is not fulfilled by this object will remain undefined 
+  ); //  we have to pass all the product details through object and define parameters for them in constructor and those parameters which is not fulfilled by this object will remain undefined
   updatedProductObject.updateEditedProduct();
 
-  res.redirect('/')
+  res.redirect("/");
 };
 
-exports.postDeleteProduct=(req,res,next)=>{
+exports.postDeleteProduct = (req, res, next) => {
   const productIdToDelete = req.params.productId;
   productModel.deleteProductById(productIdToDelete);
-  res.redirect('/');
-}
-
-exports.postDeleteCartProduct=(req,res,next)=>{
-  const prodId = req.body.ProductId;   // 'productId' will be the same which is input name for the id of the product in recieved form data
-
-  productModel.fetchOneProduct(prodId,(fetchedProdForDelete)=>{   // we have to fetch product of the recived id from the product model so that we can use other details of the product like it's price to pass in the deleteCartProductById so that totaltPrice of the cart got updated 
-    cartModel.deleteCartProductById(prodId, fetchedProdForDelete.price);
-  })
-  res.redirect('/cart');
-}
-
-exports.getProductShop = (req, res, next) => {
-  // res.sendFile(path.join(__dirname,'..','views','shop.html'))  //we can use '../' or '..' to go to one level upper folder
-  productModel.fetchAll((storedProducts) => {
-    console.log(storedProducts);
-    res.sendFile(path.join(rootDir, "views", "shop.html"));
-  });
+  res.redirect("/");
 };
 
-exports.getOneProduct = (req, res, next) => {
-  const currentProductId = req.params.productId; // we use req.params to extract values from the dynamic part available in the url and the productId is the variable to be set same as which is used in the route so that we can extract it's value
-  console.log("currentProductId", currentProductId);
-  productModel.fetchOneProduct(currentProductId, (fetchedProductById) => {
-    // here id of the product is sent to fetchOneProduct() by passing currentProductId and product data received through callback function which is defined here and got stored in the fetchedProductById
-    console.log("fetchedProductById", fetchedProductById);
+exports.postDeleteCartProduct = (req, res, next) => {
+  const prodId = req.body.ProductId; // 'productId' will be the same which is input name for the id of the product in recieved form data
+
+  productModel.fetchOneProduct(prodId, (fetchedProdForDelete) => {
+    // we have to fetch product of the recived id from the product model so that we can use other details of the product like it's price to pass in the deleteCartProductById so that totaltPrice of the cart got updated
+    cartModel.deleteCartProductById(prodId, fetchedProdForDelete.price);
   });
-  res.sendFile(path.join(rootDir, "views", "productDetails.html"));
-}; // in console we are getting productList output before fetchedproductById because while executing getOneProduct synchronously when readFileData in fetchOneProduct() is executing then there is a callback registered for which js does not wait for it's execution and bcz productList is present in readFileData before calling cb so it will get logged before cb execution
+  res.redirect("/cart");
+};
+
+// exports.getProductShop = (req, res, next) => {
+//   // res.sendFile(path.join(__dirname,'..','views','shop.html'))  //we can use '../' or '..' to go to one level upper folder
+//   productModel.fetchAll((storedProducts) => {
+//     console.log(storedProducts);
+//     res.sendFile(path.join(rootDir, "views", "shop.html"));
+//   });
+// };
+
+// exports.getOneProduct = (req, res, next) => {
+//   const currentProductId = req.params.productId; // we use req.params to extract values from the dynamic part available in the url and the productId is the variable to be set same as which is used in the route so that we can extract it's value
+//   console.log("currentProductId", currentProductId);
+//   productModel.fetchOneProduct(currentProductId, (fetchedProductById) => {
+//     // here id of the product is sent to fetchOneProduct() by passing currentProductId and product data received through callback function which is defined here and got stored in the fetchedProductById
+//     console.log("fetchedProductById", fetchedProductById);
+//   });
+//   res.sendFile(path.join(rootDir, "views", "productDetails.html"));
+// }; // in console we are getting productList output before fetchedproductById because while executing getOneProduct synchronously when readFileData in fetchOneProduct() is executing then there is a callback registered for which js does not wait for it's execution and bcz productList is present in readFileData before calling cb so it will get logged before cb execution
 
 exports.postCart = (req, res, next) => {
   const currentProdId = req.body.productId; // here as the user is hitting add to cart through form for any particular product so the req.body contain input data of that form of single product only and productId is the name of the input value for id of that item which can be extracted and used here
