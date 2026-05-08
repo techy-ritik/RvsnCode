@@ -21,16 +21,16 @@ module.exports = class Product {
 
   static deleteProductById(id) {
     db.execute("SELECT price FROM products where id =?", [id])
-      .then(([priceObjectArr])=> {
+      .then(([priceObjectArr]) => {
         const deletedProductPrice = priceObjectArr[0].price;
         console.log("deletedProductPrice", deletedProductPrice);
         cartModel.deleteCartProductById(id, deletedProductPrice);
       })
       .catch((err) => {
         console.log(err);
-      });
-
-    return db.execute('DELETE FROM products where id = ?',[id])
+      }); // here we have extracted price of the product only to pass in deleteCartProductById() so that it can be used in cart model to update cart price
+    //  we cannot store any output value from the sql query execution in any variable directly as because the sql send response of the result in form of promise so for getting the output data we must have to handle it through .then()
+    return db.execute("DELETE FROM products where id = ?", [id]);
   }
 
   static fetchAll() {
