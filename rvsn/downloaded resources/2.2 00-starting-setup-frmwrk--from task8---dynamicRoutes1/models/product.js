@@ -1,47 +1,86 @@
-const cartModel= require('./cart');
+const Sequelize = require('sequelize');   // here we are importing sequelize package which is getting stored in Sequelize with uppercase 'S' and it will be used for creating classes and using other functionalities of sequelize
 
-const db = require('../util/database');
+const sequelize = require('../util/database');   // here we are importing database connection util file with which we can interact and mange data of the databse from mysql
 
-module.exports = class Product {
-  constructor(id, title, imageUrl, description, price) {
-    this.id = id; //    as for updating existing product, we require id to be passed through object so we have to add id parameter in the constructor as when new product is created and no id is passed through object then it will be null and it's value further set inside .save() and when the edited product object is created for existing object then the id will be passed through object
-    this.title = title;
-    this.imageUrl = imageUrl;
-    this.description = description;
-    this.price = price;
+const Product = sequelize.define('product',{
+  id:{
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true
+  },
+  title: Sequelize.STRING,   // if there is only one condition which we have to set for any field then we can directly assign it without creating the object of that field 
+  price:{
+    type: Sequelize.DOUBLE,
+    allowNull: false
+  },
+  imageUrl:{
+    type:Sequelize.STRING,
+    allowNull: false
+  },
+  description :{
+    type:Sequelize.STRING,
+    allowNull: false
   }
 
-  save(){
-    return db.execute(
-      "INSERT INTO products (title,price,description,imageUrl)values(?,?,?,?)",
-      [ this.title, this.price, this.description, this.imageUrl],
-    );  // we have to follow this syntax for inserting values to the database 
-    // here we are not passing id because as we are not getting it from the user input and so nothing to save from here and we have set id column as auto_increment in database so it will automatically set incrementing numbers as id
-  }
+});  // here we will define the model in which we will create table and set all the field(columns) that is to be added in the table with all the condition that is to be followed by the field without editing it in mysql workbench
+    // in the define paranthesis, the first argument is the database table name and in the 2nd argument, object containing all the field with the conditional description of them 
+    // here we are defining model for product table becuase as we know each model manages only one table
 
-  static deleteProductById(id) {
-    db.execute("SELECT price FROM products where id =?", [id])
-      .then(([priceObjectArr]) => {
-        const deletedProductPrice = priceObjectArr[0].price;
-        console.log("deletedProductPrice", deletedProductPrice);
-        cartModel.deleteCartProductById(id, deletedProductPrice);
-      })
-      .catch((err) => {
-        console.log(err);
-      }); // here we have extracted price of the product only to pass in deleteCartProductById() so that it can be used in cart model to update cart price
-    //  we cannot store any output value from the sql query execution in any variable directly as because the sql send response of the result in form of promise so for getting the output data we must have to handle it through .then()
-    return db.execute("DELETE FROM products where id = ?", [id]);
-  }
 
-  static fetchAll() {
-    return db.execute('SELECT * FROM products');   // here we can write the keywords in lowercase also as there is no restriction for that but writing it in uppercase only to differentiate the keywords and highlight them
-  }
+module.exports=Product;
 
-  static findById(id){
-    // return db.execute(`SELECT * FROM products WHERE id=${id}`)    // we can execute the sql query with tmplate literals also as we can pass js variable here at the place where it needed without adding question mark and it also works fine
-    return db.execute('SELECT * FROM products WHERE products.id=?',[id])
-  }
-};
+
+
+
+
+
+/** we have worked with sql database using queries and now after adding sequelize, sql queries implementation also removed so I've commented it for the added comment notes */
+
+// const cartModel= require('./cart');
+
+// const db = require('../util/database');
+
+// module.exports = class Product {
+//   constructor(id, title, imageUrl, description, price) {
+//     this.id = id; //    as for updating existing product, we require id to be passed through object so we have to add id parameter in the constructor as when new product is created and no id is passed through object then it will be null and it's value further set inside .save() and when the edited product object is created for existing object then the id will be passed through object
+//     this.title = title;
+//     this.imageUrl = imageUrl;
+//     this.description = description;
+//     this.price = price;
+//   }
+
+//   save(){
+//     return db.execute(
+//       "INSERT INTO products (title,price,description,imageUrl)values(?,?,?,?)",
+//       [ this.title, this.price, this.description, this.imageUrl],
+//     );  // we have to follow this syntax for inserting values to the database 
+//     // here we are not passing id because as we are not getting it from the user input and so nothing to save from here and we have set id column as auto_increment in database so it will automatically set incrementing numbers as id
+//   }
+
+//   static deleteProductById(id) {
+//     db.execute("SELECT price FROM products where id =?", [id])
+//       .then(([priceObjectArr]) => {
+//         const deletedProductPrice = priceObjectArr[0].price;
+//         console.log("deletedProductPrice", deletedProductPrice);
+//         cartModel.deleteCartProductById(id, deletedProductPrice);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//       }); // here we have extracted price of the product only to pass in deleteCartProductById() so that it can be used in cart model to update cart price
+//     //  we cannot store any output value from the sql query execution in any variable directly as because the sql send response of the result in form of promise so for getting the output data we must have to handle it through .then()
+//     return db.execute("DELETE FROM products where id = ?", [id]);
+//   }
+
+//   static fetchAll() {
+//     return db.execute('SELECT * FROM products');   // here we can write the keywords in lowercase also as there is no restriction for that but writing it in uppercase only to differentiate the keywords and highlight them
+//   }
+
+//   static findById(id){
+//     // return db.execute(`SELECT * FROM products WHERE id=${id}`)    // we can execute the sql query with tmplate literals also as we can pass js variable here at the place where it needed without adding question mark and it also works fine
+//     return db.execute('SELECT * FROM products WHERE products.id=?',[id])
+//   }
+// };
 
 
 
