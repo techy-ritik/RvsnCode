@@ -1,52 +1,25 @@
-const sqlDb = require("../util/database");
-const cartModel = require("./cart");
+const Sequelize = require('sequelize');  // here we are importing sequelize package which is getting stored in Sequelize with uppercase 'S' and it will be used for creating classes and using other functionalities of sequelize
 
-module.exports = class Product {
-  constructor(t, price, productId) {
-    this.title = t; // here "this" refers to the object which is created with the use of the contructor and the parameters('t','price') get value from the addProduct form input which is sent back by the server and passed in while object creation
-    this.price = price;
-    this.id = productId;
-    // we can add as many number of parameters in constructor as we want and while creating object we need not to pass exact same no. of arguments as only those arguments which is recieved through object is get value stored in it, and other parameter remain undefined or we can pass null for those parameters through object and it does not cause any error. e.g.(like in add product when save() is called only title and price get value but id remain undefined or null and later in the function id get it's value
-    //  here ("title","price","id") is the key set for the values that is getting stored as object in the file
-  } // and here now our product object is ready with all the input values added inside it and it is referenced with 'this' keyword for accessing it
+const sequelize = require('../util/database');   // here we are importing database connection from util file with which we can interact and manage data of the databse from mysql
+
+const Product = sequelize.define("product", {
+  // here we will define the model in which we will create table and set all the field(columns) that is to be added in the table with all the condition that is to be followed by the field without editing it in mysql workbench
+  // in the define paranthesis, the first argument is the database table name and in the 2nd argument-> object containing all the field with the conditional description of them
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  title: Sequelize.STRING, // if there is any single condition which we have to set for any field then we can directly assign it without creating the object of that field
+  price: {
+    type: Sequelize.DOUBLE,
+    allowNull: false,
+  },
+});     // here we are defining model for product table becuase as we know each model manages only one table
 
 
-  save() {
-    //  save() is same as function but without function keyword and it's instance method type which van be called for objects only
-    return sqlDb.execute("INSERT INTO products(title,price)VALUES(?,?)", [
-      this.title,
-      this.price,
-    ]); // we have to follow this syntax for inserting values to the database
-    // here we are not passing id because as we are not getting it from the user input and so nothing to save from here and also we have set id column as auto_increment in database so it will automatically set incrementing numbers as id
-  }
-
-  updateEditedProduct() {}
-
-  static deleteProductById(deleteProductId) {
-    sqlDb.execute("SELECT price FROM products where id =?", [deleteProductId])
-      .then(([priceObjectArr]) => {
-        const deletedProductPrice = priceObjectArr[0].price;
-        console.log("deletedProductPrice", deletedProductPrice);
-        cartModel.deleteCartProductById(deleteProductId, deletedProductPrice);
-      })
-      .catch((err) => {
-        console.log(err);
-      }); // here we have extracted price of the product only to pass in deleteCartProductById() so that it can be used in cart model to update cart price
-    //  we cannot store any output value from the sql query execution in any variable directly as because the sql send response of the result in form of promise so for getting the output data we must have to handle it through .then()
-
-    return sqlDb.execute("SELECT * FROM products WHERE id = ?", [
-      deleteProductId,
-    ]);
-  }
-
-  static fetchAll() {
-    return sqlDb.execute("SELECT * FROM products"); // here we can write the keywords in lowercase also as there is no restriction for that but writing it in uppercase only to differentiate the keywords and highlight them
-  }
-
-  static fetchOneProduct(currentId) {
-    return sqlDb.execute("SELECT * FROM products WHERE id = ?", [currentId]);
-  }
-};
+module.exports=Product;
 
 
 
@@ -56,6 +29,59 @@ module.exports = class Product {
 
 
 
+
+
+/** we have worked with sql database using sql queries and now after adding sequelize, sql queries implementation also removed so I've commented it for the added comment notes */
+
+
+// const sqlDb = require("../util/database");
+// const cartModel = require("./cart");
+
+// module.exports = class Product {
+//   constructor(t, price, productId) {
+//     this.title = t; // here "this" refers to the object which is created with the use of the contructor and the parameters('t','price') get value from the addProduct form input which is sent back by the server and passed in while object creation
+//     this.price = price;
+//     this.id = productId;
+//     // we can add as many number of parameters in constructor as we want and while creating object we need not to pass exact same no. of arguments as only those arguments which is recieved through object is get value stored in it, and other parameter remain undefined or we can pass null for those parameters through object and it does not cause any error. e.g.(like in add product when save() is called only title and price get value but id remain undefined or null and later in the function id get it's value
+//     //  here ("title","price","id") is the key set for the values that is getting stored as object in the file
+//   } // and here now our product object is ready with all the input values added inside it and it is referenced with 'this' keyword for accessing it
+
+//   save() {
+//     //  save() is same as function but without function keyword and it's instance method type which van be called for objects only
+//     return sqlDb.execute("INSERT INTO products(title,price)VALUES(?,?)", [
+//       this.title,
+//       this.price,
+//     ]); // we have to follow this syntax for inserting values to the database
+//     // here we are not passing id because as we are not getting it from the user input and so nothing to save from here and also we have set id column as auto_increment in database so it will automatically set incrementing numbers as id
+//   }
+
+//   updateEditedProduct() {}
+
+//   static deleteProductById(deleteProductId) {
+//     sqlDb.execute("SELECT price FROM products where id =?", [deleteProductId])
+//       .then(([priceObjectArr]) => {
+//         const deletedProductPrice = priceObjectArr[0].price;
+//         console.log("deletedProductPrice", deletedProductPrice);
+//         cartModel.deleteCartProductById(deleteProductId, deletedProductPrice);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//       }); // here we have extracted price of the product only to pass in deleteCartProductById() so that it can be used in cart model to update cart price
+//     //  we cannot store any output value from the sql query execution in any variable directly as because the sql send response of the result in form of promise so for getting the output data we must have to handle it through .then()
+
+//     return sqlDb.execute("SELECT * FROM products WHERE id = ?", [
+//       deleteProductId,
+//     ]);
+//   }
+
+//   static fetchAll() {
+//     return sqlDb.execute("SELECT * FROM products"); // here we can write the keywords in lowercase also as there is no restriction for that but writing it in uppercase only to differentiate the keywords and highlight them
+//   }
+
+//   static fetchOneProduct(currentId) {
+//     return sqlDb.execute("SELECT * FROM products WHERE id = ?", [currentId]);
+//   }
+// };
 
 /** initially worked with fileSystem database and now after adding sql database, fileSystem is removed so I've commented it for the added comment notes*/
 
