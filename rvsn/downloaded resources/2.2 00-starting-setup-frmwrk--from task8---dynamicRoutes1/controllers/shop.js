@@ -1,10 +1,10 @@
 const Product = require("../models/product");
 const Cart = require("../models/cart");
 
+
 console.log("Product", Product);
 exports.getIndex = (req, res, next) => {
-  
-  Product.findAll()   //  here this findAll() method fetches all the saved product from the table(model) and we can set conditions also like where,like etc. in for of object inside paraenthysis, as we execute in sql queries
+  Product.findAll() //  here this findAll() method fetches all the saved product from the table(model) and we can set conditions also like where,like etc. in for of object inside paraenthysis, as we execute in sql queries
     .then((products) => {
       // we can use .then and .catch for handling fetched data from database with promises here as we have exported promise from the database util with the sql database
       // here we are using array destructuring as when output the fetched data in for of result in then block then we have to separately store the array's elements like 'const rows = res[0]; and cosnt fieldData = res[1]; ' but with array destructuring we can directly pullout those data in the passed arguments like 1st arg. get index 0 element stored and so on
@@ -18,9 +18,12 @@ exports.getIndex = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
+
+
+
   
-  
-  /** below method used before sequelize */
+
+  /** below method(with use of sql queries execution) used before sequelize */
 
   // Product.fetchAll()
   //   .then(([rows, fieldData]) => {
@@ -41,14 +44,13 @@ exports.getIndex = (req, res, next) => {
 
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows, fieldData]) => {
+  Product.findAll()
+    .then((products) => {
       // here we are using array destructuring as when output the fetched data in for of result in then block then we have to separately store the array's elements like 'const rows = res[0]; and cosnt fieldData = res[1]; ' but with array destructuring we can directly pullout those data in the passed arguments like 1st arg. get index 0 element stored and so on
       //  so here rows will carry the actual products data which is saved in the table and fieldData will carry the metaData(cahracterisctic of each column about conditions that is set for the columns)
-      console.log("rows", rows);
-      console.log("fieldData", fieldData);
+      console.log("products", products);
       res.render("shop/product-list", {
-        prods: rows,
+        prods: products,
         pageTitle: "All Products",
         path: "/products",
       });
@@ -56,26 +58,85 @@ exports.getProducts = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
+
+
+
+  /** below method(with use of sql queries execution) used before sequelize */
+
+  // Product.fetchAll()
+  //   .then(([rows, fieldData]) => {
+  //     // here we are using array destructuring as when output the fetched data in for of result in then block then we have to separately store the array's elements like 'const rows = res[0]; and cosnt fieldData = res[1]; ' but with array destructuring we can directly pullout those data in the passed arguments like 1st arg. get index 0 element stored and so on
+  //     //  so here rows will carry the actual products data which is saved in the table and fieldData will carry the metaData(cahracterisctic of each column about conditions that is set for the columns)
+  //     console.log("rows", rows);
+  //     console.log("fieldData", fieldData);
+  //     res.render("shop/product-list", {
+  //       prods: rows,
+  //       pageTitle: "All Products",
+  //       path: "/products",
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId; // we use req.params to extract values from the dynamic part available in the url and the productId is the variable to be set same as which is used in the route so that we can extract it's value
   console.log("prodId", prodId);
-  Product.findById(prodId)
-    .then(([product]) => {
+
+  /** aproach 1(using findById method of sequelize) */
+  Product.findByPk(prodId)     // here we use findByPk() inbuilt method of sequelize to fetch single product from database
+    .then((product) => {
       console.log("product of getProduct", product);
       res.render("shop/product-detail", {
         // as res.render specially desgined for ejs files so when we call it we don't need to enter full path, as it always look into views folder so we just need to enter folder and file name inside of views
-        product: product[0], // here product is the key which is set so that it can be accessed in the view
-        // as when we pass only product then it still in array form and the product object get wrapped inside that array so we ahve to pass that object with index 0 as there will be only only element inside that product array
-        pageTitle: product[0].title,
+        product: product, // here product is the key which is set so that it can be accessed in the view
+        pageTitle: product.title,
         path: "/products", // sending path variable like this for active navigation links works only with ejs.
       });
     })
     .catch((err) => {
       console.log(err);
     });
+
+    
+  /** alt. aproach(using findAll() with where condition of sequelize) */
+  // Product.findAll({ where: { id: prodId } })
+  //   .then((products) => {
+  //     console.log("product of getProduct", products);
+  //     res.render("shop/product-detail", {
+  //       // as res.render specially desgined for ejs files so when we call it we don't need to enter full path, as it always look into views folder so we just need to enter folder and file name inside of views
+  //       product: products[0], // here product is the key which is set so that it can be accessed in the view
+  //       //  here when we use findAll() method for fetching data then it always responds with an array, whether there is single product or multiple, so we have to extract first element from the array by using index 0.
+  //       pageTitle: products[0].title,
+  //       path: "/products", // sending path variable like this for active navigation links works only with ejs.
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+
+
+  //
+  //
+  /** below method(with use of sql queries execution) used before sequelize */
+
+  // Product.findById(prodId)
+  //   .then(([product]) => {
+  //     console.log("product of getProduct", product);
+  //     res.render("shop/product-detail", {
+  //       // as res.render specially desgined for ejs files so when we call it we don't need to enter full path, as it always look into views folder so we just need to enter folder and file name inside of views
+  //       product: product[0], // here product is the key which is set so that it can be accessed in the view
+  //       // as when we pass only product then it still in array form and the product object get wrapped inside that array so we ahve to pass that object with index 0 as there will be only only element inside that product array
+  //       pageTitle: product[0].title,
+  //       path: "/products", // sending path variable like this for active navigation links works only with ejs.
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
+
 
 
 
