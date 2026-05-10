@@ -15,7 +15,7 @@ const Product = sequelize.define('product',{
     allowNull: false
   },
   imageUrl:{
-    type:Sequelize.STRING,
+    type:Sequelize.STRING(500),   // as by default string type stroes in varchar(255) so for increasing character input we can set manually
     allowNull: false
   },
   description :{
@@ -27,6 +27,7 @@ const Product = sequelize.define('product',{
     // in the define paranthesis, the first argument is the database table name and in the 2nd argument, object containing all the field with the conditional description of them 
     // here we are defining model for product table becuase as we know each model manages only one table
 
+    
 
 module.exports=Product;
 

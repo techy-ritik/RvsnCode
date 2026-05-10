@@ -1,3 +1,4 @@
+const { Sequelize } = require("sequelize");
 const Product = require("../models/product");
 
 exports.getAddProduct = (req, res, next) => {
@@ -14,18 +15,42 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product(null, title, imageUrl, description, price); // here we added null because in the constructor there is extra parameter of id is passed for ehich no argumrnt is there in this object creation so it's better to pass null
-  product
-    .save()
-    .then(() => {
-      res.redirect("/"); // here we have to add .redirect() inside the .then(), so that it executes after the .save() method execution got finished and return the promise response
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  Product.create({     // here we can use .create() builtIn method of sequelize to directly save fetched data from the form input to the model(i.e. database table) and the data is added in the form of object inside create parenthysis where key are the fields of the table and value are those input value which is fethced from the form
+    title: title,
+    price:price,
+    imageUrl:imageUrl,
+    description:description,
+  }).then((res)=>{         //  and we also have to handle the response promise with then so that we get assurance of data correctly stored in database
+    console.log("product added");
+    // res.redirect('/');     // here we have to add .redirect() inside the .then(), so that it executes after the .save() method execution got finished and return the promise response
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+
+
+  /** below method used before sequelize */
+
+  // const product = new Product(null, title, imageUrl, description, price); // here we added null because in the constructor there is extra parameter of id is passed for ehich no argumrnt is there in this object creation so it's better to pass null
+  // product
+  //   .save()
+  //   .then(() => {
+  //     res.redirect("/"); // here we have to add .redirect() inside the .then(), so that it executes after the .save() method execution got finished and return the promise response
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
 
 exports.getProducts = (req, res, next) => {
+
+  // Product.findA
+  
+
+
+
+  /** below method used before sequelize */
+
   Product.fetchAll()
     .then(([rows, fieldData]) => {
       // here we are using array destructuring as when output the fetched data in for of result in then block then we have to separately store the array's elements like 'const rows = res[0]; and cosnt fieldData = res[1]; ' but with array destructuring we can directly pullout those data in the passed arguments like 1st arg. get index 0 element stored and so on
