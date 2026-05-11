@@ -21,8 +21,11 @@ const error404Controller = require("./controllers/404");
 app.use("/", error404Controller.use404);
 
 const sequelize = require("./util/database");
-sequelize   
-  .sync()
+
+sequelize
+//   .sync({ alter: true })    // here we use '{alter:true}' for updating the changes which is to be done in the model in the schema which is to be made after once the table is created
+  sequelize
+    .sync()
   .then(() => {
     app.listen(3000); // it creates and also starts the server
     //                  we have added in then() of sync bcz we want to start the server once it get confirmed that the database is created and avaialable to handle data
