@@ -46,8 +46,7 @@ exports.postAddProduct = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
   Product.findAll()
     .then((products) => {
-      // here we are using array destructuring as when output the fetched data in for of result in then block then we have to separately store the array's elements like 'const rows = res[0]; and cosnt fieldData = res[1]; ' but with array destructuring we can directly pullout those data in the passed arguments like 1st arg. get index 0 element stored and so on
-      //  so here rows will carry the actual products data which is saved in the table and fieldData will carry the metaData(cahracterisctic of each column about conditions that is set for the columns)
+      //  so here products will carry the actual products data which is saved in the table
       console.log("products", products);
       res.render("admin/products", {
         prods: products,
@@ -89,7 +88,7 @@ exports.getEditProduct = (req, res, next) => {
     .then((foundProduct) => {
       console.log('foundProduct',foundProduct)
       if (!foundProduct) {
-        //  here foundProduct will be negative only in case if findById is unable to fetch the product with the requested id and it will not be able to fetch the product only if it will not be there in the product.json file so if it will not be there in the file then it even not show up in admin page, so there is no way to hit edit button and request through admin page on any product for edit request which is not available in the admin page so in this logic this condn. is useless but it work when urll got manually changed and some invalid id got passed through that whihc is not in the database file so in that case this condition handles the application from crashing and shows the eroor we want to show the user
+        //  here foundProduct will be negative only in case if findByPk is unable to fetch the product with the requested id and it will not be able to fetch the product only if it will not be there in the product.json file so if it will not be there in the file then it even not show up in admin page, so there is no way to hit edit button and request through admin page on any product for edit request which is not available in the admin page so in this logic this condn. is useless but it work when urll got manually changed and some invalid id got passed through that whihc is not in the database file so in that case this condition handles the application from crashing and shows the eroor we want to show the user
         return res.redirect("/");
       }
       res.render("admin/add&Edit-product", {
@@ -148,7 +147,7 @@ exports.postDeleteProduct = (req, res, next) => {
   Product.findByPk(prodId) //  here at first we fetch the product which we want to delete with the prodId and then while handling the promise response in then() block we delte the instance of the fetched product by calling the destroy() method
     .then((product) => {
       return product.destroy();   // and we have to return the destroy() method so that to get promise response of whether it executed successfully or not
-    })  // and then handle the promise response of .destroy() in another chained then() block 
+    })  // here now we will handle the promise response of .destroy() in another chained then() block 
     .then(() => {
       console.log("product deleted!!");
       res.redirect("/admin/products");

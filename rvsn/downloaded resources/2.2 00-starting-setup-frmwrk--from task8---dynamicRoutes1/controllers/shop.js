@@ -7,7 +7,6 @@ exports.getIndex = (req, res, next) => {
   Product.findAll() //  here this findAll() method fetches all the saved product from the table(model) and we can set conditions also like where,like etc. in for of object inside paraenthysis, as we execute in sql queries
     .then((products) => {
       // we can use .then and .catch for handling fetched data from database with promises here as we have exported promise from the database util with the sql database
-      // here we are using array destructuring as when output the fetched data in for of result in then block then we have to separately store the array's elements like 'const rows = res[0]; and cosnt fieldData = res[1]; ' but with array destructuring we can directly pullout those data in the passed arguments like 1st arg. get index 0 element stored and so on
       console.log("products", products);
       res.render("shop/index", {
         prods: products,
@@ -19,9 +18,6 @@ exports.getIndex = (req, res, next) => {
       console.log(err);
     });
 
-
-
-  
 
   /** below method(with use of sql queries execution) used before sequelize */
 
@@ -46,8 +42,7 @@ exports.getIndex = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
   Product.findAll()
     .then((products) => {
-      // here we are using array destructuring as when output the fetched data in for of result in then block then we have to separately store the array's elements like 'const rows = res[0]; and cosnt fieldData = res[1]; ' but with array destructuring we can directly pullout those data in the passed arguments like 1st arg. get index 0 element stored and so on
-      //  so here rows will carry the actual products data which is saved in the table and fieldData will carry the metaData(cahracterisctic of each column about conditions that is set for the columns)
+      //  so here products will carry the actual products data which is saved in the table 
       console.log("products", products);
       res.render("shop/product-list", {
         prods: products,
@@ -84,7 +79,7 @@ exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId; // we use req.params to extract values from the dynamic part available in the url and the productId is the variable to be set same as which is used in the route so that we can extract it's value
   console.log("prodId", prodId);
 
-  /** aproach 1(using findById method of sequelize) */
+  /** aproach 1(using findByPK method of sequelize) */
   Product.findByPk(prodId)     // here we use findByPk() inbuilt method of sequelize to fetch single product from database
     .then((product) => {
       console.log("product of getProduct", product);
