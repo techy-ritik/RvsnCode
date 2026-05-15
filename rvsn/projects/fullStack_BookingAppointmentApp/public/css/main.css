@@ -1,0 +1,91 @@
+/* main.css */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #dfffe0, #d9f1ff);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 30px 15px;
+}
+
+h1 {
+  color: #0b5d7a;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+form {
+  background-color: white;
+  padding: 25px;
+  width: 320px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+label {
+  color: #14532d;
+  font-weight: bold;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #8fd3c1;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 5px rgba(14, 165, 233, 0.5);
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px;
+  background: linear-gradient(to right, #22c55e, #0ea5e9);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
+
+.userDetails {
+  margin-top: 30px;
+  width: 90%;
+  max-width: 800px;
+  padding: 0;
+}
+
+.userDetails li {
+  list-style: none;
+  background-color: white;
+  margin-bottom: 12px;
+  padding: 12px;
+  border-left: 5px solid #0ea5e9;
+  border-radius: 8px;
+  color: #134e4a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+  width: 100%;
+  box-sizing: border-box;
+
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
