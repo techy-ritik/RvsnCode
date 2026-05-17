@@ -14,17 +14,26 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  Product.create({
-    // here we can use .create() builtIn method of sequelize to directly save fetched data from the form input to the model(i.e. database table) and the data is added in the form of object inside create parenthysis where key are the fields of the table and value are those input value which is fethced from the form
-    title: title,
-    price: price,
-    imageUrl: imageUrl,
-    description: description,
-  })
+  req.user
+    .createProduct({
+      // here we can use .createProduct() special method provided by sequelize when we create sequelize object using model instance like we have created req.user in this project and so when we use this method for creating product then the current user's id will automatically got saved as userId with the added product in product table
+      title: title,
+      price: price,
+      imageUrl: imageUrl,
+      description: description,
+    })
+    // Product.create({
+    //   // here we can use .create() builtIn method of sequelize to directly save fetched data from the form input to the model(i.e. database table) and the data is added in the form of object inside create parenthysis where key are the fields of the table and value are those input value which is fethced from the form
+    //   title: title,
+    //   price: price,
+    //   imageUrl: imageUrl,
+    //   description: description,
+    //   userId = req.user.id,  // we can set userId manually in the product table for every product which get added through req.user for connrcting each product with the belonging user
+    // })
     .then((result) => {
       //  and we also have to handle the response promise with then so that we get assurance of data correctly stored in database
       console.log("product added");
-      res.redirect("/admin/products");     // here we have to add .redirect() inside the .then(), so that it executes after the .save() method execution got finished and return the promise response
+      res.redirect("/admin/products"); // here we have to add .redirect() inside the .then(), so that it executes after the .save() method execution got finished and return the promise response
     })
     .catch((err) => {
       console.log(err);
@@ -44,7 +53,9 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  // Product.findAll()
+  //  here we will use .getProducts instead of .findAll() after association of user and products model because we want fetch all the product which belongs to only loggedIn user
+  req.user.getProducts()
     .then((products) => {
       //  so here products will carry the actual products data which is saved in the table
       console.log("products", products);
@@ -85,7 +96,7 @@ exports.getEditProduct = (req, res, next) => {
   }
   const prodId = req.params.productId;
   Product.findByPk(prodId)
-    .then((foundProduct) => {
+  .then((foundProduct) => {
       console.log('foundProduct',foundProduct)
       if (!foundProduct) {
         //  here foundProduct will be negative only in case if findByPk is unable to fetch the product with the requested id and it will not be able to fetch the product only if it will not be there in the product.json file so if it will not be there in the file then it even not show up in admin page, so there is no way to hit edit button and request through admin page on any product for edit request which is not available in the admin page so in this logic this condn. is useless but it work when urll got manually changed and some invalid id got passed through that whihc is not in the database file so in that case this condition handles the application from crashing and shows the eroor we want to show the user
@@ -113,17 +124,29 @@ exports.postEditProduct = (req, res, next) => {
   const UpdatedImageUrl = req.body.imageUrl;
   const updatedDescription = req.body.description;
 
-  Product.findByPk(prodId)
-    .then((foundProduct) => {    // here we can now store all the product details in temp. variable created with foundProduct as below becuase like this we just modify the properties here in js memory and then we can update these details further with database by calling save() sequelize method
+  // Product.findByPk(prodId)        // this approach of fetching product to be edited can be used as a common way but for specifying user we can use below approach
+  //   .then((foundProduct) => {    // here we can now store all the product details in temp. variable created with foundProduct as below becuase like this we just modify the properties here in js memory and then we can update these details further with database by calling save() sequelize method
+  //     foundProduct.title = updatedTitle;
+  //     foundProduct.price= updatedPrice;
+  //     foundProduct.description=updatedDescription;
+  //     foundProduct.imageUrl=UpdatedImageUrl
+  //     return foundProduct.save();    // here save() method is used to update the details in the fetched product as it works like when the product exist in the database then it update the changes in that product data and if the product doesn't exist then it will craete new product and save it there
+  //                               // and we have to return the save() method so that get promise response of whether it executed successfully or not
+  //   })  // and then handle the promise response of .save() in another chained then() block
+
+  req.user
+    .getProducts({ where: { id: prodId } }) //  here we can use .getProducts() for fetching the product with passed id to be edited , we use this which make sure that the product which we are fetching are belongs to the loggedIn user whose req.user object is created and it always return the product in form of array even there is single product fetched
+    .then((products) => {
+      const foundProduct = products[0]; //  as the product that is fetched through .getProducts are in array form so we have extract it out the actual product object and store in variable to use it further
       foundProduct.title = updatedTitle;
-      foundProduct.price= updatedPrice;
-      foundProduct.description=updatedDescription;
-      foundProduct.imageUrl=UpdatedImageUrl 
-      return foundProduct.save();    // here save() method is used to update the details in the fetched product as it works like when the product exist in the database then it update the changes in that product data and if the product doesn't exist then it will craete new product and save it there
-                                // and we have to return the save() method so that get promise response of whether it executed successfully or not
-    })  // and then handle the promise response of .save() in another chained then() block
-    .then(()=>{
-      console.log('product updated!!!');
+      foundProduct.price = updatedPrice;
+      foundProduct.description = updatedDescription;
+      foundProduct.imageUrl = UpdatedImageUrl;
+      return foundProduct.save(); // here save() method is used to update the details in the fetched product as it works like when the product exist in the database then it update the changes in that product data and if the product doesn't exist then it will craete new product and save it there
+      //                             and we have to return the save() method so that get promise response of whether it executed successfully or not
+    }) // and then handle the promise response of .save() in another chained then() block
+    .then(() => {
+      console.log("product updated!!!");
       res.redirect("/products");
     })
     .catch((err) => {
