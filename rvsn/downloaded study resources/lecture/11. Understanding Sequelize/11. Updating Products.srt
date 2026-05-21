@@ -1,0 +1,239 @@
+1
+00:00:02,600 --> 00:00:08,330
+Let's make edit work and for this, we first of all need to load the product that gets edited
+
+2
+00:00:08,390 --> 00:00:13,710
+so we're looking at the get edit product function in the admin.js controller.
+
+3
+00:00:14,060 --> 00:00:17,650
+We still want to retrieve that edit mode thing and the product ID as
+
+4
+00:00:17,660 --> 00:00:22,460
+we did it before. We can also still find a product by ID,
+
+5
+00:00:22,460 --> 00:00:31,370
+however as before, we'll not use a callback function here but our promise where we catch any errors we
+
+6
+00:00:31,370 --> 00:00:32,540
+might have
+
+7
+00:00:32,540 --> 00:00:38,720
+and then here we pass that function which gets the product to then. If we get no product, we redirect
+
+8
+00:00:38,720 --> 00:00:45,830
+which is fine and otherwise we'll render the view with our loaded product. With this tiny change already
+
+9
+00:00:45,830 --> 00:00:49,500
+if we save this and we reload the edit product page,
+
+10
+00:00:49,530 --> 00:00:50,790
+this is looking good,
+
+11
+00:00:50,840 --> 00:00:54,260
+the fields get populated with our values.
+
+12
+00:00:54,290 --> 00:01:00,650
+Now we just need to make sure that if we do change something and we save it, this does get saved to the
+
+13
+00:01:00,650 --> 00:01:02,870
+database correctly.
+
+14
+00:01:02,870 --> 00:01:08,600
+For that, we of course have to have a look at post edit product which gets called once we submit this
+
+15
+00:01:08,600 --> 00:01:16,370
+page. There, we retrieve all the data we need which is good but we won't save our product like this
+
+16
+00:01:16,370 --> 00:01:25,580
+instead here, we'll use the product model and first of all here, I want to find the element in the database
+
+17
+00:01:25,580 --> 00:01:26,990
+which we do want to change, 
+
+18
+00:01:27,010 --> 00:01:31,590
+so I'll use find by ID here and I'll pass my prod ID to find it.
+
+19
+00:01:32,710 --> 00:01:36,750
+Then you know the game, we got then and catch,
+
+20
+00:01:36,760 --> 00:01:44,250
+so let's just handle any error by logging them for now and in then, let's work with the product
+
+21
+00:01:44,260 --> 00:01:48,290
+we retrieved, that product now needs to be updated.
+
+22
+00:01:48,580 --> 00:01:56,380
+So here we can simply do that by now saying product title equals updated title, so we can simply work with
+
+23
+00:01:56,470 --> 00:02:02,370
+all the attributes our product has per our model definition and change them,
+
+24
+00:02:02,380 --> 00:02:08,290
+please note this will not directly change the data in the database though, it will only do it locally in
+
+25
+00:02:08,290 --> 00:02:11,340
+our app, in our javascript app here for the moment.
+
+26
+00:02:11,650 --> 00:02:18,910
+So I can also change product title to updated price, to updated price, I can change the description to
+
+27
+00:02:18,940 --> 00:02:24,910
+updated desc and I can also change product image
+
+28
+00:02:24,910 --> 00:02:31,980
+url to updated image url. Now as I said this will not directly edit it in the database,
+
+29
+00:02:32,080 --> 00:02:36,170
+to do that we simply have to call product save.
+
+30
+00:02:36,180 --> 00:02:38,860
+This is another method provided by sequelize
+
+31
+00:02:39,010 --> 00:02:45,300
+and this now takes the product as we edit it and saves it back to the database.
+
+32
+00:02:45,360 --> 00:02:49,000
+If the product does not exist yet, it will create a new one
+
+33
+00:02:49,020 --> 00:02:56,940
+but if it does as this one, then it will overwrite or update the old one with our new values.
+
+34
+00:02:56,940 --> 00:03:04,500
+Now here we can again chain then and catch but to not start nesting our promises which would yield
+
+35
+00:03:04,500 --> 00:03:07,400
+the same ugly picture as nesting callbacks,
+
+36
+00:03:07,710 --> 00:03:15,400
+we can now return this here, so we return the promise which is returned by save and we can simply add
+
+37
+00:03:15,410 --> 00:03:24,010
+a then block here and this catch block, whoops, this catch block would catch errors both for this first promise
+
+38
+00:03:24,010 --> 00:03:24,450
+here
+
+39
+00:03:24,690 --> 00:03:31,770
+and for the second promise. This then block will now handle any success responses from this save promise
+
+40
+00:03:31,770 --> 00:03:32,610
+here,
+
+41
+00:03:32,610 --> 00:03:44,970
+so here we get back result and I will simply log updated product. Time to save that and to go back and
+
+42
+00:03:45,090 --> 00:03:51,030
+edit this by adding a couple of exclamation marks. Let's click update product now, we get redirected
+
+43
+00:03:51,030 --> 00:03:52,900
+to the products page,
+
+44
+00:03:53,130 --> 00:03:56,460
+here we don't see our change though but if we reload, we do
+
+45
+00:03:56,970 --> 00:04:03,900
+and in the database if we refreshed that here, we are of course also can see that change here.
+
+46
+00:04:04,900 --> 00:04:12,900
+Now do you know why we didn't immediately see that change on our admin products page though? Well the
+
+47
+00:04:12,900 --> 00:04:15,600
+reason is we redirect here
+
+48
+00:04:15,600 --> 00:04:23,070
+and as you learned, javascript and nodejs simply executes your code from top to bottom but async operations
+
+49
+00:04:23,070 --> 00:04:29,860
+like this simply get registered and started and then here for promises, we registered that this function
+
+50
+00:04:29,860 --> 00:04:32,950
+should be executed once the promise is resolved.
+
+51
+00:04:33,240 --> 00:04:38,610
+So it will not wait for this to finish but instead move onto the next line and the next line is this
+
+52
+00:04:38,610 --> 00:04:39,420
+one here,
+
+53
+00:04:39,570 --> 00:04:42,590
+so it will redirect before our promise is done.
+
+54
+00:04:42,690 --> 00:04:48,570
+So we should simply move redirect into the then block here. By the way this also means that for now if
+
+55
+00:04:48,570 --> 00:04:53,850
+we have an error, we never load a new page which is not the best user experience but we'll learn more
+
+56
+00:04:53,850 --> 00:04:57,780
+about error handling in a separate module of the course.
+
+57
+00:04:57,780 --> 00:05:00,360
+So for now, this is the setup I want to use
+
+58
+00:05:00,360 --> 00:05:07,080
+and with that if I now edit this and I remove the exclamation marks and I do let's say also change the
+
+59
+00:05:07,080 --> 00:05:09,800
+price here, if I now save that,
+
+60
+00:05:09,960 --> 00:05:16,270
+now we immediately see the new values because now we only redirect after the update was successful.

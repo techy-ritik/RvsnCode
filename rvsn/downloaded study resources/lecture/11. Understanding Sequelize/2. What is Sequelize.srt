@@ -1,0 +1,119 @@
+1
+00:00:02,350 --> 00:00:10,300
+Now before we start using it, what is sequelize actually? Sequelize is a third party package, to be
+
+2
+00:00:10,300 --> 00:00:11,320
+precise
+
+3
+00:00:11,350 --> 00:00:15,290
+it's an object relational mapping library
+
+4
+00:00:15,490 --> 00:00:23,440
+and this is a pretty long name which simply means it does all the heavy lifting, all the SQL code
+
+5
+00:00:23,620 --> 00:00:31,120
+behind the scenes for us and maps it into javascript objects with convenience methods which we can call
+
+6
+00:00:31,150 --> 00:00:37,650
+to execute that behind the scenes SQL code so that we never have to write SQL code on our own.
+
+7
+00:00:37,750 --> 00:00:39,490
+It works like this,
+
+8
+00:00:39,520 --> 00:00:45,410
+we got our object let's say a user with a name, age, email and password but of course this can be anything,
+
+9
+00:00:45,430 --> 00:00:53,110
+could be a product, whatever you need and this is mapped to a database table by sequelize, so it automatically
+
+10
+00:00:53,110 --> 00:00:58,660
+creates that table for us even, it automatically sets up relations and tables even for us, it does all
+
+11
+00:00:58,660 --> 00:00:59,450
+that
+
+12
+00:00:59,450 --> 00:01:06,910
+and when we create a new user for example, we simply call a method on that user javascript object and
+
+13
+00:01:07,030 --> 00:01:12,880
+sequelize executes the SQL query or the SQL command that is required.
+
+14
+00:01:12,880 --> 00:01:18,720
+So instead of writing this on our own, we simply create a javascript object and work with that
+
+15
+00:01:18,760 --> 00:01:25,390
+and here would be one example using sequelize to create a new user which would behind the scenes execute the SQL
+
+16
+00:01:25,390 --> 00:01:28,490
+code we don't have to write. Sequelize
+
+17
+00:01:28,540 --> 00:01:32,770
+offers us the models to work with our database
+
+18
+00:01:32,770 --> 00:01:37,000
+as I showed you on the last slide and it allows us to define such models,
+
+19
+00:01:37,000 --> 00:01:43,350
+so basically define which data makes up a model and therefore which data will be saved in the database.
+
+20
+00:01:43,450 --> 00:01:50,590
+We can then instantiate these models, so these classes so to say, we can execute the constructor functions
+
+21
+00:01:50,650 --> 00:01:56,600
+or use utility methods to create let's say a new user object based on that model
+
+22
+00:01:56,890 --> 00:02:00,690
+so we have a connection here and we can then run queries on that.
+
+23
+00:02:00,760 --> 00:02:06,890
+That could be that we save a new user but it could also be that we find all users as an example
+
+24
+00:02:06,940 --> 00:02:12,730
+and here again, this always relates back to our model which we define with sequelize. And we can also
+
+25
+00:02:12,760 --> 00:02:14,410
+associate our models,
+
+26
+00:02:14,410 --> 00:02:18,620
+for example we could associate our user model to a product model.
+
+27
+00:02:18,670 --> 00:02:20,470
+So this is what sequelize does
+
+28
+00:02:20,500 --> 00:02:25,010
+but of course we dont just want to learn that in theory, we want to see that in practice.
+
+29
+00:02:25,090 --> 00:02:31,090
+So let's add sequelize to our project and let's slowly integrate it to manage our products in our cart and so
+
+30
+00:02:31,090 --> 00:02:32,680
+on through sequelize.

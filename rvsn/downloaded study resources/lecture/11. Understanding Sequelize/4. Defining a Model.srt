@@ -1,0 +1,283 @@
+1
+00:00:02,580 --> 00:00:08,000
+With the connection set up, let's go into our models folder and there to the product.js file
+
+2
+00:00:08,010 --> 00:00:12,360
+and there we can actually delete everything.
+
+3
+00:00:12,420 --> 00:00:16,530
+We don't need all of that right now, we'll write it from scratch. Here I
+
+4
+00:00:16,620 --> 00:00:18,690
+first of all need to import two things.
+
+5
+00:00:18,720 --> 00:00:21,800
+The first thing is sequelize itself,
+
+6
+00:00:21,810 --> 00:00:29,460
+so again I will require, whoops, require sequelize here and that will give me back a class or constructor
+
+7
+00:00:29,460 --> 00:00:30,150
+function
+
+8
+00:00:30,150 --> 00:00:34,700
+hence I name this here with a capital S.
+
+9
+00:00:34,780 --> 00:00:39,140
+The next thing I'll import is my database connection pool managed by sequelize,
+
+10
+00:00:39,220 --> 00:00:42,570
+I'll also name this sequelize but with lowercase s,
+
+11
+00:00:42,580 --> 00:00:48,610
+so I'll basically import what I export in my database.js file. Here
+
+12
+00:00:48,710 --> 00:00:55,460
+I will import this by requiring and then go up one level into util and then there to the database.js
+
+13
+00:00:55,460 --> 00:00:56,980
+file.
+
+14
+00:00:57,260 --> 00:00:58,830
+Now with these two things imported,
+
+15
+00:00:58,880 --> 00:01:04,100
+we can now define a model that will be managed by sequelize.
+
+16
+00:01:04,550 --> 00:01:10,820
+So here in this file below my imports, I'll create a new constant and I'll name it product because in the product.js
+
+17
+00:01:10,820 --> 00:01:11,580
+file
+
+18
+00:01:11,590 --> 00:01:13,530
+I want to define my product model.
+
+19
+00:01:13,940 --> 00:01:17,820
+Now this model is not defined as a class as we did it before
+
+20
+00:01:18,050 --> 00:01:21,260
+but instead I use sequelize with the lowercase s,
+
+21
+00:01:21,290 --> 00:01:27,380
+so my database connection pool which is more than a connection pool, it's actually a fully configured
+
+22
+00:01:27,380 --> 00:01:33,700
+sequelize environment which does also have the connection pool but also all the features of the sequelize
+
+23
+00:01:33,710 --> 00:01:34,690
+package
+
+24
+00:01:34,910 --> 00:01:42,500
+and there we can define a new model by calling define. The first name that is the model name and by the
+
+25
+00:01:42,500 --> 00:01:47,080
+way, here in the suggestion you also see an example and so on
+
+26
+00:01:47,210 --> 00:01:49,980
+as you do in the official docs of course.
+
+27
+00:01:50,390 --> 00:01:56,360
+Now the model name typically is a lowercase name and I'll name it product like this,
+
+28
+00:01:56,360 --> 00:01:59,750
+you are free to name this however you want but to follow along smoothly,
+
+29
+00:01:59,750 --> 00:02:07,880
+I recommend taking this name. The second argument defines the structure of our model and therefore also of
+
+30
+00:02:07,880 --> 00:02:10,970
+the automatically created database table.
+
+31
+00:02:10,970 --> 00:02:16,340
+This will be a javascript object and in there, we simply define the attributes or fields
+
+32
+00:02:16,400 --> 00:02:20,180
+our product should have, for example I want to have an ID.
+
+33
+00:02:20,390 --> 00:02:26,430
+Now an ID is then in turn defined with an object where I configured this attribute,
+
+34
+00:02:26,430 --> 00:02:34,330
+there for example we set the type and the type is now one of the types defined by the sequelize package.
+
+35
+00:02:34,340 --> 00:02:37,060
+So now I use sequelize with a capital S,
+
+36
+00:02:37,070 --> 00:02:44,230
+so from this import here and there you find a bunch of types like number or string,
+
+37
+00:02:44,450 --> 00:02:50,870
+so not var, char and so on but here you have the more javascript-ish names I could, would say and I want to
+
+38
+00:02:50,870 --> 00:02:59,260
+use an integer here because my ID will be a number starting at 1 and then incrementing. To make it increment,
+
+39
+00:02:59,310 --> 00:03:04,610
+I also configured this attribute to be auto-incrementing by setting auto-increment to true
+
+40
+00:03:04,930 --> 00:03:08,220
+and in case you're wondering how I do know all of that,
+
+41
+00:03:08,370 --> 00:03:14,420
+well again you find that in the official docs. On docs.sequelizejs.com,
+
+42
+00:03:14,490 --> 00:03:19,800
+you can dive into sequelize, learn more about how it works and how you can configure it and under model
+
+43
+00:03:19,800 --> 00:03:20,940
+definition,
+
+44
+00:03:20,940 --> 00:03:29,460
+you learn all about how to define a model, how you can define your different tags for the model and you
+
+45
+00:03:29,460 --> 00:03:34,170
+also see a list of all the supported data types, like the integer we just used.
+
+46
+00:03:34,200 --> 00:03:38,670
+So this is where you can learn more about this and I can tell you that I want this to be auto-incrementing
+
+47
+00:03:38,670 --> 00:03:41,750
+so I will set auto-increment to null, to true.
+
+48
+00:03:42,090 --> 00:03:48,420
+I also don't want to allow this value to be empty, so I will allow null to false because I don't want
+
+49
+00:03:48,420 --> 00:03:50,500
+to allow null values in there.
+
+50
+00:03:50,520 --> 00:03:51,620
+Last but not least,
+
+51
+00:03:51,660 --> 00:03:57,300
+I'll set primary key to true to basically define this as the primary key of the table which is an important
+
+52
+00:03:57,300 --> 00:04:05,950
+concept in SQL databases for retrieving the data and then also for later defining relations. With
+
+53
+00:04:05,990 --> 00:04:10,830
+that defined, a product of course also has other fields, for example a title.
+
+54
+00:04:10,970 --> 00:04:17,340
+Now we can again define a javascript object to configure it in detail or if you just want to set the type,
+
+55
+00:04:17,390 --> 00:04:19,800
+you can also use sequelize and then the type,
+
+56
+00:04:19,880 --> 00:04:24,980
+so this is a shortcut in case you only want to set the type, though you could argue that we also at least
+
+57
+00:04:24,980 --> 00:04:27,090
+want to set that this should never be null
+
+58
+00:04:27,230 --> 00:04:33,770
+but here as a demo, I will just assign the type. For the price I'll go back to the javascript object and
+
+59
+00:04:33,770 --> 00:04:43,440
+set the type to sequelize and then double and I will again set allow null to false to not allow null
+
+60
+00:04:43,440 --> 00:04:47,930
+values here. Then I will set my image
+
+61
+00:04:47,940 --> 00:04:58,160
+url here again to a javascript object where I set the type to sequelize string and I will set
+
+62
+00:04:58,610 --> 00:05:07,150
+allow null to false to not allow null values here. And last but not least, I also want to have a description
+
+63
+00:05:08,790 --> 00:05:18,520
+which also will have a type that is of type sequelize string and I will set allow null to false.
+
+64
+00:05:18,520 --> 00:05:20,470
+Now this is my product model,
+
+65
+00:05:20,470 --> 00:05:22,560
+last but not least we need to export it.
+
+66
+00:05:22,690 --> 00:05:30,030
+So below my model definition here,I'll simply use module exports and export my product here,
+
+67
+00:05:30,160 --> 00:05:34,410
+so this constant in which I define, store the defined model,
+
+68
+00:05:34,450 --> 00:05:36,600
+this gets exported here.
+
+69
+00:05:36,880 --> 00:05:39,460
+And with that, we made a huge step forward
+
+70
+00:05:39,520 --> 00:05:42,080
+and we can now start using this product.
+
+71
+00:05:42,090 --> 00:05:45,640
+Now let's see how we use it over the next lectures.

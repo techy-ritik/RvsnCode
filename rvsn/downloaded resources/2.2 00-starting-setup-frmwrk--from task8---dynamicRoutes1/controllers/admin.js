@@ -95,9 +95,14 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  Product.findByPk(prodId)
-  .then((foundProduct) => {
-      console.log('foundProduct',foundProduct)
+  // Product.findByPk(prodId)      // this approach of fetching product to be edited can be used as a common way but for specifying user we can use below approach
+  // .then((foundProduct) => {
+
+  req.user
+    .getProduct({ where: { id: prodId } }) //  here we can use .getProducts() for fetching the product with passed id to be edited , we use this which make sure that the product which we are fetching are belongs to the loggedIn user whose req.user object is created and it always return the product in form of array even there is single product fetched
+    .then((Products) => {
+      const foundProduct = Products[0]; //  as the product that is fetched through .getProducts are in array form so we have extract it out the actual product object and store in variable to use it further
+      console.log("foundProduct", foundProduct);
       if (!foundProduct) {
         //  here foundProduct will be negative only in case if findByPk is unable to fetch the product with the requested id and it will not be able to fetch the product only if it will not be there in the product.json file so if it will not be there in the file then it even not show up in admin page, so there is no way to hit edit button and request through admin page on any product for edit request which is not available in the admin page so in this logic this condn. is useless but it work when urll got manually changed and some invalid id got passed through that whihc is not in the database file so in that case this condition handles the application from crashing and shows the eroor we want to show the user
         return res.redirect("/");
@@ -114,7 +119,7 @@ exports.getEditProduct = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
-};
+};      
 
 
 exports.postEditProduct = (req, res, next) => {
@@ -124,35 +129,23 @@ exports.postEditProduct = (req, res, next) => {
   const UpdatedImageUrl = req.body.imageUrl;
   const updatedDescription = req.body.description;
 
-  // Product.findByPk(prodId)        // this approach of fetching product to be edited can be used as a common way but for specifying user we can use below approach
-  //   .then((foundProduct) => {    // here we can now store all the product details in temp. variable created with foundProduct as below becuase like this we just modify the properties here in js memory and then we can update these details further with database by calling save() sequelize method
-  //     foundProduct.title = updatedTitle;
-  //     foundProduct.price= updatedPrice;
-  //     foundProduct.description=updatedDescription;
-  //     foundProduct.imageUrl=UpdatedImageUrl
-  //     return foundProduct.save();    // here save() method is used to update the details in the fetched product as it works like when the product exist in the database then it update the changes in that product data and if the product doesn't exist then it will craete new product and save it there
-  //                               // and we have to return the save() method so that get promise response of whether it executed successfully or not
-  //   })  // and then handle the promise response of .save() in another chained then() block
-
-  req.user
-    .getProducts({ where: { id: prodId } }) //  here we can use .getProducts() for fetching the product with passed id to be edited , we use this which make sure that the product which we are fetching are belongs to the loggedIn user whose req.user object is created and it always return the product in form of array even there is single product fetched
-    .then((products) => {
-      const foundProduct = products[0]; //  as the product that is fetched through .getProducts are in array form so we have extract it out the actual product object and store in variable to use it further
+  Product.findByPk(prodId)        
+    .then((foundProduct) => {    // here we can now store all the product details in temp. variable created with foundProduct as below becuase like this we just modify the properties here in js memory and then we can update these details further with database by calling save() sequelize method
       foundProduct.title = updatedTitle;
-      foundProduct.price = updatedPrice;
-      foundProduct.description = updatedDescription;
-      foundProduct.imageUrl = UpdatedImageUrl;
-      return foundProduct.save(); // here save() method is used to update the details in the fetched product as it works like when the product exist in the database then it update the changes in that product data and if the product doesn't exist then it will craete new product and save it there
-      //                             and we have to return the save() method so that get promise response of whether it executed successfully or not
-    }) // and then handle the promise response of .save() in another chained then() block
-    .then(() => {
+      foundProduct.price= updatedPrice;
+      foundProduct.description=updatedDescription;
+      foundProduct.imageUrl=UpdatedImageUrl
+      return foundProduct.save();    // here save() method is used to update the details in the fetched product as it works like when the product exist in the database then it update the changes in that product data and if the product doesn't exist then it will craete new product and save it there
+                                // and we have to return the save() method so that get promise response of whether it executed successfully or not
+    })  // and then handle the promise response of .save() in another chained then() block
+.then(() => {
       console.log("product updated!!!");
       res.redirect("/products");
     })
     .catch((err) => {
       console.log(err);
     });
-};
+};   //  here we are not using association method in postEditProduct for fetching single product by id because as we have got into edit ptoduct page for the available product of current user through getEditProduct so postEditProduct will always hit for current user's product
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;

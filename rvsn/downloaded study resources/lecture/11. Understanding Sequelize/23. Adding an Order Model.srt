@@ -1,0 +1,195 @@
+1
+00:00:02,430 --> 00:00:05,400
+So our cart is looking pretty fine
+
+2
+00:00:05,730 --> 00:00:12,830
+and actually we have the old functionality again, now without storing anything in files but now working
+
+3
+00:00:12,900 --> 00:00:14,910
+with a database as we should.
+
+4
+00:00:15,840 --> 00:00:21,060
+Now one thing is missing and that are the orders. Now
+
+5
+00:00:21,120 --> 00:00:23,700
+I'll not add a real checkout flow here
+
+6
+00:00:23,940 --> 00:00:30,150
+but I want to have a checkout button in my cart which will basically for now immediately move all the
+
+7
+00:00:30,630 --> 00:00:33,500
+elements in this cart out of this cart,
+
+8
+00:00:33,540 --> 00:00:44,550
+so clear the cart and instead create a new order, an order that is related to a couple of products and
+
+9
+00:00:44,640 --> 00:00:46,220
+a user.
+
+10
+00:00:46,220 --> 00:00:50,680
+Now if you're feeling fancy, you can certainly try this on your own
+
+11
+00:00:51,080 --> 00:00:56,750
+otherwise we'll of course do it together here and we'll get there step by step
+
+12
+00:00:56,900 --> 00:01:01,100
+adding a simple checkout functionality.
+
+13
+00:01:01,220 --> 00:01:09,690
+Let's start with the model and for this, I'll create a new order.js file and copy my cart
+
+14
+00:01:09,700 --> 00:01:11,190
+item.js file,
+
+15
+00:01:11,190 --> 00:01:11,550
+move it in there,
+
+16
+00:01:11,580 --> 00:01:13,850
+import sequelize,
+
+17
+00:01:13,930 --> 00:01:17,610
+rename it here to order,
+
+18
+00:01:17,720 --> 00:01:22,870
+also here and now how should an order look like?
+
+19
+00:01:22,870 --> 00:01:32,920
+Well an order is in the end just an in-between table between a user to which the order belongs and then
+
+20
+00:01:33,100 --> 00:01:41,260
+multiple products that are part of the order and these products again do have a quantity attached to
+
+21
+00:01:41,260 --> 00:01:42,250
+them.
+
+22
+00:01:42,250 --> 00:01:51,280
+So just as we had cart items for the cart, I'll have order items for my order. So I can copy cart items
+
+23
+00:01:51,280 --> 00:01:59,390
+again, move that into order item and rename cart item here to order item, starting with a lowercase o
+
+24
+00:01:59,530 --> 00:02:06,600
+here in the string name definition and then it will have the same structure as an order, as in cart item
+
+25
+00:02:06,610 --> 00:02:12,910
+here in order item and the order itself will not have anything but the ID because the order essentially
+
+26
+00:02:12,910 --> 00:02:13,480
+is like the cart
+
+27
+00:02:13,490 --> 00:02:14,370
+here for me.
+
+28
+00:02:14,650 --> 00:02:19,600
+You could of course say an order has more information like an address and you could add this here,
+
+29
+00:02:19,600 --> 00:02:25,330
+you just have to make sure you add this for every order you create but that is essentially it.
+
+30
+00:02:25,380 --> 00:02:30,060
+Now regarding the relations, there is one important difference to the cart though.
+
+31
+00:02:30,100 --> 00:02:41,380
+If we go to the app.js file where we do set up all the relations, I'll import my order here from the order, whoops,
+
+32
+00:02:42,070 --> 00:02:49,360
+from the order file and I'll import my order item from the order item file
+
+33
+00:02:49,630 --> 00:03:00,420
+but now if we connect the models here at the bottom, we can say that an order belongs to a user and it doesn't
+
+34
+00:03:00,430 --> 00:03:05,980
+belong to many users because a single order is always belonging to one user who placed the order and the
+
+35
+00:03:05,980 --> 00:03:09,890
+user may of course have many orders, like this.
+
+36
+00:03:09,970 --> 00:03:11,890
+So this is not a many-to-many relationship,
+
+37
+00:03:11,950 --> 00:03:22,190
+it's a one to many relationship, one user can have many orders. Now an order however can belong to many
+
+38
+00:03:22,190 --> 00:03:29,390
+products and it does so with an in-between table which we specify with through which is our order item
+
+39
+00:03:29,480 --> 00:03:35,780
+table, like this and we can also define the inverse here if we want and that would be basically that a product
+
+40
+00:03:35,780 --> 00:03:38,840
+belongs to many orders but we can also leave it out here.
+
+41
+00:03:40,160 --> 00:03:41,170
+Now we get this set up.
+
+42
+00:03:41,180 --> 00:03:44,320
+now let me make sure we can sync again
+
+43
+00:03:44,320 --> 00:03:47,150
+so let's turn on forcing this.
+
+44
+00:03:47,480 --> 00:03:53,940
+If we now refresh our database, we should have new orders and order items, in orders
+
+45
+00:03:53,960 --> 00:03:57,740
+we see a connection to a user and in order items,
+
+46
+00:03:57,740 --> 00:04:05,420
+we see a connection to an order and to our product ID then. So this is now the set up we need to use
+
+47
+00:04:05,690 --> 00:04:09,820
+and I'll disable forcing this so that we don't overwrite tables all the time now.
+
+48
+00:04:10,150 --> 00:04:14,930
+So as a next step, let's make sure we have a checkout button and that this button does actually then
+
+49
+00:04:14,930 --> 00:04:17,180
+trigger something to create such a order.

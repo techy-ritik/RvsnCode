@@ -1,0 +1,223 @@
+1
+00:00:02,460 --> 00:00:05,070
+So let's ensure we can see items on the cart page
+
+2
+00:00:05,130 --> 00:00:09,890
+and the problem is that right now, this does not work because here on cart.ejs
+
+3
+00:00:09,910 --> 00:00:10,350
+.
+
+4
+00:00:10,360 --> 00:00:17,460
+we're still accessing product data for every product we loaded but the products we have here are
+
+5
+00:00:17,460 --> 00:00:20,850
+now just the products from our database.
+
+6
+00:00:21,000 --> 00:00:25,760
+So we don't need to access any nested product data
+
+7
+00:00:26,220 --> 00:00:33,360
+instead here, we'll just have p title, we'll have a look at the quantity in a second and pId down there,
+
+8
+00:00:33,360 --> 00:00:39,420
+so it directly access the fields of our products on well, the product we're looping through. Now the quantity
+
+9
+00:00:39,420 --> 00:00:46,710
+is not part of that but of the related cart item you could say and conveniently, sequelize also gives
+
+10
+00:00:46,710 --> 00:00:53,640
+us a cart item key for this which stores information about this in-between table and the entry that
+
+11
+00:00:53,640 --> 00:00:55,960
+is related to this product there.
+
+12
+00:00:56,460 --> 00:01:04,730
+So with this if we save this and we now reload this page, it still doesn't work because that should be
+
+13
+00:01:04,730 --> 00:01:06,280
+cart item with a capital I,
+
+14
+00:01:06,270 --> 00:01:08,930
+this is how I named my model.
+
+15
+00:01:08,960 --> 00:01:10,750
+So now you can see this works
+
+16
+00:01:10,910 --> 00:01:14,330
+and now we're displaying our cart item here
+
+17
+00:01:15,370 --> 00:01:19,120
+and that of course is not quantity but quantity,
+
+18
+00:01:19,120 --> 00:01:23,970
+so the key name we defined in our in-between table and now we see the quantity too.
+
+19
+00:01:24,010 --> 00:01:26,560
+So now we can see the cart items again,
+
+20
+00:01:26,740 --> 00:01:34,100
+now we can go back to making sure that we also handle the case that we add an existing item to the cart.
+
+21
+00:01:34,140 --> 00:01:40,050
+So let's make sure we also handle this case, that we add a product to the cart which is already part of the
+
+22
+00:01:40,050 --> 00:01:47,480
+cart and that should of course simply increment the quantity then. Therefore here if we make it into this
+
+23
+00:01:47,780 --> 00:01:56,700
+if block, I essentially want to get my old quantity first of all which I can get from my product by accessing
+
+24
+00:01:56,700 --> 00:02:00,450
+cart item as we just did it in the view in the last lecture,
+
+25
+00:02:00,450 --> 00:02:05,360
+this is this extra field that gets added by sequelize to give us access to this in-between table
+
+26
+00:02:05,730 --> 00:02:11,160
+and there to the quantity and sequelize does not just give us access to the in-between table but
+
+27
+00:02:11,160 --> 00:02:14,430
+to this exact product in the in-between table,
+
+28
+00:02:14,490 --> 00:02:19,210
+so therefore we get the quantity for this product as it's stored in the cart.
+
+29
+00:02:19,710 --> 00:02:24,520
+So now we have our old quantity and new quantity,
+
+30
+00:02:24,570 --> 00:02:32,640
+the variable we initialize with one here is now simply old quantity plus one.
+
+31
+00:02:32,740 --> 00:02:34,730
+With that we just have to add it to the cart,
+
+32
+00:02:34,750 --> 00:02:44,010
+so here I will return fetched cart to get access to the cart and then add product as I do it down there
+
+33
+00:02:44,010 --> 00:02:57,000
+too, add product and then simply my product here and my through call where I set my quantity to, whoops new
+
+34
+00:02:57,180 --> 00:03:00,030
+quantity just as I do it down there.
+
+35
+00:03:00,880 --> 00:03:08,630
+If we now wanted to avoid nested then blocks here, what we could do is we could add a new then block
+
+36
+00:03:08,630 --> 00:03:09,240
+here
+
+37
+00:03:10,380 --> 00:03:17,400
+where we get some data to which I'll come back, where we do handle this fetch cart thing which is the
+
+38
+00:03:17,400 --> 00:03:19,000
+same for both cases
+
+39
+00:03:19,020 --> 00:03:22,520
+essentially, we add a product with new quantity,
+
+40
+00:03:22,890 --> 00:03:26,280
+so we can certainly remove that
+
+41
+00:03:26,470 --> 00:03:31,690
+but now the difference is that data here actually should hold both the product that needs to be added
+
+42
+00:03:32,170 --> 00:03:33,790
+and our quantity
+
+43
+00:03:33,820 --> 00:03:36,350
+right because the quantity is calculated differently,
+
+44
+00:03:36,460 --> 00:03:47,050
+it either stays at one or here we set it to old quantity plus one. To make sure that we correctly get that
+
+45
+00:03:47,050 --> 00:03:54,460
+data, we can of course pull new quantity out of this anonymous function, make it a top level variable
+
+46
+00:03:54,760 --> 00:03:57,420
+in this overall function here
+
+47
+00:03:57,640 --> 00:04:03,990
+and therefore new quantity is available in all then blocks and we either leave it at one here
+
+48
+00:04:04,240 --> 00:04:11,490
+or if we got a product, we also need to return that product here because that will then be our product
+
+49
+00:04:13,200 --> 00:04:14,460
+we receive in the then block,
+
+50
+00:04:14,500 --> 00:04:17,240
+it's automatically wrapped by a promise as I mentioned earlier
+
+51
+00:04:17,480 --> 00:04:23,950
+and now we have a setup that should work again and that ultimately should ensure that we redirect.
+
+52
+00:04:23,950 --> 00:04:29,920
+So now let's see this, let's click add to cart again and the quantity indeed is two now
+
+53
+00:04:30,160 --> 00:04:42,190
+and if I add a second product here, this one with the price 66 and I add this to my cart, this is
+
+54
+00:04:42,220 --> 00:04:46,070
+now add 1. And that is now pretty neat,
+
+55
+00:04:46,100 --> 00:04:49,220
+we can now start adding all these products.
+
+56
+00:04:49,670 --> 00:04:52,730
+Now let's make sure we can also delete them from the cart.

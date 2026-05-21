@@ -1,0 +1,155 @@
+1
+00:00:02,290 --> 00:00:08,580
+From now on all new products that are created should be associated to the currently logged in user and
+
+2
+00:00:08,620 --> 00:00:15,460
+for now, this will only be this one dummy user. That means that if I'm in the admin.js controller, here
+
+3
+00:00:15,460 --> 00:00:21,090
+when we create a new product in post add product, we'll not create the product like this anymore,
+
+4
+00:00:21,190 --> 00:00:29,110
+we need to pass in extra information regarding our user that is associated. One way of doing this is
+
+5
+00:00:29,110 --> 00:00:37,030
+that we set this new user ID field we got, keep in mind user ID was added as a database field because
+
+6
+00:00:37,060 --> 00:00:43,190
+we now have a relation set up and we set this to request user ID,
+
+7
+00:00:43,330 --> 00:00:48,970
+keep in mind that request user is the sequelize user object which holds both the database data there for that
+
+8
+00:00:48,970 --> 00:00:51,660
+user as well as the helper methods.
+
+9
+00:00:52,060 --> 00:00:56,120
+So this should create new products with that user being associated to it,
+
+10
+00:00:57,130 --> 00:01:03,840
+let's test this. Let's go back to add product and simply enter some dummy values here for now,
+
+11
+00:01:04,580 --> 00:01:07,430
+seems to work, we get no error here
+
+12
+00:01:07,680 --> 00:01:14,600
+and if we look into our products table by clicking on this icon here, we indeed have the user ID stored
+
+13
+00:01:14,600 --> 00:01:15,600
+here.
+
+14
+00:01:15,650 --> 00:01:24,820
+Now we also have one tiny problem or thing we can improve at least. We manually fetch the user id and
+
+15
+00:01:24,820 --> 00:01:30,530
+this is not a lot of work here but there is a more elegant way of setting this so that we don't manually
+
+16
+00:01:30,530 --> 00:01:32,240
+have to set the user ID.
+
+17
+00:01:32,660 --> 00:01:40,250
+We can use another cool feature of sequelize, we can use our user object as it's stored in the request and
+
+18
+00:01:40,280 --> 00:01:46,790
+always keep in mind, this is a sequelize object with all the magic features and there we'll actually have
+
+19
+00:01:46,790 --> 00:01:49,030
+a create product method.
+
+20
+00:01:49,040 --> 00:01:50,650
+Now where is that coming from?
+
+21
+00:01:51,050 --> 00:01:57,590
+Well it is something you can get from the official docs if you read through associations. There you'll learn
+
+22
+00:01:58,010 --> 00:02:04,830
+that if you set up associations, sequelize add special methods depending on the association you added
+
+23
+00:02:05,120 --> 00:02:12,440
+and for a belongs to has many association as we did, sequelize adds methods that allow us for example
+
+24
+00:02:12,680 --> 00:02:16,820
+to create a new associated object.
+
+25
+00:02:16,820 --> 00:02:23,030
+So since a user has many products or a product belongs to a user
+
+26
+00:02:23,210 --> 00:02:32,220
+as we learned or as we set it up in app.js, since we have that relation defined, sequelize automatically
+
+27
+00:02:32,220 --> 00:02:40,020
+adds a create product method to the user. Create product because our model is named product and create
+
+28
+00:02:40,200 --> 00:02:44,280
+is then automatically added at the beginning of the method name,
+
+29
+00:02:44,280 --> 00:02:46,590
+that is some magic done by sequelize.
+
+30
+00:02:46,800 --> 00:02:53,850
+So create product is available and there we simply pass in the object with the product data that can't
+
+31
+00:02:53,850 --> 00:02:55,500
+be inferred by sequelize
+
+32
+00:02:55,590 --> 00:03:02,940
+so basically anything but the user ID and the timestamps and then we can chain our then and catch block here,
+
+33
+00:03:03,180 --> 00:03:04,850
+just as we did it before.
+
+34
+00:03:04,960 --> 00:03:09,270
+The rest doesn't change but this now automatically creates a connected model.
+
+35
+00:03:09,300 --> 00:03:19,130
+So if I now save this and I add a new product, this still works and if we have a look at our database and
+
+36
+00:03:19,130 --> 00:03:25,220
+we refresh the products table here, we see we also get the user ID here even though we did not set it
+
+37
+00:03:25,250 --> 00:03:26,420
+explicitly.
+
+38
+00:03:26,420 --> 00:03:33,680
+Now this is done by sequelize with this magic way of connecting it and that is a really cool way of
+
+39
+00:03:33,710 --> 00:03:40,020
+using associations in sequelize and making sure that our models know about each other.

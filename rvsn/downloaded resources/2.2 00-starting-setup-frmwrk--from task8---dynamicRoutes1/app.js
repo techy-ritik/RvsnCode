@@ -19,7 +19,7 @@ const shopRoutes = require('./routes/shop');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req,res,next)=>{   // we are registering this middleware here to store the user in the request with which that user will be made available to use anywhere in this project
+app.use((req,res,next)=>{   // we are registering this middleware here to store the user in the incoming request with which that user will be made available to use anywhere in this project
     //  here this middleware will always runs for every incoming request after the server get started inside sequelize as the npm always start the server first for which it has to execute sequelize.sync() first, so by the time this middleware get executed there will always be user available in the user table
     User.findByPk(1)
     .then((user)=>{
@@ -45,7 +45,7 @@ User.hasMany(Product);   // .hasMany() method works the same way as .belongsT() 
 sequelize.sync()       //  here when we use sequelize library with node.js then for creating table or for executing models where databse table is created, we have to run sequelize.sync inside app.js and also starts the server in then() as we know once we get the promise response of database creation or availability then only we can handle any data else there is now use of backend program
 // sequelize.sync({alter:true})        // here we use '{alter:true}' for updating the changes which is to be done in the model in the schema which is to be made after once the table is created 
 .then((res)=>{   // as we are not have any add User route yet so here we are adding dummy user for testing and execution of functionalities implimented after association of user and product model
-    return User.findByPk(1);   // it checks in the user table that whether anu user with the passed id is available in the table and return the recieved promise response and then it will be handled in nect chained .then()
+    return User.findByPk(1);   // it checks in the user table that whether any user with the passed id is available in the table and return the recieved promise response and then it will be handled in next chained .then()
 })
 .then((user)=>{
     if(!user){   // this if block will run if the user with the passed id is not available in the table and so here new user will get created 

@@ -1,0 +1,275 @@
+1
+00:00:02,540 --> 00:00:08,420
+To work with our new cart let's go to the controllers folder here and there to the shop.js file which
+
+2
+00:00:08,420 --> 00:00:16,580
+is where we have our cart related actions. Get products get product, get index, that is all working, get
+
+3
+00:00:16,580 --> 00:00:18,980
+cart however will not work.
+
+4
+00:00:20,200 --> 00:00:31,510
+In there, I want to use the cart associated with my existing user to get all the products in it and render
+
+5
+00:00:31,510 --> 00:00:33,120
+them to the screen.
+
+6
+00:00:33,670 --> 00:00:41,620
+For this, let's get rid of that code but I'll comment it out so that I easily can use my render function
+
+7
+00:00:41,620 --> 00:00:42,240
+again and
+
+8
+00:00:43,470 --> 00:00:50,060
+let's use request user, that's still the user stored in our request. By the way one important adjustment,
+
+9
+00:00:50,090 --> 00:00:57,150
+let's disable that force syncing again so that we don't always override any data we stored.
+
+10
+00:00:57,170 --> 00:01:02,870
+So let's go back to app.js, to shop.js excuse me and let's use the user we retrieve for every new
+
+11
+00:01:02,870 --> 00:01:07,070
+request and which we store in the request and there,
+
+12
+00:01:07,250 --> 00:01:14,130
+let's execute cart and let's look into this and see if this gives us anything meaningful.
+
+13
+00:01:15,870 --> 00:01:21,690
+If I now save this and I go to cart, it doesn't load the page
+
+14
+00:01:22,000 --> 00:01:23,900
+and if I go back we see undefined here,
+
+15
+00:01:23,950 --> 00:01:26,130
+so we can't access the cart like this.
+
+16
+00:01:26,530 --> 00:01:34,970
+But what we can do here is we can use our request user and get the cart which is associated to it. Let's
+
+17
+00:01:34,970 --> 00:01:36,440
+add then and catch,
+
+18
+00:01:41,220 --> 00:01:45,300
+here we'll get the cart and let's log the cart here.
+
+19
+00:01:46,750 --> 00:01:53,070
+If we save that and I reload this page, it still will not load
+
+20
+00:01:53,190 --> 00:01:57,010
+but now I get null here and not undefined.
+
+21
+00:01:57,020 --> 00:02:02,270
+Now the reason why we don't find anything here for either of the two approaches is that we got no carts
+
+22
+00:02:02,280 --> 00:02:02,760
+yet,
+
+23
+00:02:03,000 --> 00:02:09,720
+if we look into our database, carts is totally empty. Just as we create a user right at startup,
+
+24
+00:02:09,810 --> 00:02:14,740
+I'll create a cart for that user, so here I create a user.
+
+25
+00:02:14,950 --> 00:02:23,490
+Now in the next step where I get that user, I will also create a cart by adding user create cart, like this 
+
+26
+00:02:26,900 --> 00:02:32,390
+and I don't need to pass any data in there because cart in the beginning will not hold any special
+
+27
+00:02:32,390 --> 00:02:34,930
+data, it just needs to be there.
+
+28
+00:02:35,110 --> 00:02:40,290
+I'll then return this and only listen in the next step
+
+29
+00:02:41,300 --> 00:02:42,550
+where I get my cart
+
+30
+00:02:42,560 --> 00:02:53,140
+so to say and with this now set up, you see an insert into carts call is done here. If we now have a look into
+
+31
+00:02:53,140 --> 00:02:54,110
+our carts,
+
+32
+00:02:54,280 --> 00:03:02,250
+we see now we get a cart associated to our user with the ID 1 and now if I try to reload that carts
+
+33
+00:03:02,250 --> 00:03:13,230
+page again, here we now get some output and this output is stemming from our get cart call here,
+
+34
+00:03:13,490 --> 00:03:16,120
+so from this console log where I do log that cart,
+
+35
+00:03:16,200 --> 00:03:20,630
+so now this is working. Now for completeness sake,
+
+36
+00:03:20,630 --> 00:03:24,910
+let's also console log request user cart
+
+37
+00:03:24,920 --> 00:03:28,370
+again, does this also work?
+
+38
+00:03:28,560 --> 00:03:33,290
+If I reload here, this still is the old log
+
+39
+00:03:33,370 --> 00:03:36,590
+but if I scroll above it, we still see undefined.
+
+40
+00:03:36,610 --> 00:03:44,170
+So this does not work, we can't access cart as a property here but we can call get cart to work with the
+
+41
+00:03:44,170 --> 00:03:45,570
+cart.
+
+42
+00:03:45,610 --> 00:03:49,630
+So now we've got the cart available, we loaded the cart from the database,
+
+43
+00:03:49,630 --> 00:03:55,680
+we know more about that cart here. With the cart available,
+
+44
+00:03:55,840 --> 00:04:02,320
+we can use it to fetch the products that are inside of it by returning carts get products.
+
+45
+00:04:02,440 --> 00:04:11,220
+Remember a cart is associated to products in our app.js file through belongs to many and sequelize
+
+46
+00:04:11,230 --> 00:04:14,710
+will do the magic of looking into cart item and so on,
+
+47
+00:04:14,710 --> 00:04:15,900
+so into this
+
+48
+00:04:16,550 --> 00:04:24,270
+in-between table. So we can get products, this was added by sequelize as a magic method
+
+49
+00:04:25,510 --> 00:04:30,780
+and therefore here in this then block, we'll have products available
+
+50
+00:04:30,990 --> 00:04:34,230
+and here I'll again just log any error I get.
+
+51
+00:04:34,370 --> 00:04:40,720
+But in the then block here, we should have the products that are in this cart and that of course means that
+
+52
+00:04:40,720 --> 00:04:43,750
+we can now render these products.
+
+53
+00:04:43,750 --> 00:04:45,520
+So here I will render
+
+54
+00:04:48,430 --> 00:04:50,620
+my products here,
+
+55
+00:04:50,890 --> 00:04:54,250
+store them in products and pass them to the view.
+
+56
+00:04:54,270 --> 00:04:57,190
+Now this will not work as expected though,
+
+57
+00:04:57,310 --> 00:05:01,050
+if I now reload this page, we see no products in cart.
+
+58
+00:05:01,150 --> 00:05:06,850
+Now we got no products in a cart but we'll see that later once we do have them, it'll also not work but
+
+59
+00:05:06,850 --> 00:05:08,230
+I'll come back to that,
+
+60
+00:05:08,260 --> 00:05:12,090
+for now let's just have a look at our query statement.
+
+61
+00:05:12,100 --> 00:05:15,990
+We can see that this is the statement executed by sequelize
+
+62
+00:05:16,270 --> 00:05:21,910
+and if you didn't see it before, here we can definitely see the advantage we have by using a package
+
+63
+00:05:21,910 --> 00:05:22,690
+like this.
+
+64
+00:05:22,690 --> 00:05:25,490
+We don't have to write that SQL statement on our own,
+
+65
+00:05:25,540 --> 00:05:29,560
+we use sequelize and let it do that behind the scenes.
+
+66
+00:05:29,560 --> 00:05:35,440
+So before I come back to what we will have to do regarding getting the cart products, let's make sure
+
+67
+00:05:35,590 --> 00:05:37,630
+we can add products to the cart.
+
+68
+00:05:37,780 --> 00:05:44,380
+So for now I'll get rid of all that logic here and I will focus on adding products to the cart in the
+
+69
+00:05:44,380 --> 00:05:45,070
+next step.

@@ -1,0 +1,63 @@
+1
+00:00:02,310 --> 00:00:06,800
+In the last module, you learned how to use SQL in a nodejs application
+
+2
+00:00:06,800 --> 00:00:12,620
+and we did this at the example of a MySQL database which we want to use to store data.
+
+3
+00:00:12,620 --> 00:00:21,050
+Now we didn't complete the project with that SQL approach simply because in this module, we'll now implement
+
+4
+00:00:21,320 --> 00:00:27,220
+other features like for example working with the shopping cart with the help of sequelize.
+
+5
+00:00:27,260 --> 00:00:31,650
+This will still use a SQL database, still use the same
+
+6
+00:00:31,670 --> 00:00:38,240
+MySQL database actually behind the scenes or in the background as a database but the code we write
+
+7
+00:00:38,510 --> 00:00:40,200
+will be different.
+
+8
+00:00:40,490 --> 00:00:46,760
+Instead of SQL statements as we have them here and as we wrote them in the last module, we'll use
+
+9
+00:00:46,900 --> 00:00:54,410
+a third party package that allows us to work with javascript objects and convenient methods to create
+
+10
+00:00:54,440 --> 00:01:01,720
+new elements in the database, to edit them, to delete them or to find them and also to connect them
+
+11
+00:01:01,760 --> 00:01:06,570
+because you remember, a SQL database typically also works with relations
+
+12
+00:01:06,650 --> 00:01:10,040
+and we got lot of these in our current project.
+
+13
+00:01:10,040 --> 00:01:12,410
+So this is what we'll dive into in this module, 
+
+14
+00:01:12,410 --> 00:01:14,820
+you'll learn what exactly sequelize,
+
+15
+00:01:14,870 --> 00:01:21,170
+this third party package is and how you can use it and we'll then implement our products and our cart
+
+16
+00:01:21,260 --> 00:01:24,530
+and so on in this module with sequelize.

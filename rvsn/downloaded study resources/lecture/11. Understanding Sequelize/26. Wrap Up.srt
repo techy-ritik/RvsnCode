@@ -1,0 +1,75 @@
+1
+00:00:02,490 --> 00:00:10,500
+That's it for the SQL part of this course. You learned about SQL, that it's a database philosophy or
+
+2
+00:00:10,510 --> 00:00:19,350
+schema engine type that uses strict data schemas and relations in the databases that use SQL and
+
+3
+00:00:19,350 --> 00:00:27,840
+that you can easily connect to such databases with nodejs, with packages like MySQL too. There we
+
+4
+00:00:27,840 --> 00:00:30,600
+had to write all the SQL queries manually though
+
+5
+00:00:30,720 --> 00:00:36,000
+and you also have to configure the database manually, add tables manually, set up relations and that is
+
+6
+00:00:36,000 --> 00:00:38,880
+a lot of work and definitely something you need to learn
+
+7
+00:00:38,880 --> 00:00:43,230
+in addition to nodejs, it's its own language essentially
+
+8
+00:00:43,230 --> 00:00:50,100
+or you use packages like sequelize. Sequelize allows you to not write SQL queries but instead interact
+
+9
+00:00:50,100 --> 00:00:58,020
+with your database through models you define and not just models but also relations, so-called associations
+
+10
+00:00:58,140 --> 00:00:59,670
+in the sequelize world.
+
+11
+00:01:00,030 --> 00:01:05,850
+That gives you a lot of magic methods that allow you to easily connect data, add data, delete data,
+
+12
+00:01:05,880 --> 00:01:08,320
+basically what you saw in this module.
+
+13
+00:01:08,640 --> 00:01:13,200
+Now you could easily create an entire course just about SQL and sequelize
+
+14
+00:01:13,290 --> 00:01:18,500
+and that is not what this course is, it's the complete node course, not the complete sequelize
+
+15
+00:01:18,510 --> 00:01:24,780
+course. I strongly encourage you to dive into the sequelize docs if you plan on continuing with that to
+
+16
+00:01:24,830 --> 00:01:31,650
+learn all the ins and outs of this package and simply play around with it, build your own demo applications
+
+17
+00:01:31,890 --> 00:01:36,760
+and try out the different features, different types of relations and so on.
+
+18
+00:01:36,980 --> 00:01:44,310
+We'll move on here and we'll learn about a different way of storing data with a NoSQL approach in mongodb.
+
+19
+00:01:44,450 --> 00:01:47,250
+This is what we'll dive into in the next modules.
