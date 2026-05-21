@@ -5,15 +5,34 @@ const express = require("express");
 const app = express(); // app is  basically a server object which handle requests and runs the server
 
 const bodyParser = require("body-parser"); // this package is use to parse the data recieved through the req.body from the server
-// app.use(bodyParser.urlencoded({ extended: false })); // It is used to parse recieved data into usable object through req.body
-app.use(bodyParser.json({ extended: false }));  // while sending data from the .html file we will send it in json form now because urlencoded is mainly used for file like .ejs
+app.use(bodyParser.urlencoded({ extended: false })); // It is used to parse recieved data into usable object through req.body and this method(through .urlencoded()) of bodyParser used for handling data recieved from html page from the browser)
 // urlencoded means data is parsed as such it can be used to send in url as querry parameters
+
+// app.use(bodyParser.json({ extended: false }));  // As when we recieve data from frontend, from js file, then it also collects the html form data and send with axios to the backend then it will be in json format and so, for handling data of json format we have to use .json() in the bodyParser to use req.body for extracting the recieved data
 // extended : false is used here to keep the parsing format simple and if it change to true the parsing would become advanced and the result output data format got changed
 
 /** in modern express version we can directly use bodyParser through express as it now includes this internally */
-// app.use(express.json({ extended: false }));  
+// app.use(express.json({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public"))); // with express.static() builtin middleware, folder is statically handled and set as global root of the files inside it by the express for accessing the files inside it anywhere directly , here this set the public folder as static folder globally and files inside this, can we accessed anywhere directly
+
+const productModel = require("./models/product");
+const userModel = require("./models/user");
+
+app.use((req, res, next) => {
+  // we are registering this middleware here to store the user in the incoming request with which that user will be made available to use anywhere in this project
+  //  here this middleware will always runs for every incoming request after the server get started inside sequelize as the npm always start the server first for which it has to execute sequelize.sync() first, so by the time this middleware get executed there will always be user available in the user table
+  userModel
+    .findByPk(1)
+    .then((user) => {
+      req.user = user; //  here we are creating a sequelize object of user instance just like req.body and req.params through which it gives access to use user table data anywhere in the project by calling the table field with this(req.user) object
+      next(); // we have to call next() so that other code can we executed once the execution context finish creating the object inside this middleware
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});  // we have to register this middleware before the routes because the sequelize object created in this middleware has to be used in the controller which is to be executed through routes and that controller has to be executed after this middleware for availing the object and as we know execution context runs in up to down sequence so to run route after this middleware we have to reqgister this middleware before routes
+
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -24,19 +43,20 @@ app.use("/", shopRoutes);
 const error404Controller = require("./controllers/404");
 app.use("/", error404Controller.use404);
 
-const productModel = require('./models/product');
-const userModel = require('./models/user')
+
+
+
 productModel.belongsTo(userModel,{constraints:true,onDelete:'CASCADE'});   // here .belongsTo() is used for establishing association between the two tables in which it means that Product table will be connected with the user table and will add an userId column in product table as foreign key which will be the primary key of the user table and it shows that how many product of the product table belongs to single user for which, through userId it is identified (it's like,- a single userId will be added with all the products row to which all those product belongs)
 userModel.hasMany(productModel);   // .hasMany() method works the same way as .belongsT() does, as it also establishes association between user and product table and it means that a user will have many Products from the product table i.e. one userId will be available in mutiple product row to which all those product belongs
         //               we can use anyone of the methods for the same work but we use both so that sequelize can generate helper functions for other method implimentations. And usually both are used together for complete association of tables
-        //                here we have passed an object in .belongsTo() where we define rules for the association in which "constraints" is set true for the authenticity purpose which means the userId which is get added in the product table must be there in the user table and if unAvailable userId detected then database throws err and "onDelete" is set for -> when any user got deleted from the user table then all the product containing the user's userId will also get deleted automatically
+        //                here we have passed an object in .belongsTo() where we define rules for the association in which, "constraints" is set true for the authenticity purpose which means the userId which is get added in the product table must be there in the user table and if unAvailable userId detected then database throws err and "onDelete" is set for -> when any user got deleted from the user table then all the product containing the user's userId will also get deleted automatically
 
 
 const sequelize = require("./util/database");
 
-sequelize.sync({ alter: true })    // here we use '{alter:true}' for updating the changes which is to be done in the model in the schema which is to be made after once the table is created
-  // sequelize
-  //   .sync()
+// sequelize.sync({ alter: true })    // here we use '{alter:true}' for updating the changes which is to be done in the model in the schema which is to be made after once the table is created
+  sequelize
+    .sync()
     .then((res)=>{
       // as we don't have any add User route yet so here we are adding dummy user for testing and execution of functionalities implimented after association of user and product model
       return userModel.findByPk(1); // it checks in the user table that whether any user with the passed id is available in the table and return the recieved promise response and then it will be handled in next chained .then()
@@ -49,9 +69,9 @@ sequelize.sync({ alter: true })    // here we use '{alter:true}' for updating th
           email: "ritikeshjee@gmail.com",
         });
       }
-      return user; // here if the user is not available and the if condition runs then new user will be created and returned and if user available then the user recieved in the response will be returned as it is and then the returned promise response will be handled in next chained .then()
+      return user; // here if the user is available then the user recieved in the response will be returned as it is and then the returned promise response will be handled in next chained .then()
     })
-    .then((res) => {
+    .then((res) => {   // here in this .then() block there will always be user available because in previous .then() the user will get returned iin any case whether it's already available in the table or by creating new user
       // console.log(res)
     app.listen(3000); // it creates and also starts the server
     //                  we have added it in then() of sync bcz we want to start the server once it get confirmed that the database is created and avaialable to handle data

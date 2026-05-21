@@ -13,12 +13,19 @@ exports.postAddProduct = (req, res, next) => {
   // we can use .get or .post in place of .use as for which method incoming request we are using this middleware and route. (Here .post is used bcz incoming request is post method of the form)
   console.log("req.body", req.body); // data sent back by the server which we Post on the server can we recived through req.body
 
-  productModel
-    .create({      // here we can use .create() builtIn method of sequelize to directly save fetched data from the form input to the model(i.e. database table) and the data is added in the form of object inside create parenthysis where key are the fields of the table and value are those input values which is fethced from the form
+  // productModel    // we had used this when only product model was there and after adding association with user model we use following createProduct() method
+  //   .create({      // here we can use .create() builtIn method of sequelize to directly save fetched data from the form input to the model(i.e. database table) and the data is added in the form of object inside create parenthysis where key are the fields of the table and value are those input values which is fethced from the form
+  //     title: req.body.title,
+  //     price: req.body.prc,
+  //   })
+
+  req.user       //  we can use req.user sequelize object for functionilities like creating and fetching object in association with user model
+    .createProduct({      // here we can use .createProduct() which is a special method provided by sequelize when we create sequelize object using model instance like, we have created req.user in this project and so when we use this method for creating product then the current user's id will automatically got saved as userId with the added product in product table
       title: req.body.title,
       price: req.body.prc,
     })
-    .then(() => {      //  and we also have to handle the response promise with then so that we get assurance of data correctly stored in database
+    .then(() => {
+      //  and we also have to handle the response promise with then so that we get assurance of data correctly stored in database
       console.log("product added!!");
       // res.redirect("/");   // here we have to add .redirect() inside the .then(), so that it executes after the .save() method execution got finished and return the promise response
     })
@@ -43,8 +50,10 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.getProductShop = (req, res, next) => {
   // res.sendFile(path.join(__dirname,'..','views','shop.html'))  //we can use '../' or '..' to go to one level upper folder
-  productModel
-    .findAll()  //  here this findAll() method fetches all the saved product from the table(model) and we can set conditions also like where,like etc. in for of object inside paraenthysis, as we used to execute in sql queries
+  // productModel
+  //   .findAll()    // here this findAll() method fetches all the saved product from the table(model) and we can set conditions also like-> where,like etc. in for of object inside paraenthysis, as we used to execute in sql queries
+    
+    req.user.getProducts()
     .then((storedProducts) => {
       // we can use .then and .catch for handling fetched data from database with promises here as we have exported promise from the database util with the sql database
       // here we are using array destructuring as when output the fetched data in for of result in then block then we have to separately store the array's elements like 'const rows = res[0]; and cosnt fieldData = res[1]; ' but with array destructuring we can directly pullout those data in the passed arguments like 1st arg. get index 0 element stored and so on
@@ -77,7 +86,7 @@ exports.getEditProduct = (req, res, next) => {
     return res.sendFile(path.join(rootDir, "views", "404.html"));
   }
   const productId = req.params.productId;
-  productModel.findByPk(productId)
+  productModel.findByPk(productId)  
   .then((fetchedProductById) => {
     if (!fetchedProductById) {
       //  here fetchedProductById will be negative only in case if fetchOneProduct is unable to fetch the product with the requested id and it will not be able to fetch the product only if the product of the requested id will not be there in the product.json file so if it will not be there in the file then it even not show up in admin page, so there is no way to hit edit button and request through admin page on any product for edit request which is not available in the admin page so in this logic this condition is useless but it work when url got manually changed and some invalid id got passed through that which is not in the database file so in that case this condition handles the application from crashing and shows the error whatever we want to show to the user
@@ -93,7 +102,7 @@ exports.getEditProduct = (req, res, next) => {
   .catch((err=>{
     console.log(err);
   }))
-};
+};   //  here we need not use association method for getting edit product because as we fetch all the product in admin product page using association, so there will only be those products available which belongss to the curret loggedIn user
 
 exports.postEditProduct = (req, res, next) => {
 
@@ -114,7 +123,7 @@ exports.postEditProduct = (req, res, next) => {
   .catch((err)=>{
     console.log(err)
   })
-};
+};  //  here we are not using association method in postEditProduct for fetching single product by id because as we fetch all the product in admin product page using association, so there will only be those products available which belongss to the curret loggedIn user
 
 
 exports.postDeleteProduct = (req, res, next) => {
