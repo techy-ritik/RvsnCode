@@ -5,8 +5,11 @@ const bodyParser = require('body-parser');
 
 const errorController = require('./controllers/error');
 const sequelize = require('./util/database')
+
 const Product = require('./models/product');
 const User = require('./models/user')
+const Cart = require('./models/cart')
+const CartItem = require('./models/cart-item')
 
 const app = express();
 
@@ -36,14 +39,35 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
+
+/*** Association types:- */
+// >> A general convention for association is that when we use hasOne,hasMany type of association methods then  a new column of id with the field name using source model(the table with which association starts) has been added in the target-model(the table which is in the paranthesis) as it's connection-id(foreign key). (e.g. are as below)
+//                                             and when we use belongsTo, belongsToMany type of methods then the new column of id with the field name using target-model(the table which is in the paranthesis) get added in the source-model(the table with which association starts) as it's connection-id(foreign key). (e.g. are as below)
+
+/** one to many relationship methods between models(tables) */
 Product.belongsTo(User,{constraints:true,onDelete:'CASCADE'})   // here .belongsTo() is used for establishing association between the two tables in which it means that Product table will be connected with the user table and will add an userId column in product table as foreign key which will be the primary key of the user table and it shows that how many product of the product table belongs to single user for which, through userId it is identified (it's like,- a single userId will be added with all the products row to which all those product belongs)
 User.hasMany(Product);   // .hasMany() method works the same way as .belongsT() does, as it also establishes association between user and product table and it means that a user will have many Products from the product table i.e. one userId will be available in mutiple product row to which all those product belongs
-        //               we can use anyone of the methods for the same work but we use both so that sequelize can generate helper functions for other method implimentations. And usually both are used together for complete association of tables
-        //                here we have passed an object in .belongsTo() where we define rules for the association in which "constraints" is set true for the authenticity purpose which means the userId which is get added in the product table must be there in the user table and if unAvailable userId detected then database throws err and "onDelete" is set for -> when any user got deleted from the user table then the product containign the user's userId will also get deleted automatically
+    //               we can use anyone of the methods for the same work but we use both so that sequelize can generate helper functions for other method implimentations. And usually both are used together for complete association of tables
+    //                here we have passed an object in .belongsTo() where we define rules for the association in which "constraints" is set true for the authenticity purpose which means the userId which is get added in the product table must be there in the user table and if unAvailable userId detected then database throws err and "onDelete" is set for -> when any user got deleted from the user table then the product containign the user's userId will also get deleted automatically
+
+/** one to one relationship between models(tables)*/
+User.hasOne(Cart);
+Cart.belongsTo(User);     
+  //  here with this type of association there is one to one relation is set between user and cart where one user will be connected with single cart and also one cart is linked to a single user
+  //  after the connection, here a new column, userId will get added in the cart model which will be the foreign key for the cart table and primary key for the user table
+  //  we can also use only, any one of the two association to create one to one relation between user and the cart as both works the same way and is reverse of each other
+
+/** many to many relationship between models(tables) */
+// for establishing many to many relation between two table we need to create connection in a 3rd table as it will store id of both the table and for that we need to pass the it in the association
+
+Cart.belongsToMany(Product, { through: CartItem });   // here we are passing 2nd argument for establishing many to many relation between cart and product in the cartItem table
+Product.belongsToMany(Cart, { through: CartItem });
+    // as this is a many to many type of relationship where one cart can have many products and one product can be added in mutiple cart
+    //  when we create relation of many to many then we need an intermediate table which connects both the table where primary key of both the table got stored as foreign key in the form of their namedId(as productId and cartId) in this table
 
 
-sequelize.sync()       //  here when we use sequelize library with node.js then for creating table or for executing models where databse table is created, we have to run sequelize.sync inside app.js and also starts the server in then() as we know once we get the promise response of database creation or availability then only we can handle any data else there is now use of backend program
-// sequelize.sync({alter:true})        // here we use '{alter:true}' for updating the changes which is to be done in the model in the schema which is to be made after once the table is created 
+// sequelize.sync()       //  here when we use sequelize library with node.js then for creating table or for executing models where databse table is created, we have to run sequelize.sync inside app.js and also starts the server in then() as we know once we get the promise response of database creation or availability then only we can handle any data else there is now use of backend program
+sequelize.sync({alter:true})        // here we use '{alter:true}' for updating the changes which is to be done in the model in the schema which is to be made after once the table is created 
 .then((res)=>{   // as we are not have any add User route yet so here we are adding dummy user for testing and execution of functionalities implimented after association of user and product model
     return User.findByPk(1);   // it checks in the user table that whether any user with the passed id is available in the table and return the recieved promise response and then it will be handled in next chained .then()
 })
