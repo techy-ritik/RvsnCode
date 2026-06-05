@@ -13,7 +13,7 @@ const Cart = sequelize.define('cart',{
 
 module.exports = Cart;
 
-
+//  as we know a single cart can have multiple products so we cannot store product in this model because as the primary key which is the id of the cart in each row has to be unique id of the cart, so for this, a new model is added i.e. cart-item where multiple products can be stored with the cartId and the productId
 
 
 

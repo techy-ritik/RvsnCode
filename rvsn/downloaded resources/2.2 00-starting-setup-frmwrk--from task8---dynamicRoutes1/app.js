@@ -52,7 +52,7 @@ User.hasMany(Product);   // .hasMany() method works the same way as .belongsT() 
 
 /** one to one relationship between models(tables)*/
 User.hasOne(Cart);
-Cart.belongsTo(User);     
+Cart.belongsTo(User);
   //  here with this type of association there is one to one relation is set between user and cart where one user will be connected with single cart and also one cart is linked to a single user
   //  after the connection, here a new column, userId will get added in the cart model which will be the foreign key for the cart table and primary key for the user table
   //  we can also use only, any one of the two association to create one to one relation between user and the cart as both works the same way and is reverse of each other
@@ -64,10 +64,11 @@ Cart.belongsToMany(Product, { through: CartItem });   // here we are passing 2nd
 Product.belongsToMany(Cart, { through: CartItem });
     // as this is a many to many type of relationship where one cart can have many products and one product can be added in mutiple cart
     //  when we create relation of many to many then we need an intermediate table which connects both the table where primary key of both the table got stored as foreign key in the form of their namedId(as productId and cartId) in this table
+    // here we can create cartItem table with both cartId and productId for establishing relation, with only one of these many to many association only but for getting helper function for both cart and product models we have to set association both ways
+ 
 
-
-// sequelize.sync()       //  here when we use sequelize library with node.js then for creating table or for executing models where databse table is created, we have to run sequelize.sync inside app.js and also starts the server in then() as we know once we get the promise response of database creation or availability then only we can handle any data else there is now use of backend program
-sequelize.sync({alter:true})        // here we use '{alter:true}' for updating the changes which is to be done in the model in the schema which is to be made after once the table is created 
+sequelize.sync()       //  here when we use sequelize library with node.js then for creating table or for executing models where databse table is created, we have to run sequelize.sync inside app.js and also starts the server in then() as we know once we get the promise response of database creation or availability then only we can handle any data else there is now use of backend program
+// sequelize.sync({force:true})        // here we use '{alter:true}' for updating the changes which is to be done in the model in the schema which is to be made after once the table is created 
 .then((res)=>{   // as we are not have any add User route yet so here we are adding dummy user for testing and execution of functionalities implimented after association of user and product model
     return User.findByPk(1);   // it checks in the user table that whether any user with the passed id is available in the table and return the recieved promise response and then it will be handled in next chained .then()
 })
@@ -77,12 +78,15 @@ sequelize.sync({alter:true})        // here we use '{alter:true}' for updating t
     }
     return user;   // here if the user is not available and the if condition runs then new user will be created and returned and if user available then the user recieved in the response will be returned as it is and then the returned promise response will be handled in next chained .then()
 })
+.then((user)=>{
+    // console.log(user);
+    return user.createCart();   //  here we are also creating dummy cart with the use of magic methods which we got through association of user and cart for the dummy user we have added for testing purpose and we are not passing any data because there need not to be any data in the table at the time of table creation as it will later store the data of that user 
+        //                      //   after that the server will be started in the next .then() when the response get recieved for successful cart creation 
+})
 .then((res)=>{
-    // console.log(res);
-    app.listen(3000);   // we have added in then() of sync bcz we want to start the server once it get confirmed that the database is created and avaialable to handle data
+  app.listen(3000); // we have added in then() of sync bcz we want to start the server once it get confirmed that the database is created and avaialable to handle data
 })
 .catch((err)=>{
     console.log(err);
 })
-
 

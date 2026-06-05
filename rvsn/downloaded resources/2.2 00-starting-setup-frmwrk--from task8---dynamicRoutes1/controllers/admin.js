@@ -99,7 +99,7 @@ exports.getEditProduct = (req, res, next) => {
   // .then((foundProduct) => {
 
   req.user
-    .getProduct({ where: { id: prodId } }) //  here we can use .getProducts() for fetching the product with passed id to be edited , we use this which make sure that the product which we are fetching are belongs to the loggedIn user whose req.user object is created and it always return the product in form of array even there is single product fetched
+    .getProducts({ where: { id: prodId } }) //  here we can use .getProducts() for fetching the product with passed id to be edited , we use this which make sure that the product which we are fetching are belongs to the loggedIn user whose req.user object is created and it always return the product in the form of array, even there is single product has been fetched
     .then((Products) => {
       const foundProduct = Products[0]; //  as the product that is fetched through .getProducts are in array form so we have extract it out the actual product object and store in variable to use it further
       console.log("foundProduct", foundProduct);
