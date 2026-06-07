@@ -8,10 +8,11 @@
                 <ul>
                     <% products.forEach(crntP=>{ %>
                         <li>
-                            <p><%= crntP.productData.title %> (<%= crntP.qty %>)</p>   <!-- here we want to display only title and qty of the product so we have to pass them individually with the help of ejs and not complete product -->
+
+                            <!-- earlier while using file system for data storing, then we were using object format for data storing in which productData key has been used so that's why in earlier code productData is used but as of now we are using mySql so here we can directly pass .title for cart page to display -->
+                            <p><%= crntP.title %> (Quantity : <%= crntP.cartItem.quantity %>)</p>   <!-- here, for passing quantity, we have to get it from cartItem which is received as the one of the key of the product object in which all the data of the cartItem will be avaiable for that product -->
                             <form action="/cart-delete-item" method="post">
-                                <input type="hidden" name="productId" id="productId" value="<%= crntP.productData.id %>">
-                                <!-- <input type="hidden" name="productPrice" id="productPrice" value="<%= crntP.productData.price %>">  -->
+                                <input type="hidden" name="productId" id="productId" value="<%= crntP.id %>">
                                 <button type="submit" class="btn" >Delete</button>
                             </form>
                         </li>  
