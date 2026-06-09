@@ -18,6 +18,10 @@ router.post('/cart',shopController.postCart);
 
 router.post("/cart-delete-item",shopController.postCartDeleteProduct);   // here with this route of post request form is sent from the client to the server containing input data with them
 
+/** quantity adjustment added by self*/
+router.post("/cart-quantity",shopController.cartProductQuantity);  
+
+
 router.get('/orders', shopController.getOrders);
 
 router.get('/checkout', shopController.getCheckout);

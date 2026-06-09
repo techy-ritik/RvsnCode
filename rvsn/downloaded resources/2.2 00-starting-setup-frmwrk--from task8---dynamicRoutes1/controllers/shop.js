@@ -139,17 +139,16 @@ exports.getCart = (req, res, next) => {
         .then((products) => {
           // here the recieved response(products) in .then() will have product details from instance of product model of those items which is available in cartItem model
           // here the 'products' argument will have the data from the cartItem also as because when call .getProducts here then it fetches data from the junction table(cartItem) also, so it stores all the data of the cartItem separately as an object with other fields of the product(e.g. product : {id:1,title:pen,cartItem:{cartId:1,productId:1,quantity:3}})
-          console.log("getCartProducts", products);   // here we are getting output as the product details are stored inside datavalues object which is inside the array i.e.->(products[datavalues{product fields}]) so in normal js we have to use product[0].datavalues.title for getting title or any detials of the product but as we use sequelize here so in sequelize it uses getter method internally by which we can acces any product field directly with reference to product like->(product[0].title) so we are passing the products array directly for rendering where all field can be accessed directly
+          console.log("getCartProducts", products); // here we are getting output as the product details are stored inside datavalues object which is inside the array i.e.->(products[datavalues{product fields}]) so in normal js we have to use product[0].datavalues.title for getting title or any detials of the product but as we use sequelize here so in sequelize it uses getter method internally by which we can acces any product field directly with reference to product like->(product[0].title) so we are passing the products array directly for rendering where all field can be accessed directly
           res.render("shop/cart", {
             path: "/cart",
             pageTitle: "Your Cart",
             products: products,
           });
-
         }) //  we can also use nested .then() block for getting response from the promise which we returning in previous .then() but it is better to do it in chained .then() when we return any promise in previous .then()
-        .catch((err)=>{
+        .catch((err) => {
           console.log(err);
-        })
+        });
     })
     .catch((err) => {
       console.log(err);
@@ -184,7 +183,7 @@ exports.postCart = (req, res, next) => {
       }
 
       return Product.findByPk(prodId); // here if the product is not available in the cart then we will fetch that product from the product table and then it got added in the cart while handling this promise response in the .then()
-//  // here we are using nested .then() becuase with this we can access and use variables that has been initiated in it's outer scope i.e. upper .then() block without manually returning(passing) from there ; and it has received the fetched product by prodId through product argument
+      //  // here we are using nested .then() becuase with this we can access and use variables that has been initiated in it's outer scope i.e. upper .then() block without manually returning(passing) from there ; and it has received the fetched product by prodId through product argument
       // .then((product)=>{
       //   return fetchedCart.addProduct(product, {
       //     through: { quantity: newQuantity },
@@ -203,13 +202,102 @@ exports.postCart = (req, res, next) => {
       }); //  here when we use this .addProduct() magic method then it adds new record in the junction table with through keyword and also when we wants to update some field of already existing record then it also does that like here it's updating the quantity of the existing product
     })
     .then(() => {
-      res.redirect("/cart");
       console.log("cart updated with product");
+      res.redirect("/products");
     })
     .catch((err) => {
       console.log(err);
     });
 };
+
+exports.postCartDeleteProduct = (req, res, next) => {
+  console.log("inside postCartDeleteProduct");
+  const prodId = req.body.productId;
+  console.log("prodId to delete", prodId);
+
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts({ where: { id: prodId } });
+    })
+    .then((products) => {
+      const product = products[0];
+      return product.cartItem.destroy(); // here like this we can delete product from only cartItem(junction table) and not from the products table and with that the produc will get only removed from cart page and not from products page
+    })
+    .then(() => {
+      console.log("product deleted from cart");
+      res.redirect("/cart");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  // here for deleting product from the cart we are first accessing the cart through req.user.getCart and then we are fetching product thorugh .getProducts() from product table and when we destroy the fetched tproduct then it will delete it from the cartItem(junction table) also
+
+  /** alt. approach(functionality) done by self(not added by trainer) for deleting product only from cart page and not from products page by fetching product directly from cartItem without accessing cartitem through cart and product model junction mode*/
+  // req.user
+  //   .getCart()
+  //   .then((cart) => {
+  //     const fetchedCartId = cart.id;
+  //     console.log("cartId", fetchedCartId);
+  //     return cartItem.findOne({
+  //       where: { productId: prodId, cartId: fetchedCartId },
+  //     }); // here we are using findOne() method of sequelize to fetch single row(product) from the cartItem using id other than primaryKey
+  //   })
+  //   .then((product) => {
+  //     // console.log("product to delete", product);
+  //     return product.destroy();
+  //   })
+  //   .then(() => {
+  //     console.log("product deleted from cart");
+  //     res.redirect('/cart')
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+};
+
+/** quantity adjustment functionality added by self choice(not added by trainer) */
+exports.cartProductQuantity = (req, res, next) => {
+  const prodId = req.body.productId;
+  let fetchedCart;
+  req.user
+    .getCart()
+    .then((cart) => {
+      fetchedCart = cart;
+      return fetchedCart.getProducts({ where: { id: prodId } });
+    })
+    .then((products) => {
+      // console.log("fetchedProductsForIncrease", products);
+      const oldQuantity = products[0].cartItem.quantity;
+
+      let newQuantity;
+      const action = req.body.action; // we are accessing button type by extracting it through req.body from recieved data of the client side in which name of button is set as 'action' and value as incrrease for '+' and decrease for '-', so with the use of this we can handle quantity adjustment on click of the "+" or "-" button
+      console.log("action", action);
+      if (action == "decrease") {
+        if (oldQuantity <= 1) {
+          return products[0].cartItem.destroy(); // here like this we can delete product from only cartItem(junction table) and not from the products table and with that the produc will get only removed from cart page and not from products page
+        }
+        newQuantity = oldQuantity - 1;
+      } else {
+        newQuantity = oldQuantity + 1;
+      }
+      return fetchedCart.addProduct(products[0], {
+        through: { quantity: newQuantity },
+      });
+    })
+    .then(() => {
+      console.log("quanity updated!!");
+      res.redirect("/cart");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+
+
+
+
 
 /** initially worked with fileSystem database and now after adding sql database fileSystem is removed so I've commented it for the added comment notes*/
 
@@ -286,17 +374,17 @@ exports.postCart = (req, res, next) => {
 //   }); // here for passing product price we have to fetch single product from the id for that we have to call findById and then we can pass id and price in the addProduct method of cart model
 // };
 
-exports.postCartDeleteProduct = (req, res, next) => {
-  console.log("inside postCartDeleteProduct");
-  const prodId = req.body.productId;
-  // const ProdPrice = req.body.productPrice;      // we could have also extracted the product price by passing it through the form hidden input
+// exports.postCartDeleteProduct = (req, res, next) => {
+//   console.log("inside postCartDeleteProduct");
+//   const prodId = req.body.productId;
+//   // const ProdPrice = req.body.productPrice;      // we could have also extracted the product price by passing it through the form hidden input
 
-  Product.findById(prodId, (product) => {
-    // with this approch we can get product price without depending on the client side for sending the price data and it's good to remove dependency on client side for data, as much possible as it can be
-    Cart.deleteCartProductById(prodId, product.price);
-    res.redirect("/cart");
-  });
-};
+//   Product.findById(prodId, (product) => {
+//     // with this approch we can get product price without depending on the client side for sending the price data and it's good to remove dependency on client side for data, as much possible as it can be
+//     Cart.deleteCartProductById(prodId, product.price);
+//     res.redirect("/cart");
+//   });
+// };
 
 exports.getOrders = (req, res, next) => {
   res.render("shop/orders", {
