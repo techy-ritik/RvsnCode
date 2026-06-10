@@ -1,38 +1,64 @@
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: sans-serif;
-      }
-      main {
-        padding: 1rem;
-      }
-      .main-header {
-        width: 100%;
-        height: 3.5rem;
-        background-color: rgb(230, 214, 71);
-        padding: 0 1.5rem;
-      }
-      .main-header__nav {
-        height: 100%;
-        display: flex;
-        align-items: center;
-      }
-      .main-header__item-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-      }
-      .main-header__item {
-        margin: 0 1rem;
-        padding: 0;
-      }
-      .main-header__item a {
-        text-decoration: none;
-        color: rgb(1, 43, 49);
-      }
-      .main-header__item a:hover,
-      .main-header__item a:active,
-      .main-header__item a.active {
-        color: rgb(159, 3, 255);
-      }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+main {
+  padding: 1rem;
+}
+.main-header {
+  width: 100%;
+  height: 3.5rem;
+  background-color: rgb(230, 214, 71);
+  padding: 0 1.5rem;
+}
+.main-header__nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.main-header__item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+.main-header__item {
+  margin: 0 1rem;
+  padding: 0;
+}
+.main-header__item a {
+  text-decoration: none;
+  color: rgb(1, 43, 49);
+}
+.main-header__item a:hover,
+.main-header__item a:active,
+.main-header__item a.active {
+  color: rgb(159, 3, 255);
+}
+.navbar {
+  display: inline-block;
+  text-decoration: none;
+  background: rgb(1, 43, 49);
+  color: rgb(230, 214, 71);
+  padding: 0.7rem 1.4rem;
+  border-radius: 25px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border: 2px solid rgb(230, 214, 71);
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.navbar:hover,
+.navbar:active {
+  background: rgb(230, 214, 71);
+  color: rgb(1, 43, 49);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+}
+
+.navbar:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(230, 214, 71, 0.4);
+}
