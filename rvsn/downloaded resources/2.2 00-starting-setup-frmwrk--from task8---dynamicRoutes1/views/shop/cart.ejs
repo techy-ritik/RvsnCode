@@ -5,29 +5,41 @@
         <%- include('../includes/navigation.ejs') %>
         <main>
             <% if(products.length>0){ %>
-                <ul>
+                <ul class="cart-items">
                     <% products.forEach(crntP=>{ %>
-                        <li>
+                        <li class="cart-item">
 
                             <!-- earlier while using file system for data storing, then we were using object format for data storing in which productData key has been used so that's why in earlier code productData is used but as of now we are using mySql so here we can directly pass .title for cart page to display -->
-                            <p><%= crntP.title %> (Quantity : <%= crntP.cartItem.quantity %>)</p>   <!-- here, for passing quantity, we have to get it from cartItem which is received as the one of the key of the product object in which all the data of the cartItem will be avaiable for that product -->
+                            
+                            <p class="cart-item__title">
+                                <%= crntP.title %>
+                            </p>
+
+                            <p class="cart-item__quantity">
+                                Quantity: <%= crntP.cartItem.quantity %>
+                            </p>   <!-- here, for passing quantity, we have to get it from cartItem which is received as the one of the key of the product object in which all the data of the cartItem will be avaiable for that product -->
+                            
+                            <div class="cart-item__actions">
                             <form action="/cart-quantity" method="post">
                                 <input type="hidden" name="productId" id="productId" value="<%= crntP.id %>">
-                                <button type="submit" class="btn" name="action" value="increase">+</button>
-                            </form>
-                            <form action="/cart-quantity" method="post">
-                                <input type="hidden" name="productId" id="productId" value="<%= crntP.id %>">
+                                <button type="submit" class="btn" name="action" value="increase"> + </button>
                                 <button type="submit" class="btn" name="action" value="decrease"> - </button>
                             </form>
-
+                            
                             <form action="/cart-delete-item" method="post">
                                 <input type="hidden" name="productId" id="productId" value="<%= crntP.id %>">
-                                <button type="submit" class="btn" >Delete</button>
+                                <button type="submit" class="btn delete-btn" >Delete</button>
                             </form>
-                            
+                            </div>
                         </li>  
                     <% }) %>
                 </ul>
+                <div class="centered">
+                <form action="/create-order" method="post">
+                    <button type="submit" class="btn order-btn">Order now</button>
+                </form>
+                </div>
+                
             <% }else{ %>
                 <h1>no Products Avaialble in cart...</h1>
             <% } %>

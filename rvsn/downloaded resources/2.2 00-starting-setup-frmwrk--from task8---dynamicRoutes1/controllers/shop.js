@@ -294,10 +294,51 @@ exports.cartProductQuantity = (req, res, next) => {
     });
 };
 
+exports.postOrder = (req, res, next) => {
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts();
+    })
+    .then((products) => {
+      // console.log("fetched Cart products", products);
+      return req.user
+        .createOrder() // here we are creating new order by using magic method .createOrder() provided by sequelize after establishing association between user and order model and which is associated with the current logedIn user and the products added for this user in the cart will get stored in the orderItems(junction table) just like cartItem
+        .then((order) => {
+          //  whenever we hit order now button in cart page a new order will get created and it's instance get returned here in this .then() block
 
+          return order.addProducts(
+            products.map((product) => {
+              // here for adding products to the orderPage(orderItem(junction table)) we have to pass fetched products array with some modification(product quantity inside orderItem object key) added in it, for that, we have used .map() method which gives new copy of array where we can modify data without changing the original array
+              product.orderItem = { quantity: product.cartItem.quantity }; // this is the new key of orderItem object added in each product element containing quantity inside
+              console.log("modified product element", product);
+              return product; // we have to return each traversed product, so that modified element get passed in the .addProducts() as we are using .map() method whose functionality is to return the copied array after modification
+            }),
+          );
+          //  here we are storing all the product from the products array which is fetched from the cart in the orderItem and there we need quantity field also to be added which cannot be directly get added from products array as the quantity are stored inside 'cartItem' key of each element(product object) and as here the junction table name is orderItem so it's not going to check for quantity in cartItem so we need to add a new key as orderItem having quantity stored inside it. so we are using .map() here for traversing through all the product element of the array and a new key as orderItem object same as cartItem containing quantity inside get added in product element and then new copy of each product with orderItem added in it get passed in .addProducts() where it store every field data of orderItem(junction table) by getting data from each product element of products array and for quantiy(which is not directly available as key of product object) it looks for orderItem(same name as of junction table name) and after getting quantiy inside orderItem object it extracts and store in the orderItem(junction table).
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      //here we are using nested .then() block so that it'll be convenient to use 'products' recieved in the one level upper .then() block
+    })
+    .then((orderProducts) => {  // here .then() will contain all the added products of the orderItem table which is recieved from the return of order.addProducts()
+      console.log("added order products:", orderProducts);
+      console.log("products added in orderItems");
 
+      res.redirect("/orders");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-
+exports.getOrders = (req, res, next) => {
+  res.render("shop/orders", {
+    path: "/orders",
+    pageTitle: "Your Orders",
+  });
+};
 
 /** initially worked with fileSystem database and now after adding sql database fileSystem is removed so I've commented it for the added comment notes*/
 
@@ -386,12 +427,12 @@ exports.cartProductQuantity = (req, res, next) => {
 //   });
 // };
 
-exports.getOrders = (req, res, next) => {
-  res.render("shop/orders", {
-    path: "/orders",
-    pageTitle: "Your Orders",
-  });
-};
+// exports.getOrders = (req, res, next) => {
+//   res.render("shop/orders", {
+//     path: "/orders",
+//     pageTitle: "Your Orders",
+//   });
+// };
 
 exports.getCheckout = (req, res, next) => {
   res.render("shop/checkout", {

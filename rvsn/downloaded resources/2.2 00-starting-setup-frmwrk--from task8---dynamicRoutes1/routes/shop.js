@@ -21,6 +21,7 @@ router.post("/cart-delete-item",shopController.postCartDeleteProduct);   // here
 /** quantity adjustment added by self*/
 router.post("/cart-quantity",shopController.cartProductQuantity);  
 
+router.post("/create-order",shopController.postOrder)
 
 router.get('/orders', shopController.getOrders);
 

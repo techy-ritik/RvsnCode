@@ -195,7 +195,7 @@ form {
 .btn:active {
   background-color: #00695c;
   color: white;
-}
+} 
 
 @media (min-width: 768px) {
   .main-header__nav {
@@ -205,4 +205,74 @@ form {
   #side-menu-toggle {
     display: none;
   }
+}
+
+.cart-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cart-item {
+  max-width: 700px;
+  margin: 1rem auto;
+  padding: 1rem;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-item__title,
+.cart-item__quantity {
+  margin: 0;
+  font-weight: bold;
+}
+
+.cart-item__actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* delete button */
+.delete-btn {
+  background-color: #7e3d03;
+  color: white;
+  border: 1px solid #e60000;
+}
+
+.delete-btn:hover,
+.delete-btn:active {
+  background-color: #e60000;
+  border-color: #e60000;
+  color: white;
+}
+
+/* order now button */
+.order-btn {
+  background: linear-gradient(135deg, #004669, #00897b);
+  color: rgb(176, 199, 6);
+  border: none;
+  padding: 0.7rem 1.8rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 25px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 10px rgba(0, 105, 92, 0.3);
+  transition: all 0.5s ease;
+}
+
+.order-btn:hover,
+.order-btn:active {
+  background: linear-gradient(135deg, #00897b, #00695c);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 105, 92, 0.4);
+}
+
+.order-btn:focus {
+  outline: none;
 }
