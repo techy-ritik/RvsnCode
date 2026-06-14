@@ -4,6 +4,40 @@
     <body>
         <%- include('../includes/navigation.ejs') %>
         <main>
-            <h1>Nothing there!</h1>
+            <% if(orders.length>0){ %>
+                <ul class="order-list">
+                    <% orders.forEach(order=>{ %>
+                        <li class="order-card">
+                            
+                            <p class="order-id">
+                                Order #<%= order.id %>
+                            </p>
+                            <ul class="product-list">
+                                <% order.products.forEach(product=>{ %>
+                                    <li class="product-details">
+                                        <p class="order-product-title"><%= product.title %></p> <p class="order-product-quantity">quantity:<%= product.orderItem.quantity %></p>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                            <div class="order-actions">
+                                <form action="/delete-order" method="post">
+                                    <button type="button" class="btn delete-btn">delete order</button>
+                                </form>
+                                <form action="/checkout" method="post">
+                                    <button type="submit" class="btn payment-btn">Proceed for payment</button>
+                                </form>
+                            </div>
+                        </li>
+                    <% }) %>
+                    
+                </ul>
+                
+            <% }else{ %>
+                <h1 class="empty-title">Nothing there!</h1>
+                <div class="centered">
+                    <a href="/cart" class="btn">Go to cart</a>
+                </div>
+            <% } %>
+            
         </main>
         <%- include('../includes/end.ejs') %>

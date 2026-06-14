@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700");
 
 * {
   box-sizing: border-box;
@@ -7,7 +7,7 @@
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 main {
@@ -195,7 +195,7 @@ form {
 .btn:active {
   background-color: #00695c;
   color: white;
-} 
+}
 
 @media (min-width: 768px) {
   .main-header__nav {
@@ -275,4 +275,108 @@ form {
 
 .order-btn:focus {
   outline: none;
+}
+
+/* Orders Page */
+
+.orders-list {
+  width: 90%;
+  max-width: 850px;
+  margin: 2rem auto;
+  padding: 0;
+  list-style: none;
+}
+
+.order-card {
+  list-style: none;
+  background: #fff;
+  width: 700px;
+  max-width: 90%;
+  margin: 0 auto 1.5rem;
+  margin-bottom: 1rem;
+  padding: 1.25rem;
+  border-radius: 10px;
+  border-left: 5px solid #00695c;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.12);
+}
+
+.order-id {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #00695c;
+}
+
+.product-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.product-details {
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.6rem;
+  background: #f4f6f8;
+  border-radius: 6px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.product-details:hover {
+  background: #e8f4f2;
+}
+
+.order-actions{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+}
+
+.order-actions form{
+    width:200px;
+}
+
+.order-actions .btn{
+    margin-bottom: .4rem;
+    width:100%;
+    white-space:nowrap;
+}
+
+.payment-btn {
+  background: #28a745;
+  border-color: #28a745;
+  color: white;
+  font-weight: 600;
+}
+
+.payment-btn:hover,
+.payment-btn:active {
+  background: #218838;
+  border-color: #218838;
+}
+
+.empty-title {
+  text-align: center;
+  margin-top: 4rem;
+  color: #555;
+}
+
+.order-product-title,
+.order-product-quantity {
+  margin: 0;
+}
+
+.order-product-quantity {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
