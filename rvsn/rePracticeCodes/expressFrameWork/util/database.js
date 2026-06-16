@@ -8,7 +8,7 @@ const sequelize = new Sequelize(
     dialect: "mysql",
     host: "localhost",
   },
-); // we can pass all the details for connecting the databse through object of Sequelize in the exact order of(databse,usename,password,options) and then this object for implementing further sql queries
+); // we can pass all the details for connecting the databse through object of Sequelize in the exact order of(databse(schema name),usename,password,options) and then this object for implementing further sql queries
 // here we pass 4th argument as object where we have to set that with which database engines we are going to use the sequelize like here we use mysql and the host on which we will work.
 
 // here also, we have actually set connection Pool with the use of sequelize, as we have did with mysql below
