@@ -29,12 +29,12 @@ main {
 }
 .main-header__item a {
   text-decoration: none;
-  color: rgb(1, 43, 49);
+  color: rgb(142, 247, 161);
 }
 .main-header__item a:hover,
 .main-header__item a:active,
 .main-header__item a.active {
-  color: rgb(159, 3, 255);
+  color: rgb(154, 197, 250);
 }
 .navbar {
   display: inline-block;
@@ -52,7 +52,7 @@ main {
 
 .navbar:hover,
 .navbar:active {
-  background: rgb(230, 214, 71);
+  background: rgb(171, 143, 1);
   color: rgb(1, 43, 49);
   transform: translateY(-2px);
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);

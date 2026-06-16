@@ -27,7 +27,7 @@ exports.postAddProduct = (req, res, next) => {
     .then(() => {
       //  and we also have to handle the response promise with then so that we get assurance of data correctly stored in database
       console.log("product added!!");
-      // res.redirect("/");   // here we have to add .redirect() inside the .then(), so that it executes after the .save() method execution got finished and return the promise response
+      res.redirect("/shop");   // here we have to add .redirect() inside the .then(), so that it executes after the .save() method execution got finished and return the promise response
     })
     .catch((err) => {
       console.log(err);
