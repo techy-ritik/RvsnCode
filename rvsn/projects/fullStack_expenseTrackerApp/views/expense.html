@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Expense Tracker</title>
+    <!-- <title>Expense Tracker</title> -->
+    <link rel="stylesheet" href="/css/main.css">
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -15,9 +16,11 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script> 
+
   </head>
   <body>
-    <form id="ExpenseForm" class="form-control-sm">
+    <form id="ExpenseForm" class="form-control-sm" action="/add-expense" method="post">
+      <h1 class="title">Expense Tracker</h1>
       <label for="amount">Spent Amount :-</label>
       <input type="number" name="expenseAmount" id="amount" />
       <label for="description">Expense Description :- </label>
@@ -36,6 +39,7 @@
     
 
     <ul></ul>
-    <script src="expense.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+    <script src="/js/frontExpense.js"></script>
   </body>
 </html>
