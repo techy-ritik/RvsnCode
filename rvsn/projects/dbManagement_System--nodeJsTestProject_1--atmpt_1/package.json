@@ -1,0 +1,17 @@
+{
+  "name": "dbmanagement_system--nodejstestproject_1--atmpt_1",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Ritikesh",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14"
+  }
+}
