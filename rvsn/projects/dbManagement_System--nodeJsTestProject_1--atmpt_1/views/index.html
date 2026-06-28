@@ -1,15 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Index</title>
-    <link rel="stylesheet" href="/css/main.css">
-    <script src="/js/dbManagementClient.js"></script>
-</head>
-<body>
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
     <nav>
-        <a href="/create-table" class="btn">+ Create new Table</a>
+      <button type="button" class="btn">+ Create new Table</button>
     </nav>
-</body>
+
+    <!-- create table form popup -->
+    <div class="popup">
+      <form class="tableForm" action="/create-table" method="post">
+        <span class="close">&times;</span>
+
+        <h2>Create Table</h2>
+
+        <label for="tableName">Table Name</label>
+        <input type="text" name="table-name" id="tableName" />
+
+        <div class="fieldData">
+          <div>
+            <label for="fieldNames">Field names</label>
+            <input type="text" name="field-name" id="fieldNames" />
+          </div>
+
+          <div>
+            <label for="type">Type</label>
+            <select name="type" id="type">
+              <option value="STRING">STRING</option>
+              <option value="INTEGER">INTEGER</option>
+              <option value="BOOLEAN">BOOLEAN</option>
+              <option value="JSON">JSON</option>
+              <option value="DOUBLE">DOUBLE</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="button" class="addFieldBtn">Add another field</button>
+        <button type="submit" class="createtableBtn">Create Table</button>
+      </form>
+    </div>
+
+    <!-- insert record form popup --> 
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+    <script src="/js/indexClient.js"></script>
+  </body>
 </html>

@@ -1,0 +1,119 @@
+/* index page */
+*{margin:0;box-sizing:border-box;font-family:Arial}
+
+nav{
+    width:220px;
+    height:100vh;
+    background:#333;
+    padding:20px;
+}
+
+.btn{
+    position:fixed;
+    bottom:20px;
+    left:20px;
+    padding:10px;
+    border:none;
+    background:#007bff;
+    color:#fff;
+    cursor:pointer;
+}
+
+.popup{
+    display:none;
+    position:fixed;
+    inset:0;
+    justify-content:center;
+    align-items:center;
+}
+
+.tableForm{
+    width:500px;
+    padding:25px;
+    background:#433a01;
+    position:relative;
+}
+
+.close{
+    position:absolute;
+    top:10px;
+    right:15px;
+    font-size:25px;
+    cursor:pointer;
+}
+
+input,select{
+    width:100%;
+    padding:8px;
+    margin:8px 0 15px;
+}
+
+.fieldData{
+    display:flex;
+    gap:15px;
+}
+
+.fieldData div{
+    flex:1;
+}
+
+.tableForm button{
+    padding:8px 12px;
+}
+
+.addFieldBtn,
+.createtableBtn{
+    padding: 8px 14px;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+}
+
+.addFieldBtn{
+    border: none;
+    background: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 0;
+}
+
+.addFieldBtn:hover{
+    text-decoration: underline;
+}
+
+.createtableBtn{
+    float: right;
+    background: #28a745;
+}
+
+/* added table names */
+
+.table-btn {
+  width: 100%;
+  max-width: 200px;
+  text-align: left;
+
+  background-color: #f5f7fa;
+  color: #444;
+  border: 1px solid #d6dce5;
+  border-radius: 6px;
+
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.table-btn:hover {
+  background-color: #e9eef5;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1rem;
+}
