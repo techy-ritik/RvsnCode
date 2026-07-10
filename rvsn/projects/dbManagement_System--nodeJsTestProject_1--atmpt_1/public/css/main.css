@@ -1,51 +1,93 @@
 /* index page */
-*{margin:0;box-sizing:border-box;font-family:Arial}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    margin:0;
+    display:flex;
+    min-height:100vh;
+    background:#f5f6fa;
+}
 
 nav{
     width:220px;
     height:100vh;
+    position:sticky;
+    top:0;
     background:#333;
     padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    flex-shrink:0;
+    overflow-y:auto;
 }
 
 .btn{
-    position:fixed;
-    bottom:20px;
-    left:20px;
-    padding:10px;
+    margin-top:auto;
+    width:100%;
+    padding:12px 18px;
     border:none;
+    border-radius:6px;
     background:#007bff;
     color:#fff;
     cursor:pointer;
+    transition:.2s;
+}
+
+.btn:hover{
+    background:#0069d9;
 }
 
 .popup{
-    display:none;
     position:fixed;
     inset:0;
+    display:none;
     justify-content:center;
-    align-items:center;
+    align-items:flex-start;
+    overflow-y:auto;
+    padding:30px 20px;
+    background:rgba(0,0,0,.45);
+    z-index:1000;
 }
 
 .tableForm{
-    width:500px;
+    width:min(500px,100%);
     padding:25px;
-    background:#433a01;
+    background:#002b06;
+    color:#333;
+    border-radius:10px;
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
     position:relative;
 }
 
 .close{
     position:absolute;
-    top:10px;
+    top:12px;
     right:15px;
-    font-size:25px;
+    font-size:24px;
     cursor:pointer;
 }
 
-input,select{
+input,
+select{
     width:100%;
-    padding:8px;
+    padding:10px;
     margin:8px 0 15px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    font-size:15px;
+}
+
+input:focus,
+select:focus{
+    outline:none;
+    border-color:#007bff;
 }
 
 .fieldData{
@@ -58,62 +100,283 @@ input,select{
 }
 
 .tableForm button{
-    padding:8px 12px;
+    border:none;
+    border-radius:5px;
 }
 
 .addFieldBtn,
 .createtableBtn{
-    padding: 8px 14px;
-    border: none;
-    cursor: pointer;
-    color: #fff;
+    padding:10px 16px;
+    cursor:pointer;
+    color:#fff;
+    transition:.2s;
 }
 
 .addFieldBtn{
-    border: none;
-    background: none;
-    color: #007bff;
-    cursor: pointer;
-    font-size: 15px;
-    padding: 0;
+    padding:0;
+    background:none;
+    color:#007bff;
+    font-size:15px;
 }
 
 .addFieldBtn:hover{
-    text-decoration: underline;
+    text-decoration:underline;
 }
 
 .createtableBtn{
-    float: right;
-    background: #28a745;
+    float:right;
+    background:#28a745;
 }
+
+.createtableBtn:hover{
+    background:#218838;
+}
+
 
 /* added table names */
 
-.table-btn {
-  width: 100%;
-  max-width: 200px;
-  text-align: left;
-
-  background-color: #f5f7fa;
-  color: #444;
-  border: 1px solid #d6dce5;
-  border-radius: 6px;
-
-  padding: 0.6rem 1rem;
-  font-size: 0.95rem;
-
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.table-btn{
+    width:100%;
+    text-align:left;
+    background:#f5f7fa;
+    color:#444;
+    border:1px solid #d6dce5;
+    border-radius:6px;
+    padding:10px 15px;
+    font-size:.95rem;
+    cursor:pointer;
+    transition:.2s;
 }
 
-.table-btn:hover {
-  background-color: #e9eef5;
+.table-btn:hover{
+    background:#e9eef5;
 }
 
-nav {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5rem;
-  padding: 1rem;
+/* record table display */
+
+.table-container{
+    flex:1;
+    min-width:0;
+    padding:25px;
+    overflow:auto;
+    position:relative;
+}
+
+.table-container h1{
+  margin:0 0 20px;
+  font-size:28px;
+  font-weight:700;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color:#2c504d;
+  border-bottom:2px solid #4f7df3;
+  padding-bottom:8px;
+  text-transform:capitalize;
+}
+
+#dynamicTable{
+    width:100%;
+    margin-top:55px;
+    border-collapse:collapse;
+    background:#fff;
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+#dynamicTable th,
+#dynamicTable td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+#dynamicTable th{
+    text-align:center;
+    background:#305401;
+    color:#fff;
+}
+
+#dynamicTable tbody tr:nth-child(even){
+    background:#f8f8f8;
+}
+
+#dynamicTable tbody tr:hover{
+    background:#eef5ff;
+}
+
+#dynamicTable td{
+  text-align:center;
+  vertical-align:middle;
+}
+
+.delete-table{
+  display:block;
+  margin:25px auto 0;
+  padding:10px 20px;
+  background:#dc3545;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  font:600 15px "Segoe UI", sans-serif;
+  cursor:pointer;
+  transition:background .2s, transform .15s;
+}
+
+.delete-table:hover{
+  background:#bb2d3b;
+}
+
+.delete-table:active{
+  transform:scale(.97);
+}
+
+.delete-table:focus{
+  outline:none;
+  box-shadow:0 0 0 3px rgba(220,53,69,.25);
+}
+
+.delete-record{
+  background:#e53935;
+  color:#fff;
+  border:none;
+  padding:6px 14px;
+  border-radius:5px;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:500;
+  transition:.2s;
+}
+
+.delete-record:hover{
+  background:#c62828;
+}
+
+.delete-record:active{
+  transform:scale(.96);
+}
+
+.insert-record-btn{
+    position:absolute;
+    top:25px;
+    right:25px;
+    padding:10px 18px;
+    background:#02825e;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.insert-record-btn:hover{
+    background:#02694c;
+}
+
+
+/* add record form */
+
+.recordFormPopup{
+    position:fixed;
+    inset:0;
+    display:none;
+    justify-content:center;
+    align-items:flex-start;
+    overflow-y:auto;
+    padding:30px 20px;
+    background:rgba(0,0,0,.45);
+    z-index:1000;
+}
+
+.insertRecord{
+    width:min(400px,100%);
+    padding:25px;
+    background:#482901;
+    border-radius:10px;
+    box-shadow:0 15px 35px rgb(38, 0, 0);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.insertRecord input{
+    width:100%;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    font-size:15px;
+}
+
+.insertRecord input:focus{
+    outline:none;
+    border-color:#4f7df3;
+}
+
+.insertRecord button{
+    padding:10px;
+    border:none;
+    border-radius:5px;
+    background:#4f7df3;
+    color:#fff;
+    cursor:pointer;
+    font-size:15px;
+    transition:.2s;
+}
+
+.insertRecord button:hover{
+    background:#3a66d8;
+}
+
+.closeRecordForm{
+    position:absolute;
+    top:12px;
+    right:15px;
+    font-size:22px;
+    cursor:pointer;
+}
+
+
+/* responsive */
+
+@media (max-width:768px){
+
+    body{
+        flex-direction:column;
+    }
+
+    nav{
+        width:100%;
+        min-height:auto;
+    }
+
+    .btn{
+        left:auto;
+        right:20px;
+    }
+
+    .table-container{
+        width:100%;
+        padding:15px;
+    }
+
+    .insert-record-btn{
+        position:static;
+        margin-bottom:15px;
+    }
+
+    #dynamicTable{
+        margin-top:0;
+    }
+
+    .fieldData{
+        flex-direction:column;
+        gap:0;
+    }
+
+    .tableForm,
+    .insertRecord{
+        width:95%;
+    }
 }

@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Index</title>
     <link rel="stylesheet" href="/css/main.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
     <nav>
       <button type="button" class="btn">+ Create new Table</button>
     </nav>
+    
 
     <!-- create table form popup -->
     <div class="popup">
@@ -24,7 +26,7 @@
         <div class="fieldData">
           <div>
             <label for="fieldNames">Field names</label>
-            <input type="text" name="field-name" id="fieldNames" />
+            <input type="text" name="field-name" id="fieldNames" pattern="[A-Za-z0-9 ]+" required/>
           </div>
 
           <div>
@@ -45,7 +47,15 @@
     </div>
 
     <!-- insert record form popup --> 
+     <div class="recordFormPopup">
+      <form action="/insert-record" method="post" class="insertRecord">
+        <span class="closeRecordForm">&times;</span>
+        <h2>Add Record</h2>
 
+        <button type="submit" class="addRecordBtn">Add Record</button>
+      </form>
+     </div>
+    
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
     <script src="/js/indexClient.js"></script>

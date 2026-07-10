@@ -9,6 +9,8 @@ app.use(express.json({extended:false}));
 
 const adminRoutes = require('./routes/admin');
 app.use(adminRoutes);
+const dbRecordsRoutes = require('./routes/dbRecords');
+app.use(dbRecordsRoutes);
 
 const sequelize = require("./util/database")
 sequelize.sync()
