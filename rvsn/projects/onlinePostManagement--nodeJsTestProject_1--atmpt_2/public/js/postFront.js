@@ -17,6 +17,7 @@ function showPosts(allPost){
         cmntBtn.type = "button";
         cmntBtn.className = "comment-btn";
         cmntBtn.textContent = "💬 Comment";
+        cmntBtn.addEventListener('click',addComment);
         newLi.appendChild(cmntBtn);
 
         postsUl.appendChild(newLi);
@@ -45,7 +46,6 @@ postForm.addEventListener('submit',(event)=>{
 })
 
 
-
 axios.get('http://localhost:4000/get-posts')
 .then((posts)=>{
     console.log("all post",posts.data);
@@ -54,3 +54,7 @@ axios.get('http://localhost:4000/get-posts')
 .catch((err)=>{
     console.log(err);
 })
+
+function addComment(){
+    commentForm.style.display = 'flex';
+}
