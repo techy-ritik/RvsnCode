@@ -7,28 +7,17 @@ const addUser = (req, res, next) => {
   next();
 };
 
-app.get("/welcome", addUser, (req, res) => {
+app.get("/welcome",addUser,(req, res) => {
   res.send(`<h1>Welcome, ${req.user}!</h1>`);
 });
 
-app.get("/products", (req, res) => {
-  res.send("Here is the list of all products.");
-});
+app.get("/welcome/:username",(req, res)=>{
 
-app.post("/products", (req, res) => {
-  res.send("A new product has been added.");
-});
+  const username = req.params.username;
+  const role = req.query.role;
 
-app.get("/categories", (req, res) => {
-  res.send("Here is the list of all categories.");
-});
+  res.send(`Welcome ${username}, your role is of ${role}`);
 
-app.post("/categories", (req, res) => {
-  res.send("A new category has been created.");
-});
-
-app.use((req, res) => {
-  res.status(404).send("<h1>404 - Page Not Found</h1>");
 });
 
 app.listen(4000, () => {
