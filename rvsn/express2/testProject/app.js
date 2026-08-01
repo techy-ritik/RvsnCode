@@ -4,6 +4,7 @@ const app = express();
 
 const route1 = require('./routes/route1')
 
+app.use(express.json({extended:false}))
 
 app.use((req, res, next) => {
   console.log(`${req.method} request made to ${req.url}`);

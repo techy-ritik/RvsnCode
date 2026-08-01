@@ -3,20 +3,16 @@ const express = require("express");
 const router = express.Router();
 
 
-router.get("/products", (req, res) => {
-  res.send("Here is the list of all products.");
+router.get("/books", (req, res) => {
+  console.log("books request received !");
+
+  res.send("Here is the list of books!");
 });
 
-router.post("/products", (req, res) => {
-  res.send("A new product has been added.");
-});
+router.post("/books", (req, res) => {
+  console.log("Book Data:", req.body);
 
-router.get("/categories", (req, res) => {
-  res.send("Here is the list of all categories.");
-});
-
-router.post("/categories", (req, res) => {
-  res.send("A new category has been created.");
+  res.send("Book has been added!");
 });
 
 module.exports = router;
