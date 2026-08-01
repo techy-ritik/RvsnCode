@@ -2,16 +2,21 @@ const express = require('express');
 
 const app = express();
 
-const route1 = require('./routes/route1')
+app.use(express.json({ extended: false }));
 
-app.use(express.json({extended:false}))
+const studentRoute = require('./routes/students')
+const courseRoute = require('./routes/courses')
 
-app.use((req, res, next) => {
-  console.log(`${req.method} request made to ${req.url}`);
-  next();
+app.get("/", (req, res) => {
+  res.send("Welcome to the Student & Course Portal API!");
 });
 
-app.use(route1);
+app.use(studentRoute);
+app.use(courseRoute);
+
+app.use((req, res) => {
+  res.status(404).send("Page not found");
+});
 
 app.listen(4000, () => {
   console.log("Server is running on http://localhost:4000");
