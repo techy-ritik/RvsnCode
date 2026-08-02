@@ -8,6 +8,9 @@ const cartRoute = require('./routes/cartRoutes')
 
 app.use(express.json({ extended: false }));
 
+const path = require('path')
+app.use(express.static(path.join(__dirname,'public')));
+
 app.use(userRoute);
 app.use(productRoute);
 app.use(cartRoute);

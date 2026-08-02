@@ -8,7 +8,7 @@ exports.getAllProducts = (req, res) => {
 };
 
 exports.addProduct = (req, res) => {
-  res.send(productServices.addProducts());
+  console.log(req.body.productName);
 };
 
 exports.getProductById = (req, res) => {
