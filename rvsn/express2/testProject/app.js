@@ -2,6 +2,8 @@ const express = require('express');
 
 const app = express();
 
+const db = require('./util/database');
+
 const userRoute = require('./routes/userRoutes')
 const productRoute = require('./routes/productRoutes')
 const cartRoute = require('./routes/cartRoutes')

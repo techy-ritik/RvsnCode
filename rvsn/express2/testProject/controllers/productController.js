@@ -1,5 +1,7 @@
 const productServices = require("../services/productServices");
 const path = require('path')
+const db = require("../util/database");
+
 
 exports.getAllProducts = (req, res) => {
   console.log("Fetching All Products");
