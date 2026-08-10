@@ -5,6 +5,12 @@ const app = express();
 const db = require('./util/database');
 const tables = require('./database/tables');
 
-app.use(tables);
+const bookingRoute = require('./routes/booking');
 
-app.listen(4000);
+app.use(express.json());
+
+app.use(bookingRoute);
+
+app.listen(4000,(err)=>{
+    console.log("server is running on port: 4000")
+});
