@@ -4,12 +4,12 @@ const app = express();
 
 const db = require('./util/database');
 const tables = require('./database/tables');
-
-const userRoute = require('./routes/user');
-const busRoute = require('./routes/bus');
+app.use(tables);
 
 app.use(express.json());
 
+const userRoute = require('./routes/user');
+const busRoute = require('./routes/bus');
 app.use('/user',userRoute);
 app.use('/bus',busRoute);
 
