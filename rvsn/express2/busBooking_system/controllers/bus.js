@@ -1,17 +1,19 @@
-const db = require("../util/database");
-const tables = require("../database/tables");
+const Sequelize = require('sequelize')
+const sequelize = require("../util/database");
+const busModel = require('../models/bus');
 
 exports.addBus = (req, res, next) => {
-  const { busNumber, totalSeats, availableSeats } = req.body;
+  const busObj = {
+    busNumber: req.body.busNumber,
+    totalSeats: req.body.totalSeats,
+    availableSeats: req.body.availableSeats,
+  };
 
-  const insertQuery =
-    "INSERT INTO Buses (busNumber, totalSeats, availableSeats) VALUES (?, ?, ?)";
-
-  db.execute(insertQuery, [busNumber, totalSeats, availableSeats])
+  busModel.create(busObj)
     .then((result) => {
       console.log("Bus added");
 
-      res.status(201).send(`bus ${busNumber} added`);
+      res.status(201).send(`bus ${busObj.busNumber} added`);
     })
     .catch((err) => {
       console.log(err.message);
@@ -21,12 +23,10 @@ exports.addBus = (req, res, next) => {
 
 
 exports.fetchBuses = (req, res, next) => {
-  const { seats } = req.params;
+  const seats = req.params.seats;
 
-  const selectQuery = "SELECT * FROM Buses WHERE availableSeats >= ?";
-
-  db.execute(selectQuery, [seats])
-    .then(([result]) => {
+  busModel.findAll({where:{availableSeats : {[Sequelize.Op.gte] : seats}}})
+    .then((result) => {
       console.log("Available buses fetched");
 
       res.status(200).json(result);

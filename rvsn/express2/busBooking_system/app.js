@@ -1,10 +1,5 @@
 const express = require('express');
-
 const app = express();
-
-const db = require('./util/database');
-const tables = require('./database/tables');
-app.use(tables);
 
 app.use(express.json());
 
@@ -13,6 +8,21 @@ const busRoute = require('./routes/bus');
 app.use('/user',userRoute);
 app.use('/bus',busRoute);
 
-app.listen(4000,(err)=>{
-    console.log("server is running on port: 4000")
-});
+
+
+const userModel = require('./models/user');
+const busModel = require('./models/bus');
+const bookingModel = require('./models/booking');
+const paymentModel = require('./models/payment');
+const sequelize = require("./util/database");
+
+// sequelize.sync({force:true})
+sequelize.sync()
+.then(()=>{
+    app.listen(4000, (err) => {
+    console.log("server is running on port: 4000");
+    });
+})
+.catch((err)=>{
+    console.log(err);
+})

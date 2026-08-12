@@ -1,11 +1,9 @@
-const db = require("../util/database");
-const tables = require("../database/tables");
+const sequelize = require("../util/database");
+const userModel = require('../models/user');
 
 exports.fetchEntries = (req,res,next)=>{
-      const selectQuery = "SELECT * FROM Users";
-
-      db.execute(selectQuery)
-        .then(([result]) => {
+      userModel.findAll()
+        .then((result) => {
           console.log("Users fetched");
 
           res.status(200).json(result);
@@ -18,14 +16,15 @@ exports.fetchEntries = (req,res,next)=>{
 
 exports.addEntries = (req, res, next) => {
   console.log("req.body", req.body);
-  const { id, name, email } = req.body;
+  const userObj = {
+    name: req.body.name,
+    email: req.body.email,
+  };
 
-  const insertQuerry = "INSERT INTO Users (id,name,email) VALUES (?,?,?)";
-
-  db.execute(insertQuerry, [id, name, email])
-    .then(([result]) => {
-      console.log("value added");
-      res.status(201).send(`user ${name} added`);
+  userModel.create(userObj)
+    .then((result) => {
+      console.log(result)
+      res.status(201).send(`user ${userObj.name} added`);
     })
     .catch((err) => {
       console.log(err.message);
@@ -35,43 +34,43 @@ exports.addEntries = (req, res, next) => {
 };
 
 exports.updateEntry = (req, res, next) => {
-  const { id } = req.params;
-  const { name,email } = req.body;
+  // const { id } = req.params;
+  // const { name,email } = req.body;
 
-  const updateQuery = "UPDATE users set name = ? WHERE id = ?";
+  // const updateQuery = "UPDATE users set name = ? WHERE id = ?";
 
-  db.execute(updateQuery, [name,id])
-    .then((result) => {
-      if (result.affectedRows === 0) {
-        res.status(404).send("user not found");
-        return;
-      }
+  // db.execute(updateQuery, [name,id])
+  //   .then((result) => {
+  //     if (result.affectedRows === 0) {
+  //       res.status(404).send("user not found");
+  //       return;
+  //     }
 
-      res.status(200).send("user has been updated");
-    })
-    .catch((err) => {
-      console.log(err.message);
-      res.status(500).send(err.message);
-      return;
-    });
+  //     res.status(200).send("user has been updated");
+  //   })
+  //   .catch((err) => {
+  //     console.log(err.message);
+  //     res.status(500).send(err.message);
+  //     return;
+  //   });
 };
 
 exports.deleteEntry = (req, res, next) => {
-  const { id } = req.params;
-  const deleteQuery = `DELETE FROM users WHERE id=?`;
+  // const { id } = req.params;
+  // const deleteQuery = `DELETE FROM users WHERE id=?`;
 
-  db.execute(deleteQuery, [id])
-    .then((result) => {
-      if (result.affectedRows === 0) {
-        res.status(404).send("user not found");
-        return;
-      }
+  // db.execute(deleteQuery, [id])
+  //   .then((result) => {
+  //     if (result.affectedRows === 0) {
+  //       res.status(404).send("user not found");
+  //       return;
+  //     }
 
-      res.status(200).send(`user with ${id} is deleted`);
-    })
-    .catch((err) => {
-      console.log(err.message);
-      res.status(500).send(err.message);
-      return;
-    });
+  //     res.status(200).send(`user with ${id} is deleted`);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err.message);
+  //     res.status(500).send(err.message);
+  //     return;
+  //   });
 };
