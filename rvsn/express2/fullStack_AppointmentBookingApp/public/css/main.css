@@ -1,0 +1,91 @@
+/* main.css */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #f3e8ff, #ffe4e6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 30px 15px;
+}
+
+h1 {
+  color: #6b21a8;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+form {
+  background-color: white;
+  padding: 25px;
+  width: 320px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(88, 28, 135, 0.15);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+label {
+  color: #991b1b;
+  font-weight: bold;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #c4b5fd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 5px rgba(124, 58, 237, 0.3);
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px;
+  background: linear-gradient(to right, #7c3aed, #dc2626);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
+
+.userDetails {
+  margin-top: 30px;
+  width: 90%;
+  max-width: 800px;
+  padding: 0;
+}
+
+.userDetails li {
+  list-style: none;
+  background-color: white;
+  margin-bottom: 12px;
+  padding: 12px;
+  border-left: 5px solid #dc2626;
+  border-radius: 8px;
+  color: #581c87;
+  box-shadow: 0 2px 6px rgba(88, 28, 135, 0.1);
+
+  width: 100%;
+  box-sizing: border-box;
+
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
