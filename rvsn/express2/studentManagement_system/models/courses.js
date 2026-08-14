@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../util/database");
 
-const department = sequelize.define("department", {
+const courses = sequelize.define("courses", {
   id: {
     type: Sequelize.INTEGER,
     allowNull: false,
@@ -10,9 +10,8 @@ const department = sequelize.define("department", {
   },
   name: {
     type: Sequelize.STRING,
-    allowNull:false,
+    allowNull:false
   },
 });
 
-
-module.exports = department;
+module.exports = courses;

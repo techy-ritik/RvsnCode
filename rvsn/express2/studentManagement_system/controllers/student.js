@@ -1,4 +1,3 @@
-const db = require("../util/database");
 const studentModel = require('../models/student')
 const idCardModel = require('../models/identityCard');
 
