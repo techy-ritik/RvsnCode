@@ -14,4 +14,6 @@ router.put("/students/:id",studentController.updateStudent);
 
 router.delete("/students/:id",studentController.deleteStudent);
 
+router.post('/addingStudentWithCard',studentController.addValuesToStudentAndIdentityCard);
+
 module.exports = router;

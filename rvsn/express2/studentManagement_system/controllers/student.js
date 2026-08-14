@@ -1,5 +1,6 @@
 const db = require("../util/database");
 const studentModel = require('../models/student')
+const idCardModel = require('../models/identityCard');
 
 exports.addStudent = (req, res, next) => {
   console.log("req.body:", req.body);
@@ -89,3 +90,18 @@ exports.deleteStudent = (req, res, next) => {
       res.status(500).send(err.message);
     });
 };
+
+exports.addValuesToStudentAndIdentityCard =(req,res,next)=>{
+
+  studentModel.create(req.body.student)
+  .then((student)=>{
+    idCardModel.create({...req.body.idCard,StudentId : student.id}) // we can pass all the column data of the table in a single object by fetching the data from different source like this using spread operator 
+    .then((idCard)=>{
+      res.status(201).json({student,idCard});
+    })
+  })
+  .catch((err)=>{
+    console.log(err)
+    res.status(500).json({err:err.message})
+  })
+}
