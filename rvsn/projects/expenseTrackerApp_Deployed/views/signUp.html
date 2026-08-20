@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>user signUp</title>
+    <link rel="stylesheet" href="\css\signUp.css" />
+  </head>
+  <body>
+    <div class="registration-form-container">
+      <form action="/register" method="post" class="registration-form">
+        <title>Register</title>
+        <label for="name">name</label>
+        <input type="text" name="name" id="name" required />
+        <label for="email">enter email id:</label>
+        <input type="email" name="email" id="email" required />
+        <label for="password">set Password</label>
+        <input type="password" name="password" id="password" required />
+        <button type="submit" class="register-btn">register</button>
+      </form>
+    </div>
+
+    <script src="\js\script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+  </body>
+</html>
