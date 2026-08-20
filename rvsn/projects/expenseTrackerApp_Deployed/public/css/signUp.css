@@ -6,6 +6,7 @@ body {
     margin: 0;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-family: Arial, sans-serif;
@@ -57,7 +58,43 @@ body {
     box-shadow: 0 0 0 3px rgba(22, 160, 133, 0.12);
 }
 
-.registration-form button {
+/* Password field */
+.password-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.password-container input {
+    margin-bottom: 0;
+    padding-right: 45px;
+}
+
+/* Eye button */
+.eye-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto !important;
+    padding: 5px !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    color: #1677ff !important;
+    font-size: 18px !important;
+    cursor: pointer;
+    box-shadow: none !important;
+}
+
+.eye-btn:hover {
+    color: #10a36f !important;
+    transform: translateY(-50%);
+    box-shadow: none !important;
+}
+
+/* Register button */
+.register-btn {
     width: 100%;
     padding: 12px;
     border: none;
@@ -70,7 +107,28 @@ body {
     transition: 0.3s;
 }
 
-.registration-form button:hover {
+.register-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(16, 163, 111, 0.25);
+}
+
+/* Login paragraph */
+body > p {
+    margin: 15px 0 0;
+    color: #145da0;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Login anchor */
+body > p a {
+    color: #087f5b;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+body > p a:hover {
+    color: #1677ff;
+    text-decoration: underline;
 }

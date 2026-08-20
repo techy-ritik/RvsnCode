@@ -15,10 +15,14 @@
         <label for="email">enter email id:</label>
         <input type="email" name="email" id="email" required />
         <label for="password">set Password</label>
-        <input type="password" name="password" id="password" required />
+        <div class="password-container">
+          <input type="password" name="password" id="password" required />
+          <button type="button" class="eye-btn" id="eyeBtn">👁</button>
+        </div>
         <button type="submit" class="register-btn">register</button>
       </form>
     </div>
+    <p>Already registered, click here to <a href="./expense.html">login</a></p>
 
     <script src="\js\script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
