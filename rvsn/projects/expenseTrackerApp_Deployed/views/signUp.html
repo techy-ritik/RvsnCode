@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>user signUp</title>
-    <link rel="stylesheet" href="\css\signUp.css" />
+    <link rel="stylesheet" href="\css\userSignIn.css" />
   </head>
   <body>
     <div class="registration-form-container">
@@ -12,17 +12,17 @@
         <title>Register</title>
         <label for="userName">name</label>
         <input type="text" name="userName" id="userName" required />
-        <label for="email">email id:</label>
-        <input type="email" name="email" id="email" required />
-        <label for="password">set Password</label>
+        <label for="registerEmail">email id:</label>
+        <input type="email" name="email" id="registerEmail" required />
+        <label for="registerPassword">set Password</label>
         <div class="password-container">
-          <input type="password" name="password" id="password" required />
+          <input type="password" name="password" id="registerPassword" required />
           <button type="button" class="eye-btn" id="eyeBtn">👁</button>
         </div>
         <button type="submit" class="register-btn">register</button>
       </form>
     </div>
-    <p>Already registered, click here to <a href="./expense.html">login</a></p>
+    <p>Already registered, click here to <a href="./login.html">login</a></p>
 
     <script src="\js\script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>

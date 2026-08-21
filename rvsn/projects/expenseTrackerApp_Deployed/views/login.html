@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>user login</title>
+    <link rel="stylesheet" href="/css/userSignIn.css">
+  <body>
+    <div class="login-form-container">
+      <form action="/user/login" method="post" class="login-form">
+        <title>Login</title>
+        <label for="loginEmail">Email</label>
+        <input type="email" name="email" id="loginEmail" required />
+        <label for="loginPassword">Password</label>
+        <div class="password-container">
+          <input type="password" name="password" id="loginPassword" required />
+          <button type="button" class="eye-btn" id="eyeBtn">👁</button>
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+    </div>
+
+    <p>Not registered yet, click here to <a href="./signUp.html">Register</a></p>
+    <script src="/js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
+  </body>
+</html>

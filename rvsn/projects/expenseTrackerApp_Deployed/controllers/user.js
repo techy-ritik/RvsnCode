@@ -26,3 +26,7 @@ exports.addUser = (req, res, next) => {
       console.log(err);
     });
 };
+
+exports.loginUser=(req,res,next)=>{
+  console.log("login user")
+}

@@ -13,7 +13,12 @@ body {
     background: linear-gradient(135deg, #e8f4ff, #e8fff4);
 }
 
-.registration-form-container {
+/* ========================= */
+/* SIGNUP + LOGIN CONTAINER */
+/* ========================= */
+
+.registration-form-container,
+.login-form-container {
     width: 380px;
     padding: 35px;
     background: #ffffff;
@@ -22,12 +27,22 @@ body {
     border-top: 5px solid #1677ff;
 }
 
-.registration-form {
+/* ========================= */
+/* SIGNUP + LOGIN FORM */
+/* ========================= */
+
+.registration-form,
+.login-form {
     display: flex;
     flex-direction: column;
 }
 
-.registration-form title {
+/* ========================= */
+/* SIGNUP + LOGIN TITLE */
+/* ========================= */
+
+.registration-form title,
+.login-form title {
     display: block;
     margin-bottom: 25px;
     text-align: center;
@@ -36,13 +51,23 @@ body {
     color: #087f5b;
 }
 
-.registration-form label {
+/* ========================= */
+/* LABELS */
+/* ========================= */
+
+.registration-form label,
+.login-form label {
     margin-bottom: 7px;
     color: #145da0;
     font-weight: 600;
 }
 
-.registration-form input {
+/* ========================= */
+/* INPUT FIELDS */
+/* ========================= */
+
+.registration-form input,
+.login-form input {
     width: 100%;
     padding: 12px;
     margin-bottom: 18px;
@@ -53,12 +78,16 @@ body {
     transition: 0.3s;
 }
 
-.registration-form input:focus {
+.registration-form input:focus,
+.login-form input:focus {
     border-color: #16a085;
     box-shadow: 0 0 0 3px rgba(22, 160, 133, 0.12);
 }
 
-/* Password field */
+/* ========================= */
+/* PASSWORD FIELD */
+/* ========================= */
+
 .password-container {
     position: relative;
     width: 100%;
@@ -70,7 +99,10 @@ body {
     padding-right: 45px;
 }
 
-/* Eye button */
+/* ========================= */
+/* EYE BUTTON */
+/* ========================= */
+
 .eye-btn {
     position: absolute;
     right: 10px;
@@ -93,8 +125,12 @@ body {
     box-shadow: none !important;
 }
 
-/* Register button */
-.register-btn {
+/* ========================= */
+/* REGISTER + LOGIN BUTTON */
+/* ========================= */
+
+.register-btn,
+.login-btn {
     width: 100%;
     padding: 12px;
     border: none;
@@ -107,12 +143,16 @@ body {
     transition: 0.3s;
 }
 
-.register-btn:hover {
+.register-btn:hover,
+.login-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(16, 163, 111, 0.25);
 }
 
-/* Login paragraph */
+/* ========================= */
+/* LOGIN / REGISTER TEXT */
+/* ========================= */
+
 body > p {
     margin: 15px 0 0;
     color: #145da0;
@@ -120,7 +160,10 @@ body > p {
     text-align: center;
 }
 
-/* Login anchor */
+/* ========================= */
+/* LOGIN / REGISTER LINK */
+/* ========================= */
+
 body > p a {
     color: #087f5b;
     font-weight: bold;
