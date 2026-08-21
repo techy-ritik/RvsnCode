@@ -1,12 +1,11 @@
 const path = require("path");
-
 const rootDir = require("../util/path");
 
 const expenseModel = require("../models/expense");
 
-exports.getIndexPage = (req, res, next) => {
-  res.sendFile(path.join(rootDir, "views/signUp.html"));
-};
+// exports.getIndexPage = (req, res, next) => {
+//   res.sendFile(path.join(rootDir, "views/signUp.html"));
+// };
 
 exports.postAddExpense = (req, res, next) => {
   expenseModel

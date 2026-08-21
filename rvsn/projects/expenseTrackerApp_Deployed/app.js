@@ -4,14 +4,18 @@ const app = express();
 const path = require('path')
 app.use(express.static(path.join(__dirname, "public")));
 
+const userController = require('./controllers/user');
+app.get('/',userController.getSignUpPage);
 
-app.use(express.json({extended:false}))
+app.use(express.json({ extended: false }));
 
+const userRoute = require('./routes/user');
+app.use('/user',userRoute)
 const expenseRoutes = require("./routes/expense");
-app.use(expenseRoutes);
+app.use('/expense',expenseRoutes);
 
 const expenseModel = require("./models/expense");
-
+const userModel = require('./models/user');
 
 const sequelize = require("./util/database");
 
