@@ -28,5 +28,26 @@ exports.addUser = (req, res, next) => {
 };
 
 exports.loginUser=(req,res,next)=>{
-  console.log("login user")
+
+  const {email,password} = req.body;
+  console.log(email,password);
+
+  userModel.findAll({where:{email:email}})
+  .then((user)=>{
+    console.log("user",user)
+    user=user[0];
+    if(!user){
+      res.status(404).json({ message: "user not found" });
+      return;
+    }
+    if(user.password!==password){
+      res.status(401).json({ message: "User not authorized: incorrect password" });
+      return;
+    }
+    res.status(200).json({user:user,message:'user login successfull'});
+
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
 }

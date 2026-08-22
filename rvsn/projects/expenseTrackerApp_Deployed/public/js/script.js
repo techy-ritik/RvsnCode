@@ -42,13 +42,26 @@ if (loginForm) {
 
     axios
       .post("http://localhost:5000/user/login", loginObj)
-      .then((user) => {
-        console.log("currentUser", user.data);
+      .then((currentUser) => {
+        console.log("currentUser", currentUser.data.user);
+        alert(currentUser.data.message);
       })
       .catch((err) => {
-        console.log(err.message);
+        console.log(err.response.data.message);
+        alert(err.response.data.message);
       });
   });
 }
 
+/** password-eyeBtn */
+
+const eyeBtn = document.querySelector(".eye-btn");
+const registerPassword = document.querySelector(".password");
+eyeBtn.addEventListener("click", () => {
+  if (registerPassword.type == "password") {
+    registerPassword.type = "text";
+  } else {
+    registerPassword.type = "password";
+  }
+});
 
