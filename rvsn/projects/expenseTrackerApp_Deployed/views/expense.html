@@ -22,9 +22,9 @@
     <form id="ExpenseForm" class="form-control-sm" action="/expense/add-expense" method="post">
       <h1 class="title">Expense Tracker</h1>
       <label for="amount">Spent Amount :-</label>
-      <input type="number" name="expenseAmount" id="amount" />
+      <input type="number" name="expenseAmount" id="amount" required/>
       <label for="description">Expense Description :- </label>
-      <input type="text" name="expenseDesc" id="description" />
+      <input type="text" name="expenseDesc" id="description" required/>
       <label for="category">Select Expense Category :</label>
       <select name="expenseCategory" id="category">
         <option value="recharge">Mobile Recharge</option>

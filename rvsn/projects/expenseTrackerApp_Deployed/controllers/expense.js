@@ -8,17 +8,20 @@ exports.getExpensePage = (req, res, next) => {
 };
 
 exports.postAddExpense = (req, res, next) => {
+  const logedInUserId = req.user.id;
+  console.log("logedInUserId", logedInUserId);
+
   expenseModel
     .create({
       amount: req.body.xpAmount,
       description: req.body.xpDesc,
       category: req.body.xpCtgry,
-    }) //  here when we recieve data through fontend json object then we have to use those keys name here with req.body which is used in the client side js file while creating the object which is passed with post request
+      UserId: logedInUserId,
+    })
     .then((expense) => {
       console.log("new added expense", expense);
       console.log("expense added!!");
       res.status(200).json(expense);
-      // res.redirect('/expensess')  // here when we redirect different routes from server side then it's difficult to maintain the correct flow each time as we have to watch the method also so it's better to handle same functionality from client side by sending json response from here
     })
     .catch((err) => {
       console.log(err);
@@ -26,8 +29,10 @@ exports.postAddExpense = (req, res, next) => {
 };
 
 exports.getExpenses = (req, res, next) => {
+  const logedInUserId = req.user.id;
+
   expenseModel
-    .findAll()
+    .findAll({ where: { UserId: logedInUserId } })
     .then((expenses) => {
       res.json(expenses);
     })
@@ -37,27 +42,29 @@ exports.getExpenses = (req, res, next) => {
 };
 
 exports.deleteExpense = (req, res, next) => {
-  // console.log("req.params.id", req.params.id);
+  const logedInUserId = req.user.id;
   const expenseId = req.params.id;
+  console.log("logedInUserId", logedInUserId);
   expenseModel
-    .findByPk(expenseId)
+    .findOne({ where: { id: expenseId, UserId: logedInUserId } })
     .then((expense) => {
       return expense.destroy();
     })
     .then(() => {
       console.log("expense deleted");
       res.status(200).json({ message: "expense deleted successfully...!!" });
-    }) //  here we need not to redirect to "/expenses" as we have already send response one time so furhter execution will be done in client side only
+    })
     .catch((err) => {
       console.log(err);
     });
 };
 
 exports.getEditExpense = (req, res, next) => {
+  const logedInUserId = req.user.id;
   const expenseId = req.params.id;
-
+  // console.log("logedInUserId", logedInUserId);
   expenseModel
-    .findByPk(expenseId)
+    .findOne({ where: { id: expenseId, UserId: logedInUserId } })
     .then((expense) => {
       console.log("expense to edit", expense);
       res.json(expense);
@@ -68,10 +75,12 @@ exports.getEditExpense = (req, res, next) => {
 };
 
 exports.updateExpense = (req, res, next) => {
-  console.log("update details", req.body);
+  // console.log("update details", req.body);
   const expenseId = req.body.xpId;
+  const logedInUserId = req.user.id;
+  
   expenseModel
-    .findByPk(expenseId)
+    .findOne({ where: { id: expenseId, UserId: logedInUserId } })
     .then((expense) => {
       expense.amount = req.body.xpAmount;
       expense.description = req.body.xpDesc;

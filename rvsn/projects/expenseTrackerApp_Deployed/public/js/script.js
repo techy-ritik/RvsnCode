@@ -30,6 +30,7 @@ if (registerForm) {
 
 const loginForm = document.querySelector(".login-form");
 
+// let loggedInUserId;
 if (loginForm) {
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -43,8 +44,10 @@ if (loginForm) {
     axios
       .post("http://localhost:5000/user/login", loginObj)
       .then((currentUser) => {
-        console.log("currentUser", currentUser.data.user);
+        console.log("currentUser", currentUser.data);
+        // loggedInUserId = currentUser.data.user.id;
         alert(currentUser.data.message);
+        localStorage.setItem('token',currentUser.data.token);
         window.location.href = "/expense/expense-page"; // here with this, expense page opens after only successfull login
       })
       .catch((err) => {
@@ -72,13 +75,16 @@ if (registerForm || loginForm) {
 /** expense management */
 //=========================
 
+
 const expenseForm = document.querySelector("#ExpenseForm");
 const ul = document.querySelector("ul");
 
+const token = localStorage.getItem("token");
 let idToUpdate = null;
 let isEditing = false;
 
 if (expenseForm) {
+
   expenseForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -91,7 +97,7 @@ if (expenseForm) {
       };
 
       axios
-        .post("http://localhost:5000/expense/add-expense", expenseObject)
+        .post("http://localhost:5000/expense/add-expense", expenseObject, {headers: { Authorization: token }})
         .then((expense) => {
           console.log("newExpense", expense.data);
 
@@ -100,6 +106,7 @@ if (expenseForm) {
           expenseForm.reset();
         })
         .catch((err) => {
+          alert(err.response.data.message);
           console.log(err);
         });
     } else {
@@ -113,7 +120,7 @@ if (expenseForm) {
       };
 
       axios
-        .put("http://localhost:5000/expense/update-expense", editExpenseObj)
+        .put("http://localhost:5000/expense/update-expense", editExpenseObj, {headers: { Authorization: token }})
         .then((expense) => {
           console.log("expense updated..........");
 
@@ -131,6 +138,7 @@ if (expenseForm) {
           document.getElementById("addExpense").textContent = "Add Expense";
         })
         .catch((err) => {
+          alert(err.response.data.message);
           console.log(err);
         });
     }
@@ -139,7 +147,7 @@ if (expenseForm) {
   /** get all expenses */
 
   axios
-    .get("http://localhost:5000/expense/expenses")
+    .get('http://localhost:5000/expense/expenses',{headers:{"Authorization":token}})
     .then((expenses) => {
       console.log("expenses", expenses.data);
 
@@ -148,6 +156,7 @@ if (expenseForm) {
       });
     })
     .catch((err) => {
+      alert(err.response.data.message)
       console.log(err);
     });
 }
@@ -159,7 +168,7 @@ function addNewLi(expenseData) {
   newLi.className = "expenseList";
   newLi.id = expenseData.id;
 
-  newLi.innerHTML = `<span class="expense-data">${expenseData.amount} -- ${expenseData.description} --  ${expenseData.category}</span>`;
+  newLi.innerHTML = `<span class="expense-data"> Rs. ${expenseData.amount} -- ${expenseData.description} --  ${expenseData.category}</span>`;
 
   // delete-btn
   const dltBtn = document.createElement("button");
@@ -187,12 +196,14 @@ function deleteExpense(event) {
   console.log("currentExpense", currentExpense);
 
   axios
-    .delete(`http://localhost:5000/expense/delete-expense/${expenseId}`)
+    .delete(`http://localhost:5000/expense/delete-expense/${expenseId}`,{headers:{"Authorization":token}})
     .then((res) => {
       currentExpense.remove();
+      alert(res.data.message)
       console.log("expense deleted");
     })
     .catch((err) => {
+      alert(err.response.data.message);
       console.log(err);
     });
 }
@@ -204,12 +215,12 @@ function getEditExpense(event) {
   const expenseId = currentExpense.id;
 
   axios
-    .get(`http://localhost:5000/expense/edit-expense/${expenseId}`)
+    .get(`http://localhost:5000/expense/edit-expense/${expenseId}`, {headers: { Authorization: token }})
     .then((expense) => {
       console.log("expense to edit", expense.data);
 
-      currentExpense.remove()
-      
+      currentExpense.remove();
+
       const amountField = document.getElementById("amount");
       const descriptionField = document.getElementById("description");
       const categoryField = document.getElementById("category");
@@ -224,6 +235,7 @@ function getEditExpense(event) {
       document.getElementById("addExpense").textContent = "Update Expense";
     })
     .catch((err) => {
+      alert(err.response.data.message);
       console.log(err);
     });
 }
