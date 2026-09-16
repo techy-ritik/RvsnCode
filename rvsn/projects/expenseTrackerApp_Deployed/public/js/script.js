@@ -18,6 +18,7 @@ if (registerForm) {
       .then((user) => {
         console.log(user.data);
         alert("successfully registered...");
+        window.location.href = "/user/login-page";
       })
       .catch((err) => {
         console.log(err.response.data.message);
@@ -47,7 +48,7 @@ if (loginForm) {
         console.log("currentUser", currentUser.data);
         // loggedInUserId = currentUser.data.user.id;
         alert(currentUser.data.message);
-        localStorage.setItem('token',currentUser.data.token);
+        localStorage.setItem("token", currentUser.data.token);
         window.location.href = "/expense/expense-page"; // here with this, expense page opens after only successfull login
       })
       .catch((err) => {
@@ -75,7 +76,6 @@ if (registerForm || loginForm) {
 /** expense management */
 //=========================
 
-
 const expenseForm = document.querySelector("#ExpenseForm");
 const ul = document.querySelector("ul");
 
@@ -84,7 +84,6 @@ let idToUpdate = null;
 let isEditing = false;
 
 if (expenseForm) {
-
   expenseForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -97,7 +96,9 @@ if (expenseForm) {
       };
 
       axios
-        .post("http://localhost:5000/expense/add-expense", expenseObject, {headers: { Authorization: token }})
+        .post("http://localhost:5000/expense/add-expense", expenseObject, {
+          headers: { Authorization: token },
+        })
         .then((expense) => {
           console.log("newExpense", expense.data);
 
@@ -110,8 +111,7 @@ if (expenseForm) {
           console.log(err);
         });
     } else {
-
-    /** update expense */
+      /** update expense */
       const editExpenseObj = {
         xpId: idToUpdate,
         xpAmount: document.getElementById("amount").value,
@@ -120,7 +120,9 @@ if (expenseForm) {
       };
 
       axios
-        .put("http://localhost:5000/expense/update-expense", editExpenseObj, {headers: { Authorization: token }})
+        .put("http://localhost:5000/expense/update-expense", editExpenseObj, {
+          headers: { Authorization: token },
+        })
         .then((expense) => {
           console.log("expense updated..........");
 
@@ -147,7 +149,9 @@ if (expenseForm) {
   /** get all expenses */
 
   axios
-    .get('http://localhost:5000/expense/expenses',{headers:{"Authorization":token}})
+    .get("http://localhost:5000/expense/expenses", {
+      headers: { Authorization: token },
+    })
     .then((expenses) => {
       console.log("expenses", expenses.data);
 
@@ -156,7 +160,7 @@ if (expenseForm) {
       });
     })
     .catch((err) => {
-      alert(err.response.data.message)
+      alert(err.response.data.message);
       console.log(err);
     });
 }
@@ -196,10 +200,12 @@ function deleteExpense(event) {
   console.log("currentExpense", currentExpense);
 
   axios
-    .delete(`http://localhost:5000/expense/delete-expense/${expenseId}`,{headers:{"Authorization":token}})
+    .delete(`http://localhost:5000/expense/delete-expense/${expenseId}`, {
+      headers: { Authorization: token },
+    })
     .then((res) => {
       currentExpense.remove();
-      alert(res.data.message)
+      alert(res.data.message);
       console.log("expense deleted");
     })
     .catch((err) => {
@@ -215,7 +221,9 @@ function getEditExpense(event) {
   const expenseId = currentExpense.id;
 
   axios
-    .get(`http://localhost:5000/expense/edit-expense/${expenseId}`, {headers: { Authorization: token }})
+    .get(`http://localhost:5000/expense/edit-expense/${expenseId}`, {
+      headers: { Authorization: token },
+    })
     .then((expense) => {
       console.log("expense to edit", expense.data);
 
@@ -239,3 +247,14 @@ function getEditExpense(event) {
       console.log(err);
     });
 }
+
+// payment management
+//=====================
+
+/** buy membership page*/
+
+const buyMembershipBtn = document.querySelector("#membersip-btn");
+buyMembershipBtn.onclick = () => {
+  window.location.href = "/payments";
+};
+

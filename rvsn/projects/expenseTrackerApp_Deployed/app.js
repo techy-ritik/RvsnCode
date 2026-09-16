@@ -12,10 +12,13 @@ app.use(express.json({ extended: false }));
 
 const userRoute = require('./routes/user');
 app.use('/user',userRoute)
-const expenseRoutes = require("./routes/expense");
-app.use('/expense',expenseRoutes);
+const expenseRoute = require("./routes/expense");
+app.use('/expense',expenseRoute);
+const paymentRoute = require('./routes/payment');
+app.use('/payments',paymentRoute);
 
 require('./models');
+const orderModel = require('./models/order')
 
 const sequelize = require("./util/database");
 

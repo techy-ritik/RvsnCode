@@ -6,9 +6,15 @@
   box-sizing: border-box;
 }
 
+
+/* ==========================================
+   BODY / MAIN LAYOUT
+========================================== */
+
 body {
   min-height: 100vh;
-  padding: 40px;
+
+  padding: 0 40px 40px;
 
   font-family: "Poppins", sans-serif;
   color: #1e293b;
@@ -17,24 +23,109 @@ body {
 
   display: grid;
 
-  /* FORM LEFT | LIST RIGHT */
+  /*
+    Row 1 = Navbar
+    Row 2 = Form + Expense List
+  */
   grid-template-columns: 420px minmax(0, 1fr);
+  grid-template-rows: 60px minmax(0, 1fr);
 
-  /* Small gap between form and list */
-  gap: 15px;
+  column-gap: 15px;
+  row-gap: 15px;
 
   align-items: start;
+
+  overflow-x: hidden;
 }
 
 
 /* ==========================================
-   EXPENSE LIST
+   NAVBAR
+========================================== */
+
+body > .navbar {
+  grid-column: 1 / -1;
+  grid-row: 1;
+
+  /*
+    Extend navbar to the complete browser width
+    because body has 40px left/right padding
+  */
+  width: calc(100% + 80px);
+
+  margin-left: -40px;
+
+  height: 60px;
+
+  padding: 0 40px;
+
+  display: flex !important;
+  justify-content: flex-end;
+  align-items: center;
+
+  background: #11271e;
+
+  border: 1px solid #374151;
+  border-radius: 0 0 12px 12px;
+
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+
+  z-index: 1000;
+}
+
+
+/* ==========================================
+   PREMIUM MEMBERSHIP BUTTON
+========================================== */
+
+#membersip-btn {
+  padding: 11px 20px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
+
+  color: #fff;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow: 0 5px 15px rgba(234, 88, 12, 0.25);
+
+  transition: all 0.25s ease;
+}
+
+
+#membersip-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 20px rgba(234, 88, 12, 0.35);
+}
+
+
+#membersip-btn:active {
+  transform: translateY(0);
+}
+
+
+/* ==========================================
+   EXPENSE LIST CONTAINER
 ========================================== */
 
 ul {
+  grid-column: 2;
+  grid-row: 2;
+
   width: 100%;
-  margin-left: 30%;
+
+  margin: 0;
   padding: 0;
+
   list-style: none;
 }
 
@@ -44,16 +135,21 @@ ul {
 ========================================== */
 
 .expenseList {
-  width: 55%;
+  width: 75%;
+
   min-height: 65px;
 
+  margin-left: auto;
   margin-bottom: 12px;
+
   padding: 14px 18px;
 
   background: #fff;
 
   border: 1px solid #dbeafe;
+
   border-left: 5px solid #2563eb;
+
   border-radius: 12px;
 
   display: flex;
@@ -119,6 +215,9 @@ ul {
 ========================================== */
 
 #ExpenseForm {
+  grid-column: 1;
+  grid-row: 2;
+
   width: 420px;
 
   padding: 30px;
@@ -132,14 +231,13 @@ ul {
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 
   display: flex;
-
   flex-direction: column;
 
   gap: 11px;
 
   position: sticky;
 
-  top: 30px;
+  top: 15px;
 }
 
 
@@ -153,7 +251,6 @@ ul {
   color: #2563eb;
 
   font-size: 1.8rem;
-
   font-weight: 700;
 
   text-align: center;
@@ -166,7 +263,6 @@ ul {
   display: block;
 
   width: 55px;
-
   height: 4px;
 
   margin: 8px auto 0;
@@ -187,7 +283,6 @@ label {
   color: #475569;
 
   font-size: 13px;
-
   font-weight: 600;
 }
 
@@ -250,161 +345,9 @@ select:focus {
   font-family: inherit;
 
   font-size: 15px;
-
   font-weight: 600;
 
   cursor: pointer;
 }
 
 
-/* ==========================================
-   SMALL DESKTOP / LAPTOP
-========================================== */
-
-@media (max-width: 1200px) {
-
-  body {
-    padding: 30px;
-
-    grid-template-columns: 380px minmax(0, 1fr);
-
-    gap: 15px;
-  }
-
-  #ExpenseForm {
-    width: 380px;
-  }
-
-  ul {
-    margin-left: 10%;
-  }
-
-  .expenseList {
-    width: 85%;
-  }
-}
-
-
-/* ==========================================
-   TABLET
-========================================== */
-
-@media (max-width: 900px) {
-
-  body {
-    padding: 25px;
-
-    grid-template-columns: 330px minmax(0, 1fr);
-
-    gap: 15px;
-  }
-
-  #ExpenseForm {
-    width: 330px;
-
-    padding: 25px;
-  }
-
-  ul {
-    margin-left: 0;
-  }
-
-  .expenseList {
-    width: 100%;
-  }
-
-  .delete-btn,
-  .edit-btn {
-    padding: 7px 9px;
-
-    font-size: 11px;
-  }
-}
-
-
-/* ==========================================
-   MOBILE
-========================================== */
-
-@media (max-width: 700px) {
-
-  body {
-    min-height: 100vh;
-
-    padding: 20px 15px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 20px;
-  }
-
-  #ExpenseForm {
-    width: 100%;
-
-    padding: 25px;
-
-    position: static;
-  }
-
-  ul {
-    width: 100%;
-
-    margin-left: 0;
-  }
-
-  .expenseList {
-    width: 100%;
-
-    min-height: 60px;
-
-    padding: 12px 14px;
-  }
-
-  .expense-data {
-    min-width: 0;
-  }
-
-  .delete-btn,
-  .edit-btn {
-    padding: 7px 9px;
-
-    font-size: 11px;
-  }
-}
-
-
-/* ==========================================
-   SMALL MOBILE
-========================================== */
-
-@media (max-width: 450px) {
-
-  body {
-    padding: 15px 10px;
-  }
-
-  #ExpenseForm {
-    padding: 20px;
-  }
-
-  .title {
-    font-size: 1.5rem;
-  }
-
-  .expenseList {
-    padding: 11px;
-  }
-
-  .expense-data {
-    font-size: 12px;
-  }
-
-  .delete-btn,
-  .edit-btn {
-    padding: 6px 8px;
-
-    font-size: 10px;
-  }
-}

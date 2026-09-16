@@ -30,7 +30,8 @@ exports.postAddExpense = (req, res, next) => {
 
 exports.getExpenses = (req, res, next) => {
   const logedInUserId = req.user.id;
-
+  console.log("logedInUserId",logedInUserId)
+  
   expenseModel
     .findAll({ where: { UserId: logedInUserId } })
     .then((expenses) => {
