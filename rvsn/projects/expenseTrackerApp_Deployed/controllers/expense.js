@@ -28,10 +28,10 @@ exports.postAddExpense = (req, res, next) => {
     });
 };
 
-exports.getExpenses = (req, res, next) => {
+exports.getLoggedInUserExpenses = (req, res, next) => {
   const logedInUserId = req.user.id;
-  console.log("logedInUserId",logedInUserId)
-  
+  console.log("logedInUserId", logedInUserId);
+
   expenseModel
     .findAll({ where: { UserId: logedInUserId } })
     .then((expenses) => {
@@ -79,7 +79,7 @@ exports.updateExpense = (req, res, next) => {
   // console.log("update details", req.body);
   const expenseId = req.body.xpId;
   const logedInUserId = req.user.id;
-  
+
   expenseModel
     .findOne({ where: { id: expenseId, UserId: logedInUserId } })
     .then((expense) => {

@@ -21,6 +21,7 @@ document.getElementById("renderBtn").addEventListener("click", () => {
       return cashfree.checkout(checkoutOptions);
     })
     .catch((err) => {
+      alert(err.response.data.message);
       console.log(err);
     });
 });
@@ -28,8 +29,8 @@ document.getElementById("renderBtn").addEventListener("click", () => {
 window.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
 
-console.log(window.location.href);
-console.log(new URLSearchParams(window.location.search).get("status"));
+  console.log(window.location.href);
+  console.log(new URLSearchParams(window.location.search).get("status"));
 
   const orderId = params.get("orderId");
   const status = params.get("status");
@@ -45,9 +46,9 @@ console.log(new URLSearchParams(window.location.search).get("status"));
   const payInstruction = document.getElementById("paymentInstruction");
   const row = document.querySelector(".row");
 
-  statusElement.style.display = "block"
+  statusElement.style.display = "block";
 
-  if (status === "Success") {
+  if (status.toLowerCase() === "success") {
     statusElement.className = "success";
 
     statusElement.innerHTML = `
@@ -58,8 +59,7 @@ console.log(new URLSearchParams(window.location.search).get("status"));
     `;
 
     row.style.display = "none";
-  }
-  else if (status === "Pending") {
+  } else if (status.toLowerCase() === "pending") {
     statusElement.className = "pending";
 
     statusElement.innerHTML = `
@@ -69,9 +69,7 @@ console.log(new URLSearchParams(window.location.search).get("status"));
       <p>Order ID: ${orderId}</p>
     `;
     row.style.display = "none";
-  }
-
-else if (status === "Failed") {
+  } else if (status.toLowerCase() === "failed") {
     statusElement.className = "failed";
 
     statusElement.innerHTML = `

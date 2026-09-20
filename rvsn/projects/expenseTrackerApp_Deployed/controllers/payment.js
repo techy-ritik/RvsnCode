@@ -1,5 +1,6 @@
 const cashfreeServices = require("../services/cashfree");
 const orderModel = require("../models/order");
+const userModel = require("../models/user");
 const path = require("path");
 const rootDir = require("../util/path");
 
@@ -13,8 +14,9 @@ exports.processPayment = (req, res) => {
   const orderCurrency = "INR";
   const customerId = "1";
   const customerPhone = "9999999999";
+  const userId = req.user.id;
 
-  cashfreeServices.createOrder(orderId, orderAmount, orderCurrency, customerId, customerPhone)   // here by calling this services function we are generating paymentSessionId by passing all the order details 
+  cashfreeServices.createOrder(orderId, orderAmount, orderCurrency, customerId, customerPhone,userId)   // here by calling this services function we are generating paymentSessionId by passing all the order details 
     .then((paymentSessionId) => {
       console.log("paymentSessionId", paymentSessionId);
       orderModel.create({
@@ -41,8 +43,12 @@ exports.getPaymentStatus = async (req, res) => {
     await orderModel.update({ paymentStatus :orderStatus },{where:{orderId:orderId}});  // here we are updating the paymentStatus in the order table for the passed orderId with the status received from cashfree server
 
 
+    if(orderStatus == "Success"){
+      const userId = await orderModel.findOne({where:{orderId:orderId}});  // here we are fetching the userId from the order table for the passed orderId
+      await userModel.update({ userType: "premium" },{ where: { id: userId.userId } }); 
+    }
     console.log("orderStatus",orderStatus);
-    res.redirect(`/payment.html?orderId=${orderId}&status="Success"`);  // here we are redirecting to the payment.html page with the orderId and status as query params so that we can show the status of the payment to the user
+    res.redirect(`/payment.html?orderId=${orderId}&status=${orderStatus}`);  // here we are redirecting to the payment.html page with the orderId and status as query params so that we can show the status of the payment to the user
   }
   catch(err){
     console.log(err);

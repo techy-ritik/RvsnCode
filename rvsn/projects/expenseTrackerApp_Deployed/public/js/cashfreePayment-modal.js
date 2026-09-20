@@ -46,6 +46,7 @@ document.getElementById("renderBtn").addEventListener("click", () => {
       }
     })
     .catch((err) => {
+      alert(err.response.data.message);
       console.log(err);
     });
 });
@@ -73,7 +74,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   statusElement.style.display = "block";
 
-  if (status === "Success") {
+  if (status.toLowerCase() === "success") {
     statusElement.className = "success";
 
     statusElement.innerHTML = `
@@ -84,7 +85,7 @@ window.addEventListener("DOMContentLoaded", () => {
     `;
 
     row.style.display = "none";
-  } else if (status === "Pending") {
+  } else if (status.toLowerCase() === "pending") {
     statusElement.className = "pending";
 
     statusElement.innerHTML = `
@@ -94,7 +95,7 @@ window.addEventListener("DOMContentLoaded", () => {
       <p>Order ID: ${orderId}</p>
     `;
     row.style.display = "none";
-  } else if (status === "Failed") {
+  } else if (status.toLowerCase() === "failed") {
     statusElement.className = "failed";
 
     statusElement.innerHTML = `

@@ -10,9 +10,9 @@ exports.getSignUpPage = (req, res, next) => {
   res.sendFile(path.join(rootDir, "views/signUp.html"));
 };
 
-exports.getLoginPage = (req, res, next) => {
-  res.sendFile(path.join(rootDir, "views/login.html"));
-};
+// exports.getLoginPage = (req, res, next) => {
+//   res.sendFile(path.join(rootDir, "views/login.html"));
+// };
 
 exports.addUser = (req, res, next) => {
   const { name, email, password } = req.body;
@@ -29,7 +29,7 @@ exports.addUser = (req, res, next) => {
       return bcrypt.hash(password, saltrounds); // method for hashing the password by using bcrypt method
     })
     .then((hash) => {
-      return userModel.create({ name, email, password: hash });
+      return userModel.create({ name, email, password: hash, userType: "non-premium" }); 
     })
     .then((user) => {
       res.status(201).json(user);

@@ -18,7 +18,7 @@ if (registerForm) {
       .then((user) => {
         console.log(user.data);
         alert("successfully registered...");
-        window.location.href = "/user/login-page";
+        window.location.href = "/login.html";
       })
       .catch((err) => {
         console.log(err.response.data.message);
@@ -33,6 +33,7 @@ const loginForm = document.querySelector(".login-form");
 
 // let loggedInUserId;
 if (loginForm) {
+  let userType = null;
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -46,7 +47,9 @@ if (loginForm) {
       .post("http://localhost:5000/user/login", loginObj)
       .then((currentUser) => {
         console.log("currentUser", currentUser.data);
-        // loggedInUserId = currentUser.data.user.id;
+        userType = currentUser.data.user.userType;
+        localStorage.setItem("userType", userType);
+
         alert(currentUser.data.message);
         localStorage.setItem("token", currentUser.data.token);
         window.location.href = "/expense/expense-page"; // here with this, expense page opens after only successfull login
@@ -77,13 +80,15 @@ if (registerForm || loginForm) {
 //=========================
 
 const expenseForm = document.querySelector("#ExpenseForm");
-const ul = document.querySelector("ul");
+const expenseListUl = document.querySelector("#expense-list");
 
 const token = localStorage.getItem("token");
 let idToUpdate = null;
 let isEditing = false;
 
 if (expenseForm) {
+  /** expense data handling operations */
+  //-------------------------------------
   expenseForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -146,10 +151,10 @@ if (expenseForm) {
     }
   });
 
-  /** get all expenses */
+  /** get all expenses of loggedIn user*/
 
   axios
-    .get("http://localhost:5000/expense/expenses", {
+    .get("http://localhost:5000/expense/user-expenses", {
       headers: { Authorization: token },
     })
     .then((expenses) => {
@@ -188,7 +193,7 @@ function addNewLi(expenseData) {
   editBtn.addEventListener("click", getEditExpense);
   newLi.appendChild(editBtn);
 
-  ul.appendChild(newLi);
+  expenseListUl.appendChild(newLi);
 }
 
 /** delete expense */
@@ -248,13 +253,69 @@ function getEditExpense(event) {
     });
 }
 
-// payment management
-//=====================
+//==============================
+// premium membership management
+//==============================
 
 /** buy membership page*/
+userType = localStorage.getItem("userType");
+console.log("userType", userType);
 
-const buyMembershipBtn = document.querySelector("#membersip-btn");
-buyMembershipBtn.onclick = () => {
-  window.location.href = "/payments";
-};
+if (userType == "premium") {
+  const userTypeValue = document.getElementById("userTypeValue");
+  userTypeValue.textContent = "Premium User";
 
+  const buyMembershipBtn = document.querySelector("#membersip-btn");
+  buyMembershipBtn.style.display = "none";
+} else if (userType == "non-premium") {
+  const buyMembershipBtn = document.querySelector("#membersip-btn");
+  buyMembershipBtn.onclick = () => {
+    window.location.href = "/payments";
+  };
+
+  const userTypeDiv = document.getElementById("userType");
+  userTypeDiv.style.display = "none";
+}
+
+/** Leaderboard display */
+const leaderboardBtn = document.getElementById("leaderboard-btn");
+leaderboardBtn.addEventListener("click", async () => {
+  try {
+    const leaderboardExpensesList = await axios.get(
+      "http://localhost:5000/premium/leaderBoard",
+      { headers: { Authorization: token } },
+    );
+
+    const leaderboardSortedExpenses = leaderboardExpensesList.data.leaderboardList;
+    console.log("allExpenses", leaderboardSortedExpenses);
+
+    leaderboardDisplay(leaderboardSortedExpenses);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+function leaderboardDisplay(leaderboardSortedExpenses) {
+  console.log("leaderboard")
+  const leaderboardOverlay = document.querySelector(".leaderboard-overlay");
+  const leaderboardPopupDiv = document.querySelector(".leaderboard-popup");
+  const leaderboardListUl = document.querySelector("#leaderboard-list");
+  const leaderBoardCloseBtn = document.querySelector("#closeLeaderboardBtn");
+  leaderboardSortedExpenses.forEach((expense) => {
+    console.log("expense",expense)
+    const newLi = document.createElement('li');
+    newLi.className = "userTotalExpenseList";
+    newLi.id = expense.id;
+
+    newLi.innerHTML = `<span> Name - ${expense.name} --->>> Total Expense - ₹${expense.totalExpense}</span>`;
+
+    leaderboardListUl.appendChild(newLi);
+  });
+  leaderBoardCloseBtn.addEventListener('click',()=>{
+    leaderboardPopupDiv.classList.remove("show");  
+    leaderboardOverlay.classList.remove("show");
+    leaderboardListUl.innerHTML = "";
+  })
+  leaderboardPopupDiv.classList.add('show');  // display leaderboard popUp
+  leaderboardOverlay.classList.add("show");
+}

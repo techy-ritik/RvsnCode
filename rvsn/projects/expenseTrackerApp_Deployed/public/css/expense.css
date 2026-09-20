@@ -6,14 +6,12 @@
   box-sizing: border-box;
 }
 
-
 /* ==========================================
    BODY / MAIN LAYOUT
 ========================================== */
 
 body {
   min-height: 100vh;
-
   padding: 0 40px 40px;
 
   font-family: "Poppins", sans-serif;
@@ -38,7 +36,6 @@ body {
   overflow-x: hidden;
 }
 
-
 /* ==========================================
    NAVBAR
 ========================================== */
@@ -48,11 +45,10 @@ body > .navbar {
   grid-row: 1;
 
   /*
-    Extend navbar to the complete browser width
+    Extend navbar to complete browser width
     because body has 40px left/right padding
   */
   width: calc(100% + 80px);
-
   margin-left: -40px;
 
   height: 60px;
@@ -60,12 +56,17 @@ body > .navbar {
   padding: 0 40px;
 
   display: flex !important;
+
+  /* Keep everything at the right side */
   justify-content: flex-end;
   align-items: center;
+
+  gap: 15px;
 
   background: #11271e;
 
   border: 1px solid #374151;
+
   border-radius: 0 0 12px 12px;
 
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
@@ -73,6 +74,77 @@ body > .navbar {
   z-index: 1000;
 }
 
+/* ==========================================
+   USER TYPE CONTAINER
+========================================== */
+
+#userType {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ==========================================
+   USER TYPE TEXT
+========================================== */
+
+#userTypeValue {
+  margin: 0;
+
+  padding: 7px 14px;
+
+  border-radius: 20px;
+
+  background: rgba(34, 197, 94, 0.12);
+
+  border: 1px solid rgba(34, 197, 94, 0.3);
+
+  color: #86efac;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+/* ==========================================
+   LEADERBOARD BUTTON
+========================================== */
+
+#leaderboard-btn {
+  padding: 9px 16px;
+
+  border: 1px solid #3b82f6;
+
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #93c5fd;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+#leaderboard-btn:hover {
+  background: #3b82f6;
+
+  color: #ffffff;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.25);
+}
+
+#leaderboard-btn:active {
+  transform: translateY(0);
+}
 
 /* ==========================================
    PREMIUM MEMBERSHIP BUTTON
@@ -82,6 +154,7 @@ body > .navbar {
   padding: 11px 20px;
 
   border: none;
+
   border-radius: 10px;
 
   background: linear-gradient(135deg, #f59e0b, #ea580c);
@@ -100,18 +173,15 @@ body > .navbar {
   transition: all 0.25s ease;
 }
 
-
 #membersip-btn:hover {
   transform: translateY(-2px);
 
   box-shadow: 0 8px 20px rgba(234, 88, 12, 0.35);
 }
 
-
 #membersip-btn:active {
   transform: translateY(0);
 }
-
 
 /* ==========================================
    EXPENSE LIST CONTAINER
@@ -128,7 +198,6 @@ ul {
 
   list-style: none;
 }
-
 
 /* ==========================================
    EXPENSE ITEM
@@ -165,6 +234,9 @@ ul {
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
 }
 
+/* ==========================================
+   EXPENSE DATA
+========================================== */
 
 .expense-data {
   flex: 1;
@@ -173,7 +245,6 @@ ul {
 
   word-break: break-word;
 }
-
 
 /* ==========================================
    EXPENSE BUTTONS
@@ -199,16 +270,13 @@ ul {
   white-space: nowrap;
 }
 
-
 .delete-btn {
   background: linear-gradient(135deg, #ef4444, #dc2626);
 }
 
-
 .edit-btn {
   background: linear-gradient(135deg, #2563eb, #16a34a);
 }
-
 
 /* ==========================================
    EXPENSE FORM
@@ -236,10 +304,8 @@ ul {
   gap: 11px;
 
   position: sticky;
-
   top: 15px;
 }
-
 
 /* ==========================================
    FORM TITLE
@@ -256,7 +322,6 @@ ul {
   text-align: center;
 }
 
-
 .title::after {
   content: "";
 
@@ -272,7 +337,6 @@ ul {
   background: linear-gradient(90deg, #2563eb, #16a34a);
 }
 
-
 /* ==========================================
    LABELS
 ========================================== */
@@ -285,7 +349,6 @@ label {
   font-size: 13px;
   font-weight: 600;
 }
-
 
 /* ==========================================
    INPUTS
@@ -310,7 +373,6 @@ select {
   font-size: 14px;
 }
 
-
 input:focus,
 select:focus {
   outline: none;
@@ -321,7 +383,6 @@ select:focus {
 
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
-
 
 /* ==========================================
    ADD / UPDATE BUTTON
@@ -348,6 +409,275 @@ select:focus {
   font-weight: 600;
 
   cursor: pointer;
+}  
+
+/* =========================
+   LEADERBOARD OVERLAY
+========================= */
+
+.leaderboard-overlay {
+  display: none;
+
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  z-index: 9998;
+
+  pointer-events: auto;
 }
 
 
+/* Show overlay */
+
+.leaderboard-overlay.show {
+  display: block;
+}
+
+
+/* =========================
+   LEADERBOARD POPUP
+========================= */
+
+.leaderboard-popup {
+  display: none;
+
+  position: fixed;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 550px;
+
+  max-width: 90%;
+
+  max-height: 70vh;
+
+  padding: 25px;
+
+  background: #111111;
+
+  border-radius: 14px;
+
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.45);
+
+  z-index: 9999;
+
+  overflow-y: auto;
+}
+
+
+/* Show popup */
+
+.leaderboard-popup.show {
+  display: block;
+}
+
+
+/* =========================
+   LEADERBOARD HEADER
+========================= */
+
+.leaderboard-header {
+  position: relative;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  margin-bottom: 20px;
+
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid #333333;
+}
+
+
+/* =========================
+   LEADERBOARD TITLE
+========================= */
+
+.leaderboard-title {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 25px;
+
+  font-weight: 700;
+
+  text-align: center;
+}
+
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+
+#closeLeaderboardBtn {
+  position: absolute;
+
+  top: 50%;
+
+  right: 0;
+
+  transform: translateY(-50%);
+
+  width: 32px;
+
+  height: 32px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #dc3545;
+
+  color: #ffffff;
+
+  font-size: 16px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+#closeLeaderboardBtn:hover {
+  background: #bb2d3b;
+
+  transform: translateY(-50%) scale(1.08);
+}
+
+
+/* =========================
+   LEADERBOARD LIST
+========================= */
+
+#leaderboard-list {
+  list-style: none;
+
+  margin: 0;
+
+  padding: 0;
+}
+
+
+/* =========================
+   EACH USER
+========================= */
+
+.userTotalExpenseList {
+  width: 100%;
+
+  padding: 14px 16px;
+
+  margin-bottom: 10px;
+
+  background: #202124;
+
+  border: 1px solid #383838;
+
+  border-radius: 8px;
+
+  color: #eeeeee;
+
+  font-size: 15px;
+
+  font-weight: 500;
+
+  transition: 0.2s ease;
+}
+
+.userTotalExpenseList:hover {
+  background: #292b2f;
+
+  border-color: #0d6efd;
+
+  transform: translateX(3px);
+}
+
+
+/* =========================
+   USER CONTENT
+========================= */
+
+.userTotalExpenseList > span {
+  display: block;
+
+  width: 100%;
+}
+
+
+/* =========================
+   POPUP SCROLLBAR
+========================= */
+
+.leaderboard-popup::-webkit-scrollbar {
+  width: 7px;
+}
+
+.leaderboard-popup::-webkit-scrollbar-track {
+  background: #1b1b1b;
+
+  border-radius: 10px;
+}
+
+.leaderboard-popup::-webkit-scrollbar-thumb {
+  background: #555555;
+
+  border-radius: 10px;
+}
+
+.leaderboard-popup::-webkit-scrollbar-thumb:hover {
+  background: #777777;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .leaderboard-popup {
+    width: 92%;
+
+    max-height: 75vh;
+
+    padding: 20px;
+  }
+
+  .leaderboard-title {
+    font-size: 21px;
+  }
+
+  #closeLeaderboardBtn {
+    width: 30px;
+
+    height: 30px;
+  }
+
+  .userTotalExpenseList {
+    font-size: 14px;
+  }
+}

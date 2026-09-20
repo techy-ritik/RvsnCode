@@ -16,14 +16,15 @@ const expenseRoute = require("./routes/expense");
 app.use('/expense',expenseRoute);
 const paymentRoute = require('./routes/payment');
 app.use('/payments',paymentRoute);
+const premiumRoute = require('./routes/premium');
+app.use('/premium',premiumRoute);
 
 require('./models');
-const orderModel = require('./models/order')
 
 const sequelize = require("./util/database");
 
-// sequelize.sync({alter:true})
-sequelize.sync()
+sequelize.sync({alter:true})
+// sequelize.sync()
   .then(() => {
     app.listen(5000,()=>{
       console.log('server is running on port : 5000')
