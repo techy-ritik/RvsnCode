@@ -23,8 +23,8 @@ require('./models');
 
 const sequelize = require("./util/database");
 
-sequelize.sync({alter:true})
-// sequelize.sync()
+// sequelize.sync({alter:true})
+sequelize.sync()
   .then(() => {
     app.listen(5000,()=>{
       console.log('server is running on port : 5000')

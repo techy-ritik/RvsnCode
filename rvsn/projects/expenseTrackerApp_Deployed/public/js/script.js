@@ -286,10 +286,11 @@ leaderboardBtn.addEventListener("click", async () => {
       { headers: { Authorization: token } },
     );
 
-    const leaderboardSortedExpenses = leaderboardExpensesList.data.leaderboardList;
-    console.log("allExpenses", leaderboardSortedExpenses);
+    const leaderboardList = leaderboardExpensesList.data;  
+     
+    console.log("allExpenses", leaderboardList);
 
-    leaderboardDisplay(leaderboardSortedExpenses);
+    leaderboardDisplay(leaderboardList);
   } catch (err) {
     console.log(err);
   }
@@ -302,6 +303,9 @@ function leaderboardDisplay(leaderboardSortedExpenses) {
   const leaderboardListUl = document.querySelector("#leaderboard-list");
   const leaderBoardCloseBtn = document.querySelector("#closeLeaderboardBtn");
   leaderboardSortedExpenses.forEach((expense) => {
+    if(expense.totalExpense === null){
+      expense.totalExpense = 0;
+    }
     console.log("expense",expense)
     const newLi = document.createElement('li');
     newLi.className = "userTotalExpenseList";
