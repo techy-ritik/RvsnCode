@@ -5,30 +5,41 @@ const Sequelize = require('sequelize')
 
 exports.getAllExpenseForLeaderBoard = async (req, res) => {
   
+/** final optimized approach for generating leaderboard totalExpense list by saving totalExpense in the user table itself and fetch from there only */
+
+try{
+  const leaderboardToatalExpenseUserList = await userModel.findAll({
+    attributes:['name','totalExpense'],
+    order:[['totalExpense','desc']]
+  });
+
+  res.status(200).json(leaderboardToatalExpenseUserList);
+}
+
   /** 1st optimized approach for generating leaderboard totalExpense list by executing sql querries through sequelize*/
   //----------------------------
 
-  try{
-    const leaderboardToatalExpenseUserList = await userModel.findAll({
-      attributes: [
-        "id",
-        "name",
-        [Sequelize.fn("sum", Sequelize.col("expenses.amount")), "totalExpense"],
-      ],
-      include: [
-        {
-          model: expenseModel,
-          attributes: [],
-        },
-      ],
-      group: ["user.id"],
-      order: [["totalExpense","DESC"]],
-    });
+  // try{
+  //   const leaderboardToatalExpenseUserList = await userModel.findAll({
+  //     attributes: [
+  //       "id",
+  //       "name",
+  //       [Sequelize.fn("sum", Sequelize.col("expenses.amount")), "totalExpense"],
+  //     ],
+  //     include: [
+  //       {
+  //         model: expenseModel,
+  //         attributes: [],
+  //       },
+  //     ],
+  //     group: ["user.id"],
+  //     order: [["totalExpense","DESC"]],
+  //   });
 
   
-    // console.log("allExpenses",leaderboardToatalExpenseUserList)
-      res.status(200).json(leaderboardToatalExpenseUserList);
-  }
+  //   // console.log("allExpenses",leaderboardToatalExpenseUserList)
+  //     res.status(200).json(leaderboardToatalExpenseUserList);
+  // }
 
   
   /** brute force approach for leaderboard  totalExpense list */
