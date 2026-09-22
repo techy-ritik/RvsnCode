@@ -1,5 +1,7 @@
 const path = require("path");
 const rootDir = require("../util/path");
+const dotenv = require('dotenv');
+dotenv.config();
 
 const bcrypt = require("bcrypt");
 
@@ -75,9 +77,6 @@ exports.loginUser = (req, res, next) => {
 };
 
 function generateTokens(userId) {
-  return jwt.sign(
-    { userId: userId },
-    "dee29e102252e45bb511d3244effba3d2158ac9289c6879f84a46d7d589a93cd33d0048870be26c1e62efbd0d292e030a68698c49530b6c94be8839dd375d281",
-  );
+  return jwt.sign({ userId: userId }, process.env.SECRET_ENCRYPTION_KEY);
 }
 

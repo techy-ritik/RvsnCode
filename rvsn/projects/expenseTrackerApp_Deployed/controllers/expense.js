@@ -1,5 +1,6 @@
 const path = require("path");
 const rootDir = require("../util/path");
+const sequelize = require("../util/database");
 
 const expenseModel = require("../models/expense");
 const userModel = require("../models/user");
@@ -8,126 +9,141 @@ exports.getExpensePage = (req, res, next) => {
   res.status(200).sendFile(path.join(rootDir, "views/expense.html"));
 };
 
-exports.postAddExpense = (req, res, next) => {
-  const logedInUser = req.user;
-  console.log("logedInUser", logedInUser);
+exports.postAddExpense = async (req, res, next) => {
+  try {
+    const transaction = await sequelize.transaction();
 
-  const updatedTotalExpense =
-    logedInUser.totalExpense + Number(req.body.xpAmount);
+    const logedInUser = req.user;
+    console.log("logedInUser", logedInUser);
 
-  userModel
-    .update(
-      { totalExpense: updatedTotalExpense },
-      { where: { id: logedInUser.id } },
-    )
-    .then(() => {
-      console.log("total expense Updated...")
-      return expenseModel.create({
+    const updatedTotalExpense =
+      logedInUser.totalExpense + Number(req.body.xpAmount);
+
+    const expense = await expenseModel.create(
+      {
         amount: req.body.xpAmount,
         description: req.body.xpDesc,
         category: req.body.xpCtgry,
         UserId: logedInUser.id,
-      });
-    })
-    .then((expense) => {
-      console.log("new added expense", expense);
-      console.log("expense added!!");
-      res.status(200).json(expense);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      },
+      { transaction: transaction },
+    );
+
+    await userModel.update(
+      { totalExpense: updatedTotalExpense },
+      { where: { id: logedInUser.id }, transaction: transaction },
+    );
+
+    await transaction.commit();
+    res.status(201).json(expense);
+  } catch (err) {
+    await transaction.rollback();
+    console.log(err);
+    res.status(500).json({ message: "Failed to add expense" });
+  }
 };
 
-exports.getLoggedInUserExpenses = (req, res, next) => {
-  const logedInUserId = req.user.id;
-  console.log("logedInUserId", logedInUserId);
+exports.getLoggedInUserExpenses = async (req, res, next) => {
+  try {
+    const logedInUserId = req.user.id;
+    console.log("logedInUserId", logedInUserId);
 
-  expenseModel
-    .findAll({ where: { UserId: logedInUserId } })
-    .then((expenses) => {
-      res.json(expenses);
-    })
-    .catch((err) => {
-      console.log(err);
+    const expenses = await expenseModel.findAll({
+      where: { UserId: logedInUserId },
     });
+
+    res.status(200).json(expenses);
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({ message: "Failed to fetch all expenses" });
+  }
 };
 
-exports.deleteExpense = (req, res, next) => {
-  const logedInUser = req.user;
-  const expenseId = req.params.id;
-  // console.log("logedInUser", logedInUser);
-  let updatedTotalExpense = logedInUser.totalExpense;
-  expenseModel
-    .findOne({ where: { id: expenseId, UserId: logedInUser.id } })
-    .then((expense) => {
-      updatedTotalExpense -= Number(expense.amount);
-      return expense.destroy();
-    })
-    .then(() => {
-      console.log("expense deleted");
-      return userModel.update(
-        { totalExpense: updatedTotalExpense },
-        { where: { id: logedInUser.id } },
-      );
-    })
-    .then(() => {
-      console.log("Total expense updated...")
-      res.status(200).json({ message: "expense deleted successfully...!!" });
-    })
-    .catch((err) => {
-      console.log(err);
+exports.deleteExpense = async (req, res, next) => {
+  try {
+    const transaction = await sequelize.transaction();
+
+    const logedInUser = req.user;
+    const expenseId = req.params.id;
+    // console.log("logedInUser", logedInUser);
+
+    let updatedTotalExpense = logedInUser.totalExpense;
+
+    const expense = await expenseModel.findOne({
+      where: { id: expenseId, UserId: logedInUser.id },
+      transaction: transaction,
     });
+
+    updatedTotalExpense -= Number(expense.amount);
+
+    await expense.destroy({ transaction: transaction });
+
+    await userModel.update(
+      { totalExpense: updatedTotalExpense },
+      { where: { id: logedInUser.id }, transaction: transaction },
+    );
+
+    await transaction.commit();
+    res.status(200).json({ message: "expense deleted successfully...!!" });
+  } catch (err) {
+    await transaction.rollback();
+    console.log(err);
+
+    res.status(500).json({ message: "expense failed to delete" });
+  }
 };
 
-exports.getEditExpense = (req, res, next) => {
-  const logedInUserId = req.user.id;
-  const expenseId = req.params.id;
-  // console.log("logedInUserId", logedInUserId);
-  expenseModel
-    .findOne({ where: { id: expenseId, UserId: logedInUserId } })
-    .then((expense) => {
-      console.log("expense to edit", expense);
-      res.json(expense);
-    })
-    .catch((err) => {
-      console.log(err);
+exports.getEditExpense = async (req, res, next) => {
+  try {
+    const logedInUserId = req.user.id;
+    const expenseId = req.params.id;
+    // console.log("logedInUserId", logedInUserId)
+
+    const expense = await expenseModel.findOne({
+      where: { id: expenseId, UserId: logedInUserId },
     });
+
+    res.status(200).json(expense);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-exports.updateExpense = (req, res, next) => {
-  // console.log("update details", req.body);
-  const expenseId = req.body.xpId;
-  const logedInUser = req.user;
+exports.updateExpense = async (req, res, next) => {
+  try {
+    const transaction = await sequelize.transaction();
 
-  let updatedTotalExpense = logedInUser.totalExpense;
+    // console.log("update details", req.body);
+    const expenseId = req.body.xpId;
+    const logedInUser = req.user;
 
-  expenseModel
-    .findOne({ where: { id: expenseId, UserId: logedInUser.id } })
-    .then((expense) => {
+    let updatedTotalExpense = logedInUser.totalExpense;
 
-      updatedTotalExpense -= Number(expense.amount);
-
-      expense.amount = req.body.xpAmount;
-      expense.description = req.body.xpDesc;
-      expense.category = req.body.xpCtgry;
-      return expense.save();
-    })
-    .then((expense) => {
-      console.log("expense updated..!!");
-      updatedTotalExpense += Number(expense.amount);
-
-      userModel.update(
-        { totalExpense: updatedTotalExpense },
-        { where: { id: logedInUser.id } },
-      )
-      .then(()=>{
-        console.log("Total expense updated...");
-
-        res.status(200).json(expense);
-      }) 
-    })
-    .catch((err) => {
-      console.log(err);
+    const expense = await expenseModel.findOne({
+      where: { id: expenseId, UserId: logedInUser.id },transaction:transaction,
     });
+
+    updatedTotalExpense -= Number(expense.amount);
+
+    expense.amount = req.body.xpAmount;
+    expense.description = req.body.xpDesc;
+    expense.category = req.body.xpCtgry;
+
+    const updatedExpense = await expense.save({transaction:transaction});
+
+    updatedTotalExpense += Number(updatedExpense.amount);
+
+    await userModel.update(
+      { totalExpense: updatedTotalExpense },
+      { where: { id: logedInUser.id },transaction:transaction },
+    );
+
+    await transaction.commit();
+    res.status(200).json(updatedExpense);
+
+  } catch (err) {
+    await transaction.rollback();
+    console.log(err);
+  }
 };

@@ -1,5 +1,7 @@
 const userModel = require("../models/user");
 const jwt = require("jsonwebtoken");
+const dotenv = require('dotenv');
+dotenv.config();
 
 exports.userAuthentication = (req, res, next) => {
   const token = req.header("Authorization"); // here we extract authorization token from header like this
@@ -10,10 +12,7 @@ exports.userAuthentication = (req, res, next) => {
     return res.status(401).json({message:"please login again..!"})
   }
 
-  const currentUser = jwt.verify(
-    token,
-    "dee29e102252e45bb511d3244effba3d2158ac9289c6879f84a46d7d589a93cd33d0048870be26c1e62efbd0d292e030a68698c49530b6c94be8839dd375d281",
-  );
+  const currentUser = jwt.verify(token, process.env.SECRET_ENCRYPTION_KEY);
   const userId = currentUser.userId;
   console.log("authorized userId",userId)
 
