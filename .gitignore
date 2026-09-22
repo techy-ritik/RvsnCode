@@ -10,3 +10,5 @@ trial/
 settings.json/
 .gitignore
 APIKey.csv
+rvsn/projects/expenseTrackerApp_Deployed/app.js
+rvsn/projects/expenseTrackerApp_Deployed/.env

@@ -18,6 +18,8 @@ const paymentRoute = require('./routes/payment');
 app.use('/payments',paymentRoute);
 const premiumRoute = require('./routes/premium');
 app.use('/premium',premiumRoute);
+const aiRoute = require('./routes/AI');
+app.use('/ai',aiRoute);
 
 require('./models');
 

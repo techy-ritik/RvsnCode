@@ -87,11 +87,37 @@ let idToUpdate = null;
 let isEditing = false;
 
 if (expenseForm) {
+
+  /** Ai suggestion from desc inout */
+  //------------------------------------
+
+  const expenseDesc = document.getElementById("description");
+  let expensCategory = document.getElementById('category');
+
+  expenseDesc.addEventListener("blur", async () => {
+    try {
+      const expenseDescValue = expenseDesc.value;
+
+      console.log(expenseDescValue);
+      const aiSuggestedCategory = await axios.post(
+        "http://localhost:5000/ai/category-suggestion",
+        { expenseDescValue },
+      );
+
+      expensCategory.value = aiSuggestedCategory.data;
+
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  //-------------------------------------------------------
+
   /** expense data handling operations */
   //-------------------------------------
+
   expenseForm.addEventListener("submit", (event) => {
     event.preventDefault();
-
+    
     /**add new expense */
     if (isEditing == false) {
       const expenseObject = {
