@@ -1,4 +1,10 @@
+//======================
+/** user management */
+//======================
+
+
 /** user signUp */
+//---------------
 
 const registerForm = document.querySelector(".registration-form");
 
@@ -14,7 +20,7 @@ if (registerForm) {
 
     console.log("userObj", userObj);
     axios
-      .post("http://localhost:5000/user/register", userObj)
+      .post("http://localhost:5000/register", userObj)
       .then((user) => {
         console.log(user.data);
         alert("successfully registered...");
@@ -28,6 +34,7 @@ if (registerForm) {
 }
 
 /** user Login */
+//------------------
 
 const loginForm = document.querySelector(".login-form");
 
@@ -44,7 +51,7 @@ if (loginForm) {
     console.log("user", loginObj);
 
     axios
-      .post("http://localhost:5000/user/login", loginObj)
+      .post("http://localhost:5000/login", loginObj)
       .then((currentUser) => {
         console.log("currentUser", currentUser.data);
         userType = currentUser.data.user.userType;
@@ -59,9 +66,47 @@ if (loginForm) {
         alert(err.response.data.message);
       });
   });
+
+  /** forgot password handling */
+  //----------------------------
+
+  const passwordResetBtn = document.querySelector(".password-reset-btn");
+  const passwordResetFormOverlayDiv = document.querySelector(
+    ".password-reset-form-overlay",
+  );
+  const passwordResetFormPopupDiv = document.querySelector(
+    ".password-reset-form-popup",
+  );
+
+  passwordResetBtn.addEventListener("click", () => {
+    passwordResetFormOverlayDiv.classList.add("show");
+    passwordResetFormPopupDiv.classList.add("show");
+  });
+
+  const closeResetFormBtn = document.querySelector(".close-reset-form-btn");
+
+  closeResetFormBtn.addEventListener('click',()=>{
+    passwordResetFormOverlayDiv.classList.remove("show");
+    passwordResetFormPopupDiv.classList.remove("show");
+  })
+
+  const closeResetForm = document.querySelector(".password-reset-form")
+
+  closeResetForm.addEventListener('submit',async(event)=>{
+    event.preventDefault();
+
+    const resetFormEmail = document.getElementById("resetEmail").value;
+    console.log('resetFormEmail',resetFormEmail);
+
+    await axios.post("http://localhost:5000/password/forgotpassword", {
+      resetFormEmail,
+    });
+
+  })
 }
 
 /** password-eyeBtn */
+//--------------------
 
 if (registerForm || loginForm) {
   const eyeBtn = document.querySelector(".eye-btn");
@@ -74,6 +119,9 @@ if (registerForm || loginForm) {
     }
   });
 }
+
+
+
 
 //==========================
 /** expense management */
@@ -88,7 +136,7 @@ let isEditing = false;
 
 if (expenseForm) {
 
-  /** Ai suggestion from desc inout */
+  /** Ai suggestion from desc input */
   //------------------------------------
 
   const expenseDesc = document.getElementById("description");

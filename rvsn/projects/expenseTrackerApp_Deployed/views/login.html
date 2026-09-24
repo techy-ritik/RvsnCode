@@ -8,7 +8,7 @@
   <body>
     <div class="login-form-container">
       <form action="/user/login" method="post" class="login-form">
-        <title>Login</title>
+        <h2>Login</h2>
         <label for="loginEmail">Email</label>
         <input type="email" name="email" id="loginEmail" required />
         <label for="loginPassword">Password</label>
@@ -16,11 +16,24 @@
           <input type="password" name="password" id="loginPassword" class="password" required />
           <button type="button" class="eye-btn" id="eyeBtn">👁</button>
         </div>
+        <button type="button" class="password-reset-btn">forgot passowrd</button>
         <button type="submit" class="login-btn">Login</button>
       </form>
     </div>
 
     <p>Not registered yet, click here to <a href="/signUp.html">Register</a></p>
+
+    <div class="password-reset-form-overlay">
+      <div class="password-reset-form-popup">
+        <form action="/password/forgotpassword" method="post" class="password-reset-form">
+          <button type="button" class="close-reset-form-btn">X</button>
+          <label for="resetEmail">enter email id:</label>
+          <input type="email" name="email" id="resetEmail">
+          <button type="submit" class="submit-reset-form-btn">submit</button>
+        </form>
+      </div>
+    </div>
+
     <script src="/js/script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
   </body>

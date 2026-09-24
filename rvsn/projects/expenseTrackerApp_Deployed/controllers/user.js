@@ -3,6 +3,8 @@ const rootDir = require("../util/path");
 const dotenv = require('dotenv');
 dotenv.config();
 
+const Sib = require('sib-api-v3-sdk')
+
 const bcrypt = require("bcrypt");
 
 const jwt = require('jsonwebtoken')
@@ -80,3 +82,40 @@ function generateTokens(userId) {
   return jwt.sign({ userId: userId }, process.env.SECRET_ENCRYPTION_KEY);
 }
 
+exports.forgotPassword = async(req,res) =>{
+  try {
+    console.log("email", req.body);
+    const {resetFormEmail} = req.body
+
+    const client = Sib.ApiClient.instance; // extracting api client out of Sib
+
+    const apiKey = client.authentications["api-key"]; // extracting apiKey object out of client
+    apiKey.apiKey = process.env.BREVO_API_KEY;      // apiKey object is set 
+
+    const tranEmailApi = new Sib.TransactionalEmailsApi()
+
+    const sender = {
+      email: 'ritikeshjee@gmail.com'
+    }
+
+    const recievers = [
+      {
+        email:resetFormEmail
+      },
+    ]
+
+    const emailToSend = await tranEmailApi.sendTransacEmail({
+      sender,
+      to:recievers,
+      subject:"forgot password",
+      textContent:'your password is incorrect, u can reset the password'
+    })
+
+    console.log(sender)
+    console.log("emailToSend",emailToSend)
+
+
+  } catch (err) {
+    console.log(err);
+  }
+}

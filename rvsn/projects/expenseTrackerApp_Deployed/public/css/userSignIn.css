@@ -41,10 +41,14 @@ body {
 /* SIGNUP + LOGIN TITLE */
 /* ========================= */
 
-.registration-form title,
-.login-form title {
+/* ========================= */
+/* SIGNUP + LOGIN TITLE */
+/* ========================= */
+
+.registration-form h2,
+.login-form h2 {
     display: block;
-    margin-bottom: 25px;
+    margin: 0 0 25px;
     text-align: center;
     font-size: 26px;
     font-weight: bold;
@@ -91,7 +95,7 @@ body {
 .password-container {
     position: relative;
     width: 100%;
-    margin-bottom: 18px;
+    margin-bottom: 8px;
 }
 
 .password-container input {
@@ -126,6 +130,29 @@ body {
 }
 
 /* ========================= */
+/* FORGOT PASSWORD BUTTON */
+/* ========================= */
+
+.password-reset-btn {
+    align-self: flex-end;
+    width: auto;
+    padding: 5px 2px;
+    margin: 0 0 18px 0;
+    border: none;
+    background: transparent;
+    color: #1677ff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.password-reset-btn:hover {
+    color: #087f5b;
+    text-decoration: underline;
+}
+
+/* ========================= */
 /* REGISTER + LOGIN BUTTON */
 /* ========================= */
 
@@ -147,6 +174,188 @@ body {
 .login-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(16, 163, 111, 0.25);
+}
+
+/* ================================================= */
+/* PASSWORD RESET OVERLAY */
+/* ================================================= */
+
+/*
+    Hidden by default.
+    Your JS adds "show" when Forgot Password is clicked.
+*/
+
+.password-reset-form-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(20, 40, 60, 0.55);
+    backdrop-filter: blur(3px);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+
+    z-index: 1000;
+}
+
+/* ========================= */
+/* SHOW OVERLAY */
+/* ========================= */
+
+.password-reset-form-overlay.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* ================================================= */
+/* PASSWORD RESET POPUP */
+/* ================================================= */
+
+.password-reset-form-popup {
+    width: 380px;
+    padding: 32px;
+    position: relative;
+
+    background: #ffffff;
+    border-radius: 15px;
+
+    border-top: 5px solid #1677ff;
+
+    box-shadow: 0 15px 40px rgba(0, 50, 80, 0.25);
+
+    transform: translateY(-20px) scale(0.95);
+    opacity: 0;
+
+    transition:
+        transform 0.25s ease,
+        opacity 0.25s ease;
+}
+
+/* ========================= */
+/* SHOW POPUP */
+/* ========================= */
+
+.password-reset-form-popup.show {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* ================================================= */
+/* PASSWORD RESET FORM */
+/* ================================================= */
+
+.password-reset-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ========================= */
+/* RESET FORM LABEL */
+/* ========================= */
+
+.password-reset-form label {
+    margin-bottom: 8px;
+    color: #145da0;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* ========================= */
+/* RESET EMAIL INPUT */
+/* ========================= */
+
+.password-reset-form input {
+    width: 100%;
+    padding: 12px;
+
+    margin-bottom: 20px;
+
+    border: 1px solid #b7d8ee;
+    border-radius: 7px;
+
+    outline: none;
+
+    font-size: 15px;
+
+    transition: 0.3s ease;
+}
+
+.password-reset-form input:focus {
+    border-color: #16a085;
+    box-shadow: 0 0 0 3px rgba(22, 160, 133, 0.12);
+}
+
+/* ================================================= */
+/* RESET FORM SUBMIT BUTTON */
+/* ================================================= */
+
+.submit-reset-form-btn {
+    width: 100%;
+    padding: 12px;
+
+    border: none;
+    border-radius: 7px;
+
+    background: linear-gradient(90deg, #1677ff, #10a36f);
+
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+}
+
+.submit-reset-form-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(16, 163, 111, 0.25);
+}
+
+/* ================================================= */
+/* CLOSE RESET FORM BUTTON */
+/* ================================================= */
+
+.close-reset-form-btn {
+    position: absolute;
+
+    top: 12px;
+    right: 14px;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #eef6ff;
+
+    color: #145da0;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.close-reset-form-btn:hover {
+    background: #1677ff;
+    color: #ffffff;
+    transform: rotate(90deg);
 }
 
 /* ========================= */
@@ -174,4 +383,22 @@ body > p a {
 body > p a:hover {
     color: #1677ff;
     text-decoration: underline;
+}
+
+/* ================================================= */
+/* MOBILE RESPONSIVE */
+/* ================================================= */
+
+@media (max-width: 480px) {
+
+    .registration-form-container,
+    .login-form-container {
+        width: calc(100% - 30px);
+        padding: 28px 22px;
+    }
+
+    .password-reset-form-popup {
+        width: calc(100% - 30px);
+        padding: 28px 22px;
+    }
 }

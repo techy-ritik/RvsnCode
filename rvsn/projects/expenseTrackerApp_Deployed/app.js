@@ -5,13 +5,13 @@ const path = require('path')
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static('views'))
 
-const userController = require('./controllers/user');
-app.get('/',userController.getSignUpPage);
+// const userController = require('./controllers/user');
+// app.get('/',userController.getSignUpPage);
 
 app.use(express.json({ extended: false }));
 
 const userRoute = require('./routes/user');
-app.use('/user',userRoute)
+app.use('/',userRoute)
 const expenseRoute = require("./routes/expense");
 app.use('/expense',expenseRoute);
 const paymentRoute = require('./routes/payment');
