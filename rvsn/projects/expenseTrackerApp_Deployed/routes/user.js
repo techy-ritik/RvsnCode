@@ -13,4 +13,8 @@ router.post('/login',userController.loginUser);
 
 router.post("/password/forgotpassword",userController.forgotPassword);
 
+router.get('/password/resetPassword/:requestId',userController.resetPassword);
+
+router.post("/password/updatedPassword",userController.updateNewPassword);
+
 module.exports = router;

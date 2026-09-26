@@ -2,7 +2,6 @@
 /** user management */
 //======================
 
-
 /** user signUp */
 //---------------
 
@@ -85,43 +84,77 @@ if (loginForm) {
 
   const closeResetFormBtn = document.querySelector(".close-reset-form-btn");
 
-  closeResetFormBtn.addEventListener('click',()=>{
+  closeResetFormBtn.addEventListener("click", () => {
     passwordResetFormOverlayDiv.classList.remove("show");
     passwordResetFormPopupDiv.classList.remove("show");
-  })
+  });
 
-  const closeResetForm = document.querySelector(".password-reset-form")
+  const ResetMailForm = document.querySelector(".password-reset-form");
 
-  closeResetForm.addEventListener('submit',async(event)=>{
+  ResetMailForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const resetFormEmail = document.getElementById("resetEmail").value;
-    console.log('resetFormEmail',resetFormEmail);
+    const resetEmail = document.getElementById("resetEmail").value;
+    console.log("resetFormEmail", resetEmail);
 
-    await axios.post("http://localhost:5000/password/forgotpassword", {
-      resetFormEmail,
-    });
+    const resetForm = await axios.post(
+      "http://localhost:5000/password/forgotpassword",
+      {
+        resetEmail,
+      },
+    );
 
-  })
+    passwordResetFormOverlayDiv.classList.remove("show");
+    passwordResetFormPopupDiv.classList.remove("show");
+
+    alert(resetForm.data.message);
+  });
+}
+
+/** update reset password */
+//---------------------
+
+const passwordResetForm = document.querySelector(".resetPassword-form");
+
+if (passwordResetForm) {
+  passwordResetForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const urlPathSplit = window.location.pathname.split("/");
+
+    const userUpdatedPasswordObj = {
+      updatedPassword: document.getElementById("updated-passowrd").value,
+      requestId: urlPathSplit.pop(),           // here it's assumed that the request id will be at the end
+    };
+
+    console.log(userUpdatedPasswordObj);
+
+    const passwordUpdate = await axios.post(
+      "http://localhost:5000/password/updatedPassword",
+      userUpdatedPasswordObj,
+    );
+
+    alert(passwordUpdate.data.message);
+
+    window.location.href = "/login.html";
+  });
 }
 
 /** password-eyeBtn */
 //--------------------
 
-if (registerForm || loginForm) {
+if (registerForm || loginForm || passwordResetForm) {
+  console.log("eye button handling");
   const eyeBtn = document.querySelector(".eye-btn");
-  const registerPassword = document.querySelector(".password");
+  const Password = document.querySelector(".password");
   eyeBtn.addEventListener("click", () => {
-    if (registerPassword.type == "password") {
-      registerPassword.type = "text";
+    if (Password.type == "password") {
+      Password.type = "text";
     } else {
-      registerPassword.type = "password";
+      Password.type = "password";
     }
   });
 }
-
-
-
 
 //==========================
 /** expense management */
@@ -135,12 +168,11 @@ let idToUpdate = null;
 let isEditing = false;
 
 if (expenseForm) {
-
   /** Ai suggestion from desc input */
   //------------------------------------
 
   const expenseDesc = document.getElementById("description");
-  let expensCategory = document.getElementById('category');
+  let expensCategory = document.getElementById("category");
 
   expenseDesc.addEventListener("blur", async () => {
     try {
@@ -153,7 +185,6 @@ if (expenseForm) {
       );
 
       expensCategory.value = aiSuggestedCategory.data;
-
     } catch (err) {
       console.log(err);
     }
@@ -165,7 +196,7 @@ if (expenseForm) {
 
   expenseForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    
+
     /**add new expense */
     if (isEditing == false) {
       const expenseObject = {
@@ -360,8 +391,8 @@ leaderboardBtn.addEventListener("click", async () => {
       { headers: { Authorization: token } },
     );
 
-    const leaderboardList = leaderboardExpensesList.data;  
-     
+    const leaderboardList = leaderboardExpensesList.data;
+
     console.log("allExpenses", leaderboardList);
 
     leaderboardDisplay(leaderboardList);
@@ -371,17 +402,17 @@ leaderboardBtn.addEventListener("click", async () => {
 });
 
 function leaderboardDisplay(leaderboardSortedExpenses) {
-  console.log("leaderboard")
+  console.log("leaderboard");
   const leaderboardOverlay = document.querySelector(".leaderboard-overlay");
   const leaderboardPopupDiv = document.querySelector(".leaderboard-popup");
   const leaderboardListUl = document.querySelector("#leaderboard-list");
   const leaderBoardCloseBtn = document.querySelector("#closeLeaderboardBtn");
   leaderboardSortedExpenses.forEach((expense) => {
-    if(expense.totalExpense === null){
+    if (expense.totalExpense === null) {
       expense.totalExpense = 0;
     }
-    console.log("expense",expense)
-    const newLi = document.createElement('li');
+    console.log("expense", expense);
+    const newLi = document.createElement("li");
     newLi.className = "userTotalExpenseList";
     newLi.id = expense.id;
 
@@ -389,11 +420,11 @@ function leaderboardDisplay(leaderboardSortedExpenses) {
 
     leaderboardListUl.appendChild(newLi);
   });
-  leaderBoardCloseBtn.addEventListener('click',()=>{
-    leaderboardPopupDiv.classList.remove("show");  
+  leaderBoardCloseBtn.addEventListener("click", () => {
+    leaderboardPopupDiv.classList.remove("show");
     leaderboardOverlay.classList.remove("show");
     leaderboardListUl.innerHTML = "";
-  })
-  leaderboardPopupDiv.classList.add('show');  // display leaderboard popUp
+  });
+  leaderboardPopupDiv.classList.add("show"); // display leaderboard popUp
   leaderboardOverlay.classList.add("show");
 }
