@@ -11,8 +11,8 @@ const userRoute = require('./routes/user');
 app.use('/',userRoute)
 const expenseRoute = require("./routes/expense");
 app.use('/expense',expenseRoute);
-// const paymentRoute = require('./routes/payment');
-// app.use('/payments',paymentRoute);
+const paymentRoute = require('./routes/payment');
+app.use('/payments',paymentRoute);
 const premiumRoute = require('./routes/premium');
 app.use('/premium',premiumRoute);
 const aiRoute = require('./routes/AI');

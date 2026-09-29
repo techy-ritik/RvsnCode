@@ -6,11 +6,18 @@
   box-sizing: border-box;
 }
 
+/* Keep overflow at the document/page level */
+html {
+  min-width: 1050px;
+  overflow: auto;
+}
+
 /* ==========================================
    BODY / MAIN LAYOUT
 ========================================== */
 
 body {
+  min-width: 1050px;
   min-height: 100vh;
   padding: 0 40px 40px;
 
@@ -25,15 +32,19 @@ body {
     Row 1 = Navbar
     Row 2 = Form + Expense List
   */
-  grid-template-columns: 420px minmax(0, 1fr);
-  grid-template-rows: 60px minmax(0, 1fr);
+  grid-template-columns: 420px minmax(615px, 1fr);
+  grid-template-rows: 60px auto;
 
   column-gap: 15px;
   row-gap: 15px;
 
   align-items: start;
 
-  overflow-x: hidden;
+  /*
+    Do not create a nested scrolling container.
+    The browser/document handles horizontal and vertical scrolling.
+  */
+  overflow: visible;
 }
 
 /* ==========================================
@@ -279,6 +290,178 @@ ul {
 }
 
 /* ==========================================
+   EXPENSE TABLE
+========================================== */
+
+.expense-table {
+  grid-column: 2;
+  grid-row: 2;
+
+  width: 88%;
+  margin: 0 auto;
+
+  border-collapse: separate;
+  border-spacing: 0 8px;
+
+  background: transparent;
+
+  table-layout: fixed;
+}
+
+.expense-table thead {
+  background: linear-gradient(135deg, #2563eb, #16a34a);
+}
+
+.expense-table th {
+  padding: 15px 18px;
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  text-align: left;
+
+  border: none;
+}
+
+.expense-table th:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+.expense-table th:last-child {
+  border-radius: 0 10px 10px 0;
+}
+
+.expense-table th:nth-child(1) {
+  width: 18%;
+}
+
+.expense-table th:nth-child(2) {
+  width: 30%;
+}
+
+.expense-table th:nth-child(3) {
+  width: 24%;
+}
+
+.expense-table th:nth-child(4) {
+  width: 28%;
+}
+
+.expense-table tbody tr {
+  background: #ffffff;
+
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+
+  transition: 0.2s ease;
+}
+
+.expense-table tbody tr:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.10);
+}
+
+.expense-table td {
+  padding: 16px 18px;
+
+  color: #334155;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  background: #ffffff;
+
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+
+  vertical-align: middle;
+
+  word-break: break-word;
+}
+
+.expense-table td:first-child {
+  border-left: 1px solid #e2e8f0;
+
+  border-radius: 12px 0 0 12px;
+
+  color: #2563eb;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.expense-table td:nth-child(2) {
+  color: #1e293b;
+}
+
+.expense-table td:nth-child(3) {
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+.expense-table td:last-child {
+  border-right: 1px solid #e2e8f0;
+
+  border-radius: 0 12px 12px 0;
+}
+
+.expense-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  min-height: 50px;
+}
+
+.expense-table .edit-btn,
+.expense-table .delete-btn {
+  padding: 8px 13px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition: 0.2s ease;
+}
+
+.expense-table .edit-btn {
+  background: #2563eb;
+}
+
+.expense-table .edit-btn:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-1px);
+}
+
+.expense-table .delete-btn {
+  background: #ef4444;
+}
+
+.expense-table .delete-btn:hover {
+  background: #dc2626;
+
+  transform: translateY(-1px);
+}
+
+/* ==========================================
    EXPENSE FORM
 ========================================== */
 
@@ -409,7 +592,7 @@ select:focus {
   font-weight: 600;
 
   cursor: pointer;
-}  
+}
 
 /* =========================
    LEADERBOARD OVERLAY
@@ -433,13 +616,11 @@ select:focus {
   pointer-events: auto;
 }
 
-
 /* Show overlay */
 
 .leaderboard-overlay.show {
   display: block;
 }
-
 
 /* =========================
    LEADERBOARD POPUP
@@ -474,13 +655,11 @@ select:focus {
   overflow-y: auto;
 }
 
-
 /* Show popup */
 
 .leaderboard-popup.show {
   display: block;
 }
-
 
 /* =========================
    LEADERBOARD HEADER
@@ -502,7 +681,6 @@ select:focus {
   border-bottom: 1px solid #333333;
 }
 
-
 /* =========================
    LEADERBOARD TITLE
 ========================= */
@@ -518,7 +696,6 @@ select:focus {
 
   text-align: center;
 }
-
 
 /* =========================
    CLOSE BUTTON
@@ -568,7 +745,6 @@ select:focus {
   transform: translateY(-50%) scale(1.08);
 }
 
-
 /* =========================
    LEADERBOARD LIST
 ========================= */
@@ -580,7 +756,6 @@ select:focus {
 
   padding: 0;
 }
-
 
 /* =========================
    EACH USER
@@ -616,7 +791,6 @@ select:focus {
   transform: translateX(3px);
 }
 
-
 /* =========================
    USER CONTENT
 ========================= */
@@ -626,7 +800,6 @@ select:focus {
 
   width: 100%;
 }
-
 
 /* =========================
    POPUP SCROLLBAR
@@ -652,32 +825,69 @@ select:focus {
   background: #777777;
 }
 
+/* ==========================================
+   EXPENSE TABLE WRAPPER
+========================================== */
 
-/* =========================
-   MOBILE
-========================= */
+.expense-table-wrapper {
+  grid-column: 2;
+  grid-row: 2;
 
-@media (max-width: 600px) {
+  width: 88%;
+  margin: 0 auto;
 
-  .leaderboard-popup {
-    width: 92%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
 
-    max-height: 75vh;
+/* Keep the existing table appearance/size */
+.expense-table-wrapper .expense-table {
+  width: 100%;
+  margin: 0;
+}
 
-    padding: 20px;
-  }
+/* ==========================================
+   TABLE DOWNLOAD BUTTON
+========================================== */
 
-  .leaderboard-title {
-    font-size: 21px;
-  }
+.table-download {
+  align-self: flex-end;
 
-  #closeLeaderboardBtn {
-    width: 30px;
+  margin-top: 8px;
 
-    height: 30px;
-  }
+  padding: 9px 18px;
 
-  .userTotalExpenseList {
-    font-size: 14px;
-  }
+  border: none;
+  border-radius: 8px;
+
+  background: linear-gradient(135deg, #02ab19, #011d37);
+
+  color: #ffffff;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 25px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow: 0 5px 12px rgba(124, 58, 237, 0.22);
+
+  transition: all 0.2s ease;
+  
+}
+
+.table-download:hover {
+  background: linear-gradient(135deg, #6d28d9, #af1c1c);
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 17px rgba(124, 58, 237, 0.30);
+}
+
+.table-download:active {
+  transform: translateY(0);
+
+  box-shadow: 0 4px 9px rgba(124, 58, 237, 0.20);
 }

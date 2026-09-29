@@ -46,13 +46,27 @@
         <option value="Travel">Travel cost</option>
         <option value="movie">Movie expense</option>
       </select> -->
-      <input type="text" name="expenseCategory" id="category" required>
+      <input type="text" name="expenseCategory" id="category" required />
       <button type="submit" class="btn-danger" id="addExpense">
         Add Expense
       </button>
     </form>
 
-    <ul id="expense-list"></ul>
+    <!-- <ul id="expense-list"></ul> -->
+    <div class="expense-table-wrapper">
+      <table class="expense-table">
+        <thead id="expense-table-head">
+          <tr>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="expense-table-body"></tbody>
+      </table>
+      <button type="button" class="table-download" id="tableDownloadBtn"> ⇩ </button>
+    </div>
 
     <div class="leaderboard-overlay"></div>
 

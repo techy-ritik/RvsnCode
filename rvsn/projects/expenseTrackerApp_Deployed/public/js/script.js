@@ -161,15 +161,15 @@ if (registerForm || loginForm || passwordResetForm) {
 //=========================
 
 const expenseForm = document.querySelector("#ExpenseForm");
-const expenseListUl = document.querySelector("#expense-list");
+
 
 const token = localStorage.getItem("token");
 let idToUpdate = null;
 let isEditing = false;
 
 if (expenseForm) {
-  /** Ai suggestion from desc input */
-  //------------------------------------
+  /** Ai suggestion from description input */
+  //-------------------------------------------
 
   const expenseDesc = document.getElementById("description");
   let expensCategory = document.getElementById("category");
@@ -212,7 +212,7 @@ if (expenseForm) {
         .then((expense) => {
           console.log("newExpense", expense.data);
 
-          addNewLi(expense.data);
+          expenseDisplay(expense.data);
 
           expenseForm.reset();
         })
@@ -240,7 +240,7 @@ if (expenseForm) {
           // const oldExpense = document.getElementById(idToUpdate);
           // oldExpense.remove();
 
-          addNewLi(updatedExpense);
+          expenseDisplay(updatedExpense);
 
           expenseForm.reset();
 
@@ -266,7 +266,7 @@ if (expenseForm) {
       console.log("expenses", expenses.data);
 
       expenses.data.forEach((expense) => {
-        addNewLi(expense);
+        expenseDisplay(expense);
       });
     })
     .catch((err) => {
@@ -277,44 +277,53 @@ if (expenseForm) {
 
 /** expense data display on page */
 
-function addNewLi(expenseData) {
-  const newLi = document.createElement("li");
-  newLi.className = "expenseList";
-  newLi.id = expenseData.id;
+function expenseDisplay(expenseData) {
+  const tBody = document.querySelector("#expense-table-body");
 
-  newLi.innerHTML = `<span class="expense-data"> Rs. ${expenseData.amount} -- ${expenseData.description} --  ${expenseData.category}</span>`;
+  const newRow = document.createElement("tr");
+  newRow.id = `${expenseData.id}`;
+  newRow.innerHTML = `
+        <td>₹${expenseData.amount}</td>
+        <td>${expenseData.description}</td>
+        <td>${expenseData.category}</td>
+        <td class="expense-actions">
+            <button 
+                class="edit-btn"
+                type="button"
+            >
+                Edit
+            </button>
 
-  // delete-btn
-  const dltBtn = document.createElement("button");
-  dltBtn.textContent = "Delete Expense";
-  dltBtn.className = "delete-btn";
-  dltBtn.addEventListener("click", deleteExpense);
-  newLi.appendChild(dltBtn);
+            <button 
+                class="delete-btn"
+                type="button"
+            >
+                Delete
+            </button>
+        </td>
+    `;
 
-  // edit-btn
-  const editBtn = document.createElement("button");
-  editBtn.textContent = "Edit Expense";
-  editBtn.className = "edit-btn";
+  const editBtn = newRow.querySelector(".edit-btn");
   editBtn.addEventListener("click", getEditExpense);
-  newLi.appendChild(editBtn);
 
-  expenseListUl.appendChild(newLi);
+  const deleteBtn = newRow.querySelector(".delete-btn");
+  deleteBtn.addEventListener("click", deleteExpense);
+
+  tBody.appendChild(newRow);
 }
 
 /** delete expense */
 
 function deleteExpense(event) {
-  const currentExpense = event.target.parentElement;
-  const expenseId = currentExpense.id;
-
-  console.log("currentExpense", currentExpense);
+  const currentExpenseTr = event.target.parentElement.parentElement;;
+  const expenseId = currentExpenseTr.id;
 
   axios
     .delete(`http://localhost:5000/expense/delete-expense/${expenseId}`, {
       headers: { Authorization: token },
     })
     .then((res) => {
-      currentExpense.remove();
+      currentExpenseTr.remove();
       alert(res.data.message);
       console.log("expense deleted");
     })
@@ -325,10 +334,11 @@ function deleteExpense(event) {
 }
 
 /** edit expense form display */
+//------------------------------
 
 function getEditExpense(event) {
-  const currentExpense = event.target.parentElement;
-  const expenseId = currentExpense.id;
+  const currentExpenseTr = event.target.parentElement.parentElement;
+  const expenseId = currentExpenseTr.id;
 
   axios
     .get(`http://localhost:5000/expense/edit-expense/${expenseId}`, {
@@ -337,7 +347,7 @@ function getEditExpense(event) {
     .then((expense) => {
       console.log("expense to edit", expense.data);
 
-      currentExpense.remove();
+      currentExpenseTr.remove();
 
       const amountField = document.getElementById("amount");
       const descriptionField = document.getElementById("description");
@@ -353,8 +363,8 @@ function getEditExpense(event) {
       document.getElementById("addExpense").textContent = "Update Expense";
     })
     .catch((err) => {
-      alert(err.response.data.message);
       console.log(err);
+      alert(err.response.data.message);
     });
 }
 
@@ -362,17 +372,31 @@ function getEditExpense(event) {
 // premium membership management
 //==============================
 
-/** buy membership page*/
-userType = localStorage.getItem("userType");
-console.log("userType", userType);
 
+userType = localStorage.getItem("userType");
+// console.log("userType", userType);
+const reportDownloadBtn = document.querySelector("#tableDownloadBtn");
+
+/** premium member */
+//-------------------------
 if (userType == "premium") {
   const userTypeValue = document.getElementById("userTypeValue");
   userTypeValue.textContent = "Premium User";
 
   const buyMembershipBtn = document.querySelector("#membersip-btn");
   buyMembershipBtn.style.display = "none";
-} else if (userType == "non-premium") {
+
+  reportDownloadBtn.addEventListener("click", () => {
+    downloadTableReport();
+  });
+
+}
+
+/** non premium member */
+//------------------------
+
+/** buy membership page*/
+else if (userType == "non-premium") {
   const buyMembershipBtn = document.querySelector("#membersip-btn");
   buyMembershipBtn.onclick = () => {
     window.location.href = "/payments";
@@ -380,9 +404,66 @@ if (userType == "premium") {
 
   const userTypeDiv = document.getElementById("userType");
   userTypeDiv.style.display = "none";
+
+  reportDownloadBtn.addEventListener('click',()=>{
+    alert("buy membership to use this feature !")
+  })
 }
 
+function downloadTableReport(){
+  const tr = document.querySelectorAll('tr');
+
+  // console.log("tr",tr);
+  const tableData = []
+
+  tr.forEach(row=>{
+    const rowCell = row.querySelectorAll("th,td");
+    // console.log("rowCell",rowCell)
+    const rowData = [];
+
+    rowCell.forEach((cell, index) => {
+
+      if (index === 3) {
+        return;
+      }
+      let cellValue = cell.textContent.trim();
+
+      cellValue = cellValue.replace(/"/g, '""'); //here in this way we are basically replacing every available double quotes in two double quotes for safe csv style formatting
+
+      cellValue = `"${cellValue}"`; // now we have added double quotes to an overall value of the cell which will make a single string of complete cell value
+
+      rowData.push(cellValue);
+    });
+    
+    tableData.push(rowData.join(",")); // it will join every available element of the rowData separating them with , and store it in tableData as a single string element
+
+  })
+
+  const csvContent = tableData.join("\n"); // it will join every available element of the tableData separating them with \n(i.e. new line) and store it in csvContent as a single string
+
+  console.log("csvContent", csvContent);
+
+  const blob = new Blob([csvContent], {
+    type: "text/csv;charset=utf-8;",
+  }); // it's the object, containing csvContent which is treated as file by the browser
+
+  const tempUrl = URL.createObjectURL(blob); // here now we have url for the downloadable file object
+
+  const tempAnchorTag = document.createElement("a");
+  tempAnchorTag.href = tempUrl;
+  tempAnchorTag.download = "Expense.csv";   // here like this we set name of the file to be downloaded
+  document.body.appendChild(tempAnchorTag);
+
+  tempAnchorTag.click();     // here when it is called, the tempAnchorTag url link get auto clicked after the creation 
+
+  document.body.removeChild(tempAnchorTag);   // as we don't need the temporarily added anchor tag now so we have removed it after the click
+
+  URL.revokeObjectURL(tempUrl);  // as the url we have created is for meant for one time download of the data so we will also revoke the url
+}
+
+
 /** Leaderboard display */
+//-------------------------
 const leaderboardBtn = document.getElementById("leaderboard-btn");
 leaderboardBtn.addEventListener("click", async () => {
   try {
