@@ -48,11 +48,41 @@ exports.getLoggedInUserExpenses = async (req, res, next) => {
     const logedInUserId = req.user.id;
     console.log("logedInUserId", logedInUserId);
 
-    const expenses = await expenseModel.findAll({
+    const currentPage = parseInt(req.query.page);
+    const prevPage = currentPage - 1;
+    let nextPage = currentPage + 1;
+    const expenseLimitPerPage = 2;
+    let currentIsLastPage = false;
+
+    const expenseData = await expenseModel.findAndCountAll({
+      offset: (currentPage - 1) * expenseLimitPerPage,
+      limit: expenseLimitPerPage + 1,
       where: { UserId: logedInUserId },
     });
 
-    res.status(200).json(expenses);
+    const expenseListCount = expenseData.count;
+    let totalPage = expenseListCount/2;
+    if(parseInt(totalPage)<totalPage){
+      totalPage = parseInt(totalPage) + 1;
+    }
+
+    const expenses = expenseData.rows;
+
+    if (expenses.length < expenseLimitPerPage + 1) {
+      currentIsLastPage = true;
+      nextPage = null ;
+    }
+    else{
+      expenses.pop();
+    }
+
+    console.log("expenseListCount", expenseListCount);
+    console.log("total page",totalPage)
+    console.log("expenses", expenses.length);
+
+    res
+      .status(200)
+      .json({ expenses, currentPage, prevPage, nextPage, currentIsLastPage, totalPage });
   } catch (err) {
     console.log(err);
 
@@ -100,14 +130,18 @@ exports.getEditExpense = async (req, res, next) => {
     const expenseId = req.params.id;
     // console.log("logedInUserId", logedInUserId)
 
+    console.log("expenseId",expenseId)
+
     const expense = await expenseModel.findOne({
       where: { id: expenseId, UserId: logedInUserId },
     });
 
+    console.log('expense to edit',expense)
+
     res.status(200).json(expense);
   } catch (err) {
     console.log(err);
-    res.status(500).json({message:err.message})
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -122,7 +156,8 @@ exports.updateExpense = async (req, res, next) => {
     let updatedTotalExpense = logedInUser.totalExpense;
 
     const expense = await expenseModel.findOne({
-      where: { id: expenseId, UserId: logedInUser.id },transaction:transaction,
+      where: { id: expenseId, UserId: logedInUser.id },
+      transaction: transaction,
     });
 
     updatedTotalExpense -= Number(expense.amount);
@@ -131,18 +166,17 @@ exports.updateExpense = async (req, res, next) => {
     expense.description = req.body.xpDesc;
     expense.category = req.body.xpCtgry;
 
-    const updatedExpense = await expense.save({transaction:transaction});
+    const updatedExpense = await expense.save({ transaction: transaction });
 
     updatedTotalExpense += Number(updatedExpense.amount);
 
     await userModel.update(
       { totalExpense: updatedTotalExpense },
-      { where: { id: logedInUser.id },transaction:transaction },
+      { where: { id: logedInUser.id }, transaction: transaction },
     );
 
     await transaction.commit();
     res.status(200).json(updatedExpense);
-
   } catch (err) {
     await transaction.rollback();
     console.log(err);

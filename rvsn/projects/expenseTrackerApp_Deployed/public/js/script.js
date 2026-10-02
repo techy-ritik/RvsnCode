@@ -124,7 +124,7 @@ if (passwordResetForm) {
 
     const userUpdatedPasswordObj = {
       updatedPassword: document.getElementById("updated-passowrd").value,
-      requestId: urlPathSplit.pop(),           // here it's assumed that the request id will be at the end
+      requestId: urlPathSplit.pop(), // here it's assumed that the request id will be at the end
     };
 
     console.log(userUpdatedPasswordObj);
@@ -161,7 +161,6 @@ if (registerForm || loginForm || passwordResetForm) {
 //=========================
 
 const expenseForm = document.querySelector("#ExpenseForm");
-
 
 const token = localStorage.getItem("token");
 let idToUpdate = null;
@@ -212,7 +211,13 @@ if (expenseForm) {
         .then((expense) => {
           console.log("newExpense", expense.data);
 
-          expenseDisplay(expense.data);
+          const nextPage = document.getElementById("nextpage");
+          if (!nextPage) {
+            const currentPageNum =
+              document.getElementById("currentPage").textContent;
+            getExpenseData(currentPageNum);
+          }
+          alert("Expense added Successfully..!");
 
           expenseForm.reset();
         })
@@ -236,11 +241,9 @@ if (expenseForm) {
         .then((expense) => {
           console.log("expense updated..........");
 
-          const updatedExpense = expense.data;
-          // const oldExpense = document.getElementById(idToUpdate);
-          // oldExpense.remove();
-
-          expenseDisplay(updatedExpense);
+          const currentPageNum =
+            document.getElementById("currentPage").textContent;
+          getExpenseData(currentPageNum);
 
           expenseForm.reset();
 
@@ -256,36 +259,114 @@ if (expenseForm) {
     }
   });
 
-  /** get all expenses of loggedIn user*/
+  /** get 1st page expenses of loggedIn user*/
+  //--------------------------------------
 
+  const currentPage = 1;
+
+  window.addEventListener("DOMContentLoaded", () => {
+    axios
+      .get(`http://localhost:5000/expense/user-expenses?page=${currentPage}`, {
+        headers: { Authorization: token },
+      })
+      .then((expenseData) => {
+        console.log("expenses", expenseData);
+
+        pagination(expenseData.data);
+
+        expenseDisplay(expenseData.data.expenses);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+}
+
+/** pagination of expenses */
+//---------------------------
+
+function pagination({
+  currentPage,
+  prevPage,
+  nextPage,
+  currentIsLastPage,
+  totalPage,
+}) {
+  // console.log(
+  //   "prevPage",
+  //   prevPage + "\n" + "current page",
+  //   currentPage + "\n" + "next page",
+  //   nextPage + "\n" + "current page is the last page",
+  //   currentIsLastPage,
+  // );
+  const expenseTablePaginationDiv = document.querySelector(".pagination");
+  if (currentIsLastPage == true) {
+    if (prevPage != 0) {
+      expenseTablePaginationDiv.innerHTML = `<button id="prevPage" onclick="getExpenseData(${prevPage})">${prevPage}</button> <button id="currentPage" onclick="getExpenseData(${currentPage})"  >${currentPage}</button>`;
+    } else {
+      expenseTablePaginationDiv.innerHTML = `<button id="currentPage" onclick="getExpenseData(${currentPage})">${currentPage}</button>`;
+    }
+  } else {
+    if (currentPage == 1) {
+      expenseTablePaginationDiv.innerHTML = `<button id="currentPage" onclick="getExpenseData(${currentPage})">${currentPage}</button> <button id="nextpage" onclick="getExpenseData(${nextPage})" >${nextPage}</button>`;
+    }
+    if (currentPage != 1) {
+      expenseTablePaginationDiv.innerHTML = `<button id="prevPage" onclick="getExpenseData(${prevPage})">${prevPage}</button> <button id="currentPage" onclick="getExpenseData(${currentPage})"  >${currentPage}</button> <button id="nextpage" onclick="getExpenseData(${nextPage})" >${nextPage}</button>`;
+    }
+    if (nextPage != totalPage) {
+
+      const dots = document.createElement("span");
+      dots.textContent = "• • •";
+      dots.className = "pagination-dots";
+      expenseTablePaginationDiv.appendChild(dots);
+
+      const lastPageBtn = document.createElement("button");
+      lastPageBtn.textContent = totalPage;
+      lastPageBtn.id = "lastPage";
+      lastPageBtn.addEventListener("click", () => {
+        getExpenseData(totalPage);
+      });
+      expenseTablePaginationDiv.appendChild(lastPageBtn);
+    }
+  }
+}
+
+/** get expense data by page number, on button click*/
+//---------------------------------------------------
+
+function getExpenseData(pageNum) {
   axios
-    .get("http://localhost:5000/expense/user-expenses", {
+    .get(`http://localhost:5000/expense/user-expenses?page=${pageNum}`, {
       headers: { Authorization: token },
     })
-    .then((expenses) => {
-      console.log("expenses", expenses.data);
+    .then((expenseData) => {
+      console.log("expenses", expenseData);
 
-      expenses.data.forEach((expense) => {
-        expenseDisplay(expense);
-      });
+      pagination(expenseData.data);
+      expenseDisplay(expenseData.data.expenses);
     })
     .catch((err) => {
-      alert(err.response.data.message);
       console.log(err);
     });
 }
 
 /** expense data display on page */
 
-function expenseDisplay(expenseData) {
+function expenseDisplay(expenses) {
   const tBody = document.querySelector("#expense-table-body");
 
-  const newRow = document.createElement("tr");
-  newRow.id = `${expenseData.id}`;
-  newRow.innerHTML = `
-        <td>₹${expenseData.amount}</td>
-        <td>${expenseData.description}</td>
-        <td>${expenseData.category}</td>
+  if (tBody.innerHTML) {
+    console.log("old tr available");
+    tBody.innerHTML = "";
+  }
+
+  expenses.forEach((expense, index) => {
+    const newRow = document.createElement("tr");
+    newRow.id = `${expense.id}`;
+    newRow.innerHTML = `
+        <td>₹${expense.amount}</td>
+        <td>${expense.description}</td>
+        <td>${expense.category}</td>
         <td class="expense-actions">
             <button 
                 class="edit-btn"
@@ -303,19 +384,21 @@ function expenseDisplay(expenseData) {
         </td>
     `;
 
-  const editBtn = newRow.querySelector(".edit-btn");
-  editBtn.addEventListener("click", getEditExpense);
+    const editBtn = newRow.querySelector(".edit-btn");
+    editBtn.addEventListener("click", getEditExpense);
 
-  const deleteBtn = newRow.querySelector(".delete-btn");
-  deleteBtn.addEventListener("click", deleteExpense);
+    const deleteBtn = newRow.querySelector(".delete-btn");
+    deleteBtn.addEventListener("click", deleteExpense);
 
-  tBody.appendChild(newRow);
+    tBody.appendChild(newRow);
+  });
 }
 
 /** delete expense */
+//--------------------
 
 function deleteExpense(event) {
-  const currentExpenseTr = event.target.parentElement.parentElement;;
+  const currentExpenseTr = event.target.parentElement.parentElement;
   const expenseId = currentExpenseTr.id;
 
   axios
@@ -325,6 +408,8 @@ function deleteExpense(event) {
     .then((res) => {
       currentExpenseTr.remove();
       alert(res.data.message);
+      const currentPageNum = document.getElementById("currentPage").textContent;
+      getExpenseData(currentPageNum);
       console.log("expense deleted");
     })
     .catch((err) => {
@@ -340,12 +425,13 @@ function getEditExpense(event) {
   const currentExpenseTr = event.target.parentElement.parentElement;
   const expenseId = currentExpenseTr.id;
 
+  // console.log("expense Id",currentExpenseTr.id)
   axios
     .get(`http://localhost:5000/expense/edit-expense/${expenseId}`, {
       headers: { Authorization: token },
     })
     .then((expense) => {
-      console.log("expense to edit", expense.data);
+      // console.log("expense to edit", expense.data);
 
       currentExpenseTr.remove();
 
@@ -372,7 +458,6 @@ function getEditExpense(event) {
 // premium membership management
 //==============================
 
-
 userType = localStorage.getItem("userType");
 // console.log("userType", userType);
 const reportDownloadBtn = document.querySelector("#tableDownloadBtn");
@@ -389,7 +474,6 @@ if (userType == "premium") {
   reportDownloadBtn.addEventListener("click", () => {
     downloadTableReport();
   });
-
 }
 
 /** non premium member */
@@ -405,24 +489,23 @@ else if (userType == "non-premium") {
   const userTypeDiv = document.getElementById("userType");
   userTypeDiv.style.display = "none";
 
-  reportDownloadBtn.addEventListener('click',()=>{
-    alert("buy membership to use this feature !")
-  })
+  reportDownloadBtn.addEventListener("click", () => {
+    alert("buy membership to use this feature !");
+  });
 }
 
-function downloadTableReport(){
-  const tr = document.querySelectorAll('tr');
+function downloadTableReport() {
+  const tr = document.querySelectorAll("tr");
 
   // console.log("tr",tr);
-  const tableData = []
+  const tableData = [];
 
-  tr.forEach(row=>{
+  tr.forEach((row) => {
     const rowCell = row.querySelectorAll("th,td");
     // console.log("rowCell",rowCell)
     const rowData = [];
 
     rowCell.forEach((cell, index) => {
-
       if (index === 3) {
         return;
       }
@@ -434,10 +517,9 @@ function downloadTableReport(){
 
       rowData.push(cellValue);
     });
-    
-    tableData.push(rowData.join(",")); // it will join every available element of the rowData separating them with , and store it in tableData as a single string element
 
-  })
+    tableData.push(rowData.join(",")); // it will join every available element of the rowData separating them with , and store it in tableData as a single string element
+  });
 
   const csvContent = tableData.join("\n"); // it will join every available element of the tableData separating them with \n(i.e. new line) and store it in csvContent as a single string
 
@@ -451,16 +533,15 @@ function downloadTableReport(){
 
   const tempAnchorTag = document.createElement("a");
   tempAnchorTag.href = tempUrl;
-  tempAnchorTag.download = "Expense.csv";   // here like this we set name of the file to be downloaded
+  tempAnchorTag.download = "Expense.csv"; // here like this we set name of the file to be downloaded
   document.body.appendChild(tempAnchorTag);
 
-  tempAnchorTag.click();     // here when it is called, the tempAnchorTag url link get auto clicked after the creation 
+  tempAnchorTag.click(); // here when it is called, the tempAnchorTag url link get auto clicked after the creation
 
-  document.body.removeChild(tempAnchorTag);   // as we don't need the temporarily added anchor tag now so we have removed it after the click
+  document.body.removeChild(tempAnchorTag); // as we don't need the temporarily added anchor tag now so we have removed it after the click
 
-  URL.revokeObjectURL(tempUrl);  // as the url we have created is for meant for one time download of the data so we will also revoke the url
+  URL.revokeObjectURL(tempUrl); // as the url we have created is for meant for one time download of the data so we will also revoke the url
 }
-
 
 /** Leaderboard display */
 //-------------------------

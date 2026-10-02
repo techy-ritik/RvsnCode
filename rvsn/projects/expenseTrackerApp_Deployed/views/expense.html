@@ -18,6 +18,8 @@
     ></script>
   </head>
   <body>
+
+    <!-- navbar -->
     <nav class="navbar">
       <button id="membersip-btn">buy premium membership</button>
       <div id="userType">
@@ -25,6 +27,8 @@
         <button id="leaderboard-btn">Show Leaderboard</button>
       </div>
     </nav>
+
+    <!-- expense form -->
     <form
       id="ExpenseForm"
       class="form-control-sm"
@@ -52,7 +56,7 @@
       </button>
     </form>
 
-    <!-- <ul id="expense-list"></ul> -->
+    <!-- expense table -->
     <div class="expense-table-wrapper">
       <table class="expense-table">
         <thead id="expense-table-head">
@@ -65,9 +69,11 @@
         </thead>
         <tbody id="expense-table-body"></tbody>
       </table>
+      <div class="pagination"></div>
       <button type="button" class="table-download" id="tableDownloadBtn"> ⇩ </button>
     </div>
 
+    <!-- leaderboard -->
     <div class="leaderboard-overlay"></div>
 
     <div class="leaderboard-popup">
@@ -76,7 +82,6 @@
 
         <button id="closeLeaderboardBtn">X</button>
       </div>
-
       <ul id="leaderboard-list"></ul>
     </div>
 

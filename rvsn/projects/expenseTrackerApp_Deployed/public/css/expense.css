@@ -848,6 +848,124 @@ select:focus {
 }
 
 /* ==========================================
+   PAGINATION
+   Buttons: #prevPage, #currentPage, #nextpage
+========================================== */
+
+.expense-table-wrapper .pagination {
+  /* Bootstrap also defines .pagination, so reset its defaults */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+
+  gap: 8px;
+
+  margin: 10px 0 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+/* All pagination buttons */
+.expense-table-wrapper .pagination button {
+  min-width: 42px;
+  height: 42px;
+
+  padding: 0 14px;
+
+  border: 1px solid #dbeafe;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #2563eb;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+
+  transition: all 0.2s ease;
+}
+
+/* Hover (prev / next) */
+.expense-table-wrapper .pagination button:hover {
+  background: #eff6ff;
+
+  border-color: #2563eb;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
+}
+
+/* Press */
+.expense-table-wrapper .pagination button:active {
+  transform: translateY(0);
+
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
+}
+
+/* Keyboard focus */
+.expense-table-wrapper .pagination button:focus-visible {
+  outline: none;
+
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+/* Current (active) page - blue to green theme gradient */
+.expense-table-wrapper .pagination #currentPage {
+  /* Bigger than prev / next buttons */
+  min-width: 54px;
+  height: 54px;
+
+  padding: 0 20px;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  border-radius: 12px;
+
+  border-color: transparent;
+
+  background: linear-gradient(135deg, #2563eb, #16a34a);
+
+  color: #ffffff;
+
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
+
+  cursor: default;
+}
+
+.expense-table-wrapper .pagination #currentPage:hover {
+  background: linear-gradient(135deg, #2563eb, #16a34a);
+
+  transform: none;
+
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
+}
+
+/* Disabled state (if you add disabled buttons later) */
+.expense-table-wrapper .pagination button:disabled {
+  background: #f1f5f9;
+
+  border-color: #e2e8f0;
+
+  color: #94a3b8;
+
+  box-shadow: none;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+/* ==========================================
    TABLE DOWNLOAD BUTTON
 ========================================== */
 
