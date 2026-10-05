@@ -18,7 +18,6 @@
     ></script>
   </head>
   <body>
-
     <!-- navbar -->
     <nav class="navbar">
       <button id="membersip-btn">buy premium membership</button>
@@ -69,8 +68,22 @@
         </thead>
         <tbody id="expense-table-body"></tbody>
       </table>
-      <div class="pagination"></div>
-      <button type="button" class="table-download" id="tableDownloadBtn"> ⇩ </button>
+      <div class="pagination">
+        <div class="rows-per-page">
+          <p>Rows per page:</p>
+          <select class="numOfRowsToShow">
+            <option id="5">5</option>
+            <option id="10">10</option>
+            <option id="20">20</option>
+            <option id="50">50</option>
+            <option id="100">100</option>
+          </select>
+        </div>
+        <div class="page-Btn"></div>
+      </div>
+      <button type="button" class="table-download" id="tableDownloadBtn">
+        ⇩
+      </button>
     </div>
 
     <!-- leaderboard -->

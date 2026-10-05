@@ -51,7 +51,7 @@ exports.getLoggedInUserExpenses = async (req, res, next) => {
     const currentPage = parseInt(req.query.page);
     const prevPage = currentPage - 1;
     let nextPage = currentPage + 1;
-    const expenseLimitPerPage = 2;
+    const expenseLimitPerPage = parseInt(req.query.pageLimit);
     let currentIsLastPage = false;
 
     const expenseData = await expenseModel.findAndCountAll({
@@ -61,14 +61,14 @@ exports.getLoggedInUserExpenses = async (req, res, next) => {
     });
 
     const expenseListCount = expenseData.count;
-    let totalPage = expenseListCount/2;
+    let totalPage = expenseListCount/expenseLimitPerPage;
     if(parseInt(totalPage)<totalPage){
       totalPage = parseInt(totalPage) + 1;
     }
 
     const expenses = expenseData.rows;
 
-    if (expenses.length < expenseLimitPerPage + 1) {
+    if (currentPage == totalPage) {
       currentIsLastPage = true;
       nextPage = null ;
     }

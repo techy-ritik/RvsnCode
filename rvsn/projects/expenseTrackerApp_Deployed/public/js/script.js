@@ -211,12 +211,12 @@ if (expenseForm) {
         .then((expense) => {
           console.log("newExpense", expense.data);
 
-          const nextPage = document.getElementById("nextpage");
-          if (!nextPage) {
             const currentPageNum =
               document.getElementById("currentPage").textContent;
-            getExpenseData(currentPageNum);
-          }
+            const lastPage = localStorage.getItem("Last_page");
+            const expenseLimitPerPage = localStorage.getItem("rows_per_page");
+            getExpenseData(lastPage, expenseLimitPerPage);
+          
           alert("Expense added Successfully..!");
 
           expenseForm.reset();
@@ -243,7 +243,8 @@ if (expenseForm) {
 
           const currentPageNum =
             document.getElementById("currentPage").textContent;
-          getExpenseData(currentPageNum);
+          const expenseLimitPerPage = localStorage.getItem("rows_per_page");
+          getExpenseData(currentPageNum,expenseLimitPerPage);
 
           expenseForm.reset();
 
@@ -263,10 +264,15 @@ if (expenseForm) {
   //--------------------------------------
 
   const currentPage = 1;
+  let expenseLimitPerPage = localStorage.getItem("rows_per_page");
+  if(!expenseLimitPerPage){
+    expenseLimitPerPage = 5;
+  }
+  document.querySelector(".numOfRowsToShow").value=expenseLimitPerPage;
 
   window.addEventListener("DOMContentLoaded", () => {
     axios
-      .get(`http://localhost:5000/expense/user-expenses?page=${currentPage}`, {
+      .get(`http://localhost:5000/expense/user-expenses?page=${currentPage}&pageLimit=${expenseLimitPerPage}`, {
         headers: { Authorization: token },
       })
       .then((expenseData) => {
@@ -280,8 +286,10 @@ if (expenseForm) {
         console.log(err);
       });
   });
+
 }
 
+//---------------------------
 /** pagination of expenses */
 //---------------------------
 
@@ -297,48 +305,73 @@ function pagination({
   //   prevPage + "\n" + "current page",
   //   currentPage + "\n" + "next page",
   //   nextPage + "\n" + "current page is the last page",
-  //   currentIsLastPage,
+  //   currentIsLastPage + "\n" + "last page" , totalPage
   // );
-  const expenseTablePaginationDiv = document.querySelector(".pagination");
+
+  localStorage.setItem("Last_page",totalPage);
+
+  const PageBtnDiv = document.querySelector(".page-Btn");
+  const expenseLimitPerPage = localStorage.getItem("rows_per_page");
+
+  if (currentPage>totalPage) {
+    console.log("call expenseData again")
+    getExpenseData(totalPage,expenseLimitPerPage);
+  }
+  
   if (currentIsLastPage == true) {
     if (prevPage != 0) {
-      expenseTablePaginationDiv.innerHTML = `<button id="prevPage" onclick="getExpenseData(${prevPage})">${prevPage}</button> <button id="currentPage" onclick="getExpenseData(${currentPage})"  >${currentPage}</button>`;
+      PageBtnDiv.innerHTML = `<button id="prevPage" onclick="getExpenseData(${prevPage}, ${expenseLimitPerPage})">${prevPage}</button> <button id="currentPage" onclick="getExpenseData(${currentPage}, ${expenseLimitPerPage})"  >${currentPage}</button>`;
     } else {
-      expenseTablePaginationDiv.innerHTML = `<button id="currentPage" onclick="getExpenseData(${currentPage})">${currentPage}</button>`;
+      PageBtnDiv.innerHTML = `<button id="currentPage" onclick="getExpenseData(${currentPage}, ${expenseLimitPerPage})">${currentPage}</button>`;
     }
   } else {
     if (currentPage == 1) {
-      expenseTablePaginationDiv.innerHTML = `<button id="currentPage" onclick="getExpenseData(${currentPage})">${currentPage}</button> <button id="nextpage" onclick="getExpenseData(${nextPage})" >${nextPage}</button>`;
+      PageBtnDiv.innerHTML = `<button id="currentPage" onclick="getExpenseData(${currentPage}, ${expenseLimitPerPage})">${currentPage}</button> <button id="nextpage" onclick="getExpenseData(${nextPage}, ${expenseLimitPerPage})" >${nextPage}</button>`;
     }
     if (currentPage != 1) {
-      expenseTablePaginationDiv.innerHTML = `<button id="prevPage" onclick="getExpenseData(${prevPage})">${prevPage}</button> <button id="currentPage" onclick="getExpenseData(${currentPage})"  >${currentPage}</button> <button id="nextpage" onclick="getExpenseData(${nextPage})" >${nextPage}</button>`;
+      PageBtnDiv.innerHTML = `<button id="prevPage" onclick="getExpenseData(${prevPage}, ${expenseLimitPerPage})">${prevPage}</button> <button id="currentPage" onclick="getExpenseData(${currentPage}, ${expenseLimitPerPage})"  >${currentPage}</button> <button id="nextpage" onclick="getExpenseData(${nextPage}, ${expenseLimitPerPage})" >${nextPage}</button>`;
     }
     if (nextPage != totalPage) {
-
-      const dots = document.createElement("span");
-      dots.textContent = "• • •";
-      dots.className = "pagination-dots";
-      expenseTablePaginationDiv.appendChild(dots);
 
       const lastPageBtn = document.createElement("button");
       lastPageBtn.textContent = totalPage;
       lastPageBtn.id = "lastPage";
       lastPageBtn.addEventListener("click", () => {
-        getExpenseData(totalPage);
+        getExpenseData(totalPage,expenseLimitPerPage);
       });
-      expenseTablePaginationDiv.appendChild(lastPageBtn);
+      PageBtnDiv.appendChild(lastPageBtn);
     }
   }
+  
 }
 
-/** get expense data by page number, on button click*/
-//---------------------------------------------------
+/** rows per page selector */
+//---------------------------
 
-function getExpenseData(pageNum) {
+const rowsPerPageSelector = document.querySelector('.numOfRowsToShow');
+rowsPerPageSelector.addEventListener('change',()=>{
+  const expenseLimitPerPage = rowsPerPageSelector.value;
+  localStorage.setItem("rows_per_page", expenseLimitPerPage);
+
+  let currentPageToShow = document.getElementById("currentPage").textContent
+
+  getExpenseData(currentPageToShow,expenseLimitPerPage)
+  
+})
+
+
+
+/** get expense data by page number, on button click*/
+//----------------------------------------------------
+
+function getExpenseData(pageNum,expenseLimitPerPage) {
   axios
-    .get(`http://localhost:5000/expense/user-expenses?page=${pageNum}`, {
-      headers: { Authorization: token },
-    })
+    .get(
+      `http://localhost:5000/expense/user-expenses?page=${pageNum}&pageLimit=${expenseLimitPerPage}`,
+      {
+        headers: { Authorization: token },
+      },
+    )
     .then((expenseData) => {
       console.log("expenses", expenseData);
 
@@ -363,6 +396,7 @@ function expenseDisplay(expenses) {
   expenses.forEach((expense, index) => {
     const newRow = document.createElement("tr");
     newRow.id = `${expense.id}`;
+    newRow.className = "expense-details"
     newRow.innerHTML = `
         <td>₹${expense.amount}</td>
         <td>${expense.description}</td>
@@ -408,8 +442,16 @@ function deleteExpense(event) {
     .then((res) => {
       currentExpenseTr.remove();
       alert(res.data.message);
-      const currentPageNum = document.getElementById("currentPage").textContent;
-      getExpenseData(currentPageNum);
+      let PageNumToShow = document.getElementById("currentPage").textContent;
+      const expenseLimitPerPage = localStorage.getItem("rows_per_page");
+      const expenseList = document.querySelector(".expense-details");
+      console.log("expense list",expenseList)
+      if(!expenseList){
+        const prevPageNum = document.getElementById("prevPage").textContent;
+        console.log("previous page",prevPageNum)
+        PageNumToShow = prevPageNum;
+      }
+      getExpenseData(PageNumToShow, expenseLimitPerPage);
       console.log("expense deleted");
     })
     .catch((err) => {
