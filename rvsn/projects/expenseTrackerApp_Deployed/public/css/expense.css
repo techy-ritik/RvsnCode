@@ -333,20 +333,33 @@ ul {
   border-radius: 0 10px 10px 0;
 }
 
+/* 5 columns: Amount | Description | Category | Short Note | Actions (total 100%) */
 .expense-table th:nth-child(1) {
-  width: 18%;
+  width: 12%;
 }
 
 .expense-table th:nth-child(2) {
-  width: 30%;
+  width: 22%;
 }
 
 .expense-table th:nth-child(3) {
-  width: 24%;
+  width: 16%;
 }
 
 .expense-table th:nth-child(4) {
+  width: 22%;
+}
+
+/* Wide enough to hold Edit + Delete side by side */
+.expense-table th:nth-child(5) {
   width: 28%;
+}
+
+/* Tighter side padding in the Actions column so both buttons fit */
+.expense-table th:last-child,
+.expense-table td:last-child {
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 .expense-table tbody tr {
@@ -403,6 +416,16 @@ ul {
   font-size: 12px;
 }
 
+/* Short Note column */
+.expense-table td:nth-child(4) {
+  color: #64748b;
+
+  font-size: 12px;
+  font-style: italic;
+
+  line-height: 1.4;
+}
+
 .expense-table td:last-child {
   border-right: 1px solid #e2e8f0;
 
@@ -411,6 +434,9 @@ ul {
 
 .expense-actions {
   display: flex;
+
+  /* Edit and Delete always stay side by side in one row */
+  flex-wrap: nowrap;
 
   align-items: center;
 
@@ -421,7 +447,7 @@ ul {
 
 .expense-table .edit-btn,
 .expense-table .delete-btn {
-  padding: 8px 13px;
+  padding: 8px 11px;
 
   border: none;
 

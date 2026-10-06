@@ -202,6 +202,7 @@ if (expenseForm) {
         xpAmount: document.getElementById("amount").value,
         xpDesc: document.getElementById("description").value,
         xpCtgry: document.getElementById("category").value,
+        xpNote: document.getElementById("note").value,
       };
 
       axios
@@ -211,8 +212,6 @@ if (expenseForm) {
         .then((expense) => {
           console.log("newExpense", expense.data);
 
-            const currentPageNum =
-              document.getElementById("currentPage").textContent;
             const lastPage = localStorage.getItem("Last_page");
             const expenseLimitPerPage = localStorage.getItem("rows_per_page");
             getExpenseData(lastPage, expenseLimitPerPage);
@@ -232,6 +231,7 @@ if (expenseForm) {
         xpAmount: document.getElementById("amount").value,
         xpDesc: document.getElementById("description").value,
         xpCtgry: document.getElementById("category").value,
+        xpNote: document.getElementById("note").value,
       };
 
       axios
@@ -401,6 +401,7 @@ function expenseDisplay(expenses) {
         <td>₹${expense.amount}</td>
         <td>${expense.description}</td>
         <td>${expense.category}</td>
+        <td>${expense.note}</td>
         <td class="expense-actions">
             <button 
                 class="edit-btn"
@@ -480,10 +481,12 @@ function getEditExpense(event) {
       const amountField = document.getElementById("amount");
       const descriptionField = document.getElementById("description");
       const categoryField = document.getElementById("category");
+      const noteField = document.getElementById("note")
 
       amountField.value = expense.data.amount;
       descriptionField.value = expense.data.description;
       categoryField.value = expense.data.category;
+      noteField.value = expense.data.note;
 
       idToUpdate = expenseId; // Store ID of expense being edited
       isEditing = true;

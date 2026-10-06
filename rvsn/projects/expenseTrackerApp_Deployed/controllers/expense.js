@@ -24,6 +24,7 @@ exports.postAddExpense = async (req, res, next) => {
         amount: req.body.xpAmount,
         description: req.body.xpDesc,
         category: req.body.xpCtgry,
+        note:req.body.xpNote,
         UserId: logedInUser.id,
       },
       { transaction: transaction },
@@ -162,9 +163,11 @@ exports.updateExpense = async (req, res, next) => {
 
     updatedTotalExpense -= Number(expense.amount);
 
+    
     expense.amount = req.body.xpAmount;
     expense.description = req.body.xpDesc;
     expense.category = req.body.xpCtgry;
+    expense.note = req.body.xpNote;
 
     const updatedExpense = await expense.save({ transaction: transaction });
 

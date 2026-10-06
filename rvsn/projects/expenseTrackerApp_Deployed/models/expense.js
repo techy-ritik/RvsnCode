@@ -21,6 +21,9 @@ const Expense = sequelize.define('expense',{
         type:Sequelize.STRING,
         allowNull:false,
     },
+    note:{
+        type:Sequelize.STRING,
+    }
 })
 
 module.exports = Expense;

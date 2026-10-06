@@ -50,6 +50,8 @@
         <option value="movie">Movie expense</option>
       </select> -->
       <input type="text" name="expenseCategory" id="category" required />
+      <label for="note">Add Note:-</label>
+      <input type="text" name="note" id="note">
       <button type="submit" class="btn-danger" id="addExpense">
         Add Expense
       </button>
@@ -63,11 +65,13 @@
             <th>Amount</th>
             <th>Description</th>
             <th>Category</th>
+            <th>Short Note</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody id="expense-table-body"></tbody>
       </table>
+      <!-- pagination -->
       <div class="pagination">
         <div class="rows-per-page">
           <p>Rows per page:</p>
@@ -81,6 +85,7 @@
         </div>
         <div class="page-Btn"></div>
       </div>
+      <!-- report download -->
       <button type="button" class="table-download" id="tableDownloadBtn">
         ⇩
       </button>
