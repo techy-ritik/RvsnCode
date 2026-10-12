@@ -1,32 +1,48 @@
-const express = require('express');
-const app = express();
+const express = require("express");
+const path = require("path");
+const helmet = require("helmet");
+const compression = require("compression");
+const morgan = require("morgan");
+const fs = require("fs");
 
-const path = require('path')
-app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static('views'))
+const dotenv = require("dotenv");
+dotenv.config();
 
-app.use(express.json({ extended: false }));
-
-const userRoute = require('./routes/user');
-app.use('/',userRoute)
+const userRoute = require("./routes/user");
 const expenseRoute = require("./routes/expense");
-app.use('/expense',expenseRoute);
-// const paymentRoute = require('./routes/payment');
-// app.use('/payments',paymentRoute);
-const premiumRoute = require('./routes/premium');
-app.use('/premium',premiumRoute);
-const aiRoute = require('./routes/AI');
-app.use('/ai',aiRoute);
+const paymentRoute = require("./routes/payment");
+const premiumRoute = require("./routes/premium");
+const aiRoute = require("./routes/AI");
 
-require('./models');
+require("./models");
 
 const sequelize = require("./util/database");
 
+const app = express();
+
+// app.use(helmet());
+app.use(compression());
+
+const accessLogStream = fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'});
+app.use(morgan('combined', {stream : accessLogStream}));     
+
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("views"));
+
+app.use(express.json({ extended: false }));
+
+app.use("/", userRoute);
+app.use("/expense", expenseRoute);
+app.use("/payments", paymentRoute);
+app.use("/premium", premiumRoute);
+app.use("/ai", aiRoute);
+
 // sequelize.sync({alter:true})
-sequelize.sync()
+sequelize
+  .sync()
   .then(() => {
-    app.listen(5000,()=>{
-      console.log('server is running on port : 5000')
+    app.listen(process.env.PORT || 5000, () => {
+      console.log("server is running on port : 5000");
     });
   })
   .catch((err) => {
