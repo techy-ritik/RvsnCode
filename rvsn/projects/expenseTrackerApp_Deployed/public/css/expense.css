@@ -624,7 +624,8 @@ select:focus {
    LEADERBOARD OVERLAY
 ========================= */
 
-.leaderboard-overlay {
+.leaderboard-overlay,
+.oldReports-overlay {
   display: none;
 
   position: fixed;
@@ -644,7 +645,8 @@ select:focus {
 
 /* Show overlay */
 
-.leaderboard-overlay.show {
+.leaderboard-overlay.show,
+.oldReports-overlay.show {
   display: block;
 }
 
@@ -652,7 +654,8 @@ select:focus {
    LEADERBOARD POPUP
 ========================= */
 
-.leaderboard-popup {
+.leaderboard-popup,
+.downloadedFilesListDiv-popUp {
   display: none;
 
   position: fixed;
@@ -683,7 +686,8 @@ select:focus {
 
 /* Show popup */
 
-.leaderboard-popup.show {
+.leaderboard-popup.show,
+.downloadedFilesListDiv-popUp.show {
   display: block;
 }
 
@@ -691,7 +695,8 @@ select:focus {
    LEADERBOARD HEADER
 ========================= */
 
-.leaderboard-header {
+.leaderboard-header,
+.downloadedFilesListDiv {
   position: relative;
 
   display: flex;
@@ -711,7 +716,8 @@ select:focus {
    LEADERBOARD TITLE
 ========================= */
 
-.leaderboard-title {
+.leaderboard-title,
+.downloadFilesTitle {
   margin: 0;
 
   color: #ffffff;
@@ -727,7 +733,8 @@ select:focus {
    CLOSE BUTTON
 ========================= */
 
-#closeLeaderboardBtn {
+#closeLeaderboardBtn,
+#reportListCloseBtn {
   position: absolute;
 
   top: 50%;
@@ -765,7 +772,8 @@ select:focus {
   transition: 0.2s ease;
 }
 
-#closeLeaderboardBtn:hover {
+#closeLeaderboardBtn:hover,
+#reportListCloseBtn:hover {
   background: #bb2d3b;
 
   transform: translateY(-50%) scale(1.08);
@@ -775,7 +783,8 @@ select:focus {
    LEADERBOARD LIST
 ========================= */
 
-#leaderboard-list {
+#leaderboard-list,
+.oldReportList {
   list-style: none;
 
   margin: 0;
@@ -787,7 +796,8 @@ select:focus {
    EACH USER
 ========================= */
 
-.userTotalExpenseList {
+.userTotalExpenseList,
+.oldReportList li {
   width: 100%;
 
   padding: 14px 16px;
@@ -809,7 +819,8 @@ select:focus {
   transition: 0.2s ease;
 }
 
-.userTotalExpenseList:hover {
+.userTotalExpenseList:hover,
+.oldReportList li:hover {
   background: #292b2f;
 
   border-color: #0d6efd;
@@ -831,23 +842,27 @@ select:focus {
    POPUP SCROLLBAR
 ========================= */
 
-.leaderboard-popup::-webkit-scrollbar {
+.leaderboard-popup::-webkit-scrollbar,
+.downloadedFilesListDiv-popUp::-webkit-scrollbar {
   width: 7px;
 }
 
-.leaderboard-popup::-webkit-scrollbar-track {
+.leaderboard-popup::-webkit-scrollbar-track,
+.downloadedFilesListDiv-popUp::-webkit-scrollbar-track {
   background: #1b1b1b;
 
   border-radius: 10px;
 }
 
-.leaderboard-popup::-webkit-scrollbar-thumb {
+.leaderboard-popup::-webkit-scrollbar-thumb,
+.downloadedFilesListDiv-popUp::-webkit-scrollbar-thumb {
   background: #555555;
 
   border-radius: 10px;
 }
 
-.leaderboard-popup::-webkit-scrollbar-thumb:hover {
+.leaderboard-popup::-webkit-scrollbar-thumb:hover,
+.downloadedFilesListDiv-popUp::-webkit-scrollbar-thumb:hover {
   background: #777777;
 }
 
@@ -1145,7 +1160,7 @@ select:focus {
 
   font-family: "Poppins", sans-serif;
 
-  font-size: 25px;
+  font-size: 15px;
   font-weight: 600;
 
   cursor: pointer;
@@ -1168,4 +1183,84 @@ select:focus {
   transform: translateY(0);
 
   box-shadow: 0 4px 9px rgba(124, 58, 237, 0.20);
+}
+
+/* ==========================================
+   OLD REPORTS BUTTON
+   Sits right below the "Download New Report" button
+========================================== */
+
+.oldReportListBtn {
+  align-self: flex-end;
+
+  margin-top: 8px;
+
+  padding: 9px 18px;
+
+  border: 1px solid #3b82f6;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #2563eb;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow: 0 5px 12px rgba(37, 99, 235, 0.15);
+
+  transition: all 0.2s ease;
+}
+
+.oldReportListBtn:hover {
+  background: #2563eb;
+
+  color: #ffffff;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 17px rgba(37, 99, 235, 0.30);
+}
+
+.oldReportListBtn:active {
+  transform: translateY(0);
+
+  box-shadow: 0 4px 9px rgba(37, 99, 235, 0.20);
+}
+
+/* ==========================================
+   OLD REPORT LIST POPUP
+   Popup, overlay, header, close button, scrollbar and list items
+   share the leaderboard rules above (same look and behaviour).
+   Only the content inside each report row is styled here.
+========================================== */
+
+/* Each report row: number + download link */
+.oldReportList li {
+  list-style: none;
+
+  line-height: 1.5;
+
+  word-break: break-word;
+}
+
+/* Report download link */
+.oldReportList li a {
+  color: #93c5fd;
+
+  font-weight: 600;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.oldReportList li a:hover {
+  color: #ffffff;
+
+  text-decoration: underline;
 }

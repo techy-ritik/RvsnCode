@@ -2,6 +2,7 @@ const userModel = require("./user");
 const expenseModel = require("./expense");
 const orderModel = require("./order");
 const forgotPassowrdRequestModel = require("../models/forgotPasswordRequestes");
+const downloadedFilesRecordModel = require('../models/downloadedReportFilesLink');
 
 userModel.hasMany(expenseModel);
 expenseModel.belongsTo(userModel);
@@ -12,11 +13,15 @@ orderModel.belongsTo(userModel);
 userModel.hasMany(forgotPassowrdRequestModel);
 forgotPassowrdRequestModel.belongsTo(userModel);
 
+userModel.hasMany(downloadedFilesRecordModel);
+downloadedFilesRecordModel.belongsTo(userModel);
+
 module.exports = {
   userModel,
   expenseModel,
   orderModel,
   forgotPassowrdRequestModel,
+  downloadedFilesRecordModel,
 };
 
 

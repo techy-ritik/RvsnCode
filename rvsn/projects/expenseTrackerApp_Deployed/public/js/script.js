@@ -212,10 +212,10 @@ if (expenseForm) {
         .then((expense) => {
           console.log("newExpense", expense.data);
 
-            const lastPage = localStorage.getItem("Last_page");
-            const expenseLimitPerPage = localStorage.getItem("rows_per_page");
-            getExpenseData(lastPage, expenseLimitPerPage);
-          
+          const lastPage = localStorage.getItem("Last_page");
+          const expenseLimitPerPage = localStorage.getItem("rows_per_page");
+          getExpenseData(lastPage, expenseLimitPerPage);
+
           alert("Expense added Successfully..!");
 
           expenseForm.reset();
@@ -244,7 +244,7 @@ if (expenseForm) {
           const currentPageNum =
             document.getElementById("currentPage").textContent;
           const expenseLimitPerPage = localStorage.getItem("rows_per_page");
-          getExpenseData(currentPageNum,expenseLimitPerPage);
+          getExpenseData(currentPageNum, expenseLimitPerPage);
 
           expenseForm.reset();
 
@@ -265,16 +265,19 @@ if (expenseForm) {
 
   const currentPage = 1;
   let expenseLimitPerPage = localStorage.getItem("rows_per_page");
-  if(!expenseLimitPerPage){
+  if (!expenseLimitPerPage) {
     expenseLimitPerPage = 5;
   }
-  document.querySelector(".numOfRowsToShow").value=expenseLimitPerPage;
+  document.querySelector(".numOfRowsToShow").value = expenseLimitPerPage;
 
   window.addEventListener("DOMContentLoaded", () => {
     axios
-      .get(`http://localhost:5000/expense/user-expenses?page=${currentPage}&pageLimit=${expenseLimitPerPage}`, {
-        headers: { Authorization: token },
-      })
+      .get(
+        `http://localhost:5000/expense/user-expenses?page=${currentPage}&pageLimit=${expenseLimitPerPage}`,
+        {
+          headers: { Authorization: token },
+        },
+      )
       .then((expenseData) => {
         console.log("expenses", expenseData);
 
@@ -286,7 +289,6 @@ if (expenseForm) {
         console.log(err);
       });
   });
-
 }
 
 //---------------------------
@@ -308,16 +310,16 @@ function pagination({
   //   currentIsLastPage + "\n" + "last page" , totalPage
   // );
 
-  localStorage.setItem("Last_page",totalPage);
+  localStorage.setItem("Last_page", totalPage);
 
   const PageBtnDiv = document.querySelector(".page-Btn");
   const expenseLimitPerPage = localStorage.getItem("rows_per_page");
 
-  if (currentPage>totalPage) {
-    console.log("call expenseData again")
-    getExpenseData(totalPage,expenseLimitPerPage);
+  if (currentPage > totalPage) {
+    console.log("call expenseData again");
+    getExpenseData(totalPage, expenseLimitPerPage);
   }
-  
+
   if (currentIsLastPage == true) {
     if (prevPage != 0) {
       PageBtnDiv.innerHTML = `<button id="prevPage" onclick="getExpenseData(${prevPage}, ${expenseLimitPerPage})">${prevPage}</button> <button id="currentPage" onclick="getExpenseData(${currentPage}, ${expenseLimitPerPage})"  >${currentPage}</button>`;
@@ -332,39 +334,34 @@ function pagination({
       PageBtnDiv.innerHTML = `<button id="prevPage" onclick="getExpenseData(${prevPage}, ${expenseLimitPerPage})">${prevPage}</button> <button id="currentPage" onclick="getExpenseData(${currentPage}, ${expenseLimitPerPage})"  >${currentPage}</button> <button id="nextpage" onclick="getExpenseData(${nextPage}, ${expenseLimitPerPage})" >${nextPage}</button>`;
     }
     if (nextPage != totalPage) {
-
       const lastPageBtn = document.createElement("button");
       lastPageBtn.textContent = totalPage;
       lastPageBtn.id = "lastPage";
       lastPageBtn.addEventListener("click", () => {
-        getExpenseData(totalPage,expenseLimitPerPage);
+        getExpenseData(totalPage, expenseLimitPerPage);
       });
       PageBtnDiv.appendChild(lastPageBtn);
     }
   }
-  
 }
 
 /** rows per page selector */
 //---------------------------
 
-const rowsPerPageSelector = document.querySelector('.numOfRowsToShow');
-rowsPerPageSelector.addEventListener('change',()=>{
+const rowsPerPageSelector = document.querySelector(".numOfRowsToShow");
+rowsPerPageSelector.addEventListener("change", () => {
   const expenseLimitPerPage = rowsPerPageSelector.value;
   localStorage.setItem("rows_per_page", expenseLimitPerPage);
 
-  let currentPageToShow = document.getElementById("currentPage").textContent
+  let currentPageToShow = document.getElementById("currentPage").textContent;
 
-  getExpenseData(currentPageToShow,expenseLimitPerPage)
-  
-})
-
-
+  getExpenseData(currentPageToShow, expenseLimitPerPage);
+});
 
 /** get expense data by page number, on button click*/
 //----------------------------------------------------
 
-function getExpenseData(pageNum,expenseLimitPerPage) {
+function getExpenseData(pageNum, expenseLimitPerPage) {
   axios
     .get(
       `http://localhost:5000/expense/user-expenses?page=${pageNum}&pageLimit=${expenseLimitPerPage}`,
@@ -396,7 +393,7 @@ function expenseDisplay(expenses) {
   expenses.forEach((expense, index) => {
     const newRow = document.createElement("tr");
     newRow.id = `${expense.id}`;
-    newRow.className = "expense-details"
+    newRow.className = "expense-details";
     newRow.innerHTML = `
         <td>₹${expense.amount}</td>
         <td>${expense.description}</td>
@@ -446,10 +443,10 @@ function deleteExpense(event) {
       let PageNumToShow = document.getElementById("currentPage").textContent;
       const expenseLimitPerPage = localStorage.getItem("rows_per_page");
       const expenseList = document.querySelector(".expense-details");
-      console.log("expense list",expenseList)
-      if(!expenseList){
+      console.log("expense list", expenseList);
+      if (!expenseList) {
         const prevPageNum = document.getElementById("prevPage").textContent;
-        console.log("previous page",prevPageNum)
+        console.log("previous page", prevPageNum);
         PageNumToShow = prevPageNum;
       }
       getExpenseData(PageNumToShow, expenseLimitPerPage);
@@ -481,7 +478,7 @@ function getEditExpense(event) {
       const amountField = document.getElementById("amount");
       const descriptionField = document.getElementById("description");
       const categoryField = document.getElementById("category");
-      const noteField = document.getElementById("note")
+      const noteField = document.getElementById("note");
 
       amountField.value = expense.data.amount;
       descriptionField.value = expense.data.description;
@@ -506,6 +503,15 @@ function getEditExpense(event) {
 userType = localStorage.getItem("userType");
 // console.log("userType", userType);
 const reportDownloadBtn = document.querySelector("#tableDownloadBtn");
+const oldReportDownloadBtn = document.querySelector(".oldReportListBtn");
+
+reportDownloadBtn.addEventListener("click", () => {
+  downloadTableReport();
+});
+
+oldReportDownloadBtn.addEventListener("click", () => {
+  oldDownloadedReportList();
+});
 
 /** premium member */
 //-------------------------
@@ -515,10 +521,6 @@ if (userType == "premium") {
 
   const buyMembershipBtn = document.querySelector("#membersip-btn");
   buyMembershipBtn.style.display = "none";
-
-  reportDownloadBtn.addEventListener("click", () => {
-    downloadTableReport();
-  });
 }
 
 /** non premium member */
@@ -533,59 +535,121 @@ else if (userType == "non-premium") {
 
   const userTypeDiv = document.getElementById("userType");
   userTypeDiv.style.display = "none";
-
-  reportDownloadBtn.addEventListener("click", () => {
-    alert("buy membership to use this feature !");
-  });
 }
 
-function downloadTableReport() {
-  const tr = document.querySelectorAll("tr");
+/** expense report download */
+//-----------------------------------------
 
-  // console.log("tr",tr);
-  const tableData = [];
+/**report download in csv file (using frontend mechanism) */
+// function downloadTableReport() {
+//   const tr = document.querySelectorAll("tr");
 
-  tr.forEach((row) => {
-    const rowCell = row.querySelectorAll("th,td");
-    // console.log("rowCell",rowCell)
-    const rowData = [];
+//   // console.log("tr",tr);
+//   const tableData = [];
 
-    rowCell.forEach((cell, index) => {
-      if (index === 3) {
-        return;
-      }
-      let cellValue = cell.textContent.trim();
+//   tr.forEach((row) => {
+//     const rowCell = row.querySelectorAll("th,td");
+//     // console.log("rowCell",rowCell)
+//     const rowData = [];
 
-      cellValue = cellValue.replace(/"/g, '""'); //here in this way we are basically replacing every available double quotes in two double quotes for safe csv style formatting
+//     rowCell.forEach((cell, index) => {
+//       if (index === 4) {
+//         return;
+//       }
+//       let cellValue = cell.textContent.trim();
 
-      cellValue = `"${cellValue}"`; // now we have added double quotes to an overall value of the cell which will make a single string of complete cell value
+//       cellValue = cellValue.replace(/"/g, '""'); //here in this way we are basically replacing every available double quotes in two double quotes for safe csv style formatting
 
-      rowData.push(cellValue);
+//       cellValue = `"${cellValue}"`; // now we have added double quotes to an overall value of the cell which will make a single string of complete cell value
+
+//       rowData.push(cellValue);
+//     });
+
+//     tableData.push(rowData.join(",")); // it will join every available element of the rowData separating them with , and store it in tableData as a single string element
+//   });
+
+//   const csvContent = tableData.join("\n"); // it will join every available element of the tableData separating them with \n(i.e. new line) and store it in csvContent as a single string
+
+//   console.log("csvContent", csvContent);
+
+//   const blob = new Blob([csvContent], {
+//     type: "text/csv;charset=utf-8;",
+//   }); // it's the object, containing csvContent which is treated as file by the browser
+
+//   const tempUrl = URL.createObjectURL(blob); // here now we have url for the downloadable file object
+
+//   const tempAnchorTag = document.createElement("a");
+//   tempAnchorTag.href = tempUrl;
+//   tempAnchorTag.download = "Expense.csv"; // here like this we set name of the file to be downloaded
+//   document.body.appendChild(tempAnchorTag);
+
+//   tempAnchorTag.click(); // here when it is called, the tempAnchorTag url link get auto clicked after the creation
+
+//   document.body.removeChild(tempAnchorTag); // as we don't need the temporarily added anchor tag now so we have removed it after the click
+
+//   URL.revokeObjectURL(tempUrl); // as the url we have created is for meant for one time download of the data so we will also revoke the url
+// }
+
+/** report download (using backend mechanism) */
+async function downloadTableReport() {
+  try {
+    const response = await axios.get(
+      "http://localhost:5000/premium/report-download",
+      { headers: { Authorization: token } },
+    );
+
+    const a = document.createElement("a");
+    a.href = response.data.fileUrl;
+    a.download = "expenses.txt";
+    a.click();
+
+    console.log("userExpenses", response.data.fileUrl);
+  } catch (err) {
+    console.log(err);
+    alert(err.response.data.message);
+  }
+}
+
+async function oldDownloadedReportList() {
+  try {
+    const oldReportList = await axios.get(
+      "http://localhost:5000/premium/old-report-download",
+      {
+        headers: { Authorization: token },
+      },
+    );
+
+    const oldReportsOverlay = document.querySelector(".oldReports-overlay");
+    const oldReportListPopUp = document.querySelector(
+      ".downloadedFilesListDiv-popUp",
+    );
+    const oldReportListUl = document.querySelector(".oldReportList");
+    oldReportList.data.forEach((report, index) => {
+      const newLi = document.createElement("li");
+      newLi.innerHTML = `${index + 1}.) <a href="${report.fileLink}">expense - ${report.id}(${new Date(report.updatedAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })})</a>`;
+      newLi.id = report.id;
+      oldReportListUl.appendChild(newLi);
     });
 
-    tableData.push(rowData.join(",")); // it will join every available element of the rowData separating them with , and store it in tableData as a single string element
-  });
+    console.log(oldReportList.data);
 
-  const csvContent = tableData.join("\n"); // it will join every available element of the tableData separating them with \n(i.e. new line) and store it in csvContent as a single string
+    const OldReportListCloseBtn = document.querySelector("#reportListCloseBtn");
+    OldReportListCloseBtn.addEventListener(
+      "click",
+      () => {
+        oldReportsOverlay.classList.remove("show");
+        oldReportListPopUp.classList.remove("show");
+        oldReportListUl.innerHTML = "";
+      },
+      { once: true },   // when we add {once:true} then only one eventListner attach to the btn as it makes sure that old eventlistner get removed from btn and new one get attached each time if we don't add this then a new eventListener get attached to the btn each time which does not ahve any visible effect but is not good for application
+    );
 
-  console.log("csvContent", csvContent);
-
-  const blob = new Blob([csvContent], {
-    type: "text/csv;charset=utf-8;",
-  }); // it's the object, containing csvContent which is treated as file by the browser
-
-  const tempUrl = URL.createObjectURL(blob); // here now we have url for the downloadable file object
-
-  const tempAnchorTag = document.createElement("a");
-  tempAnchorTag.href = tempUrl;
-  tempAnchorTag.download = "Expense.csv"; // here like this we set name of the file to be downloaded
-  document.body.appendChild(tempAnchorTag);
-
-  tempAnchorTag.click(); // here when it is called, the tempAnchorTag url link get auto clicked after the creation
-
-  document.body.removeChild(tempAnchorTag); // as we don't need the temporarily added anchor tag now so we have removed it after the click
-
-  URL.revokeObjectURL(tempUrl); // as the url we have created is for meant for one time download of the data so we will also revoke the url
+    oldReportsOverlay.classList.add("show");
+    oldReportListPopUp.classList.add("show");
+  } catch (err) {
+    console.log(err);
+    alert(err.response.data.message);
+  }
 }
 
 /** Leaderboard display */
@@ -605,6 +669,7 @@ leaderboardBtn.addEventListener("click", async () => {
     leaderboardDisplay(leaderboardList);
   } catch (err) {
     console.log(err);
+    alert(err.response.data.message);
   }
 });
 

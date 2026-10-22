@@ -51,7 +51,7 @@
       </select> -->
       <input type="text" name="expenseCategory" id="category" required />
       <label for="note">Add Note:-</label>
-      <input type="text" name="note" id="note">
+      <input type="text" name="note" id="note" />
       <button type="submit" class="btn-danger" id="addExpense">
         Add Expense
       </button>
@@ -87,9 +87,23 @@
       </div>
       <!-- report download -->
       <button type="button" class="table-download" id="tableDownloadBtn">
-        ⇩
+        ⇩ Download New Report
+      </button>
+      <button type="button" class="oldReportListBtn">
+        ⇩ Download Old Reports
       </button>
     </div>
+    <!--old downloaded report list -->
+    <div class="oldReports-overlay"></div>
+
+    <div class="downloadedFilesListDiv-popUp">
+      <div class="downloadedFilesListDiv">
+        <h3 class="downloadFilesTitle">Old Report List</h3>
+        <button id="reportListCloseBtn">X</button>
+      </div>
+      <ul class="oldReportList"></ul>
+    </div>
+
 
     <!-- leaderboard -->
     <div class="leaderboard-overlay"></div>
