@@ -4,11 +4,11 @@ dotenv.config();
 
 const sequelize = new Sequelize(
   process.env.DATABASE_SCHEMA,
-  "root",
+  process.env.DATABASE_USER,
   process.env.DATABASE_PASSWORD,
   {
-    dialect: "mysql",
-    host: "localhost",
+    dialect: process.env.DIALECT,
+    host: process.env.DATABASE_HOST,
   },
 );
 
