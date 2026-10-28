@@ -19,7 +19,7 @@ if (registerForm) {
 
     console.log("userObj", userObj);
     axios
-      .post("http://localhost:5000/register", userObj)
+      .post("/register", userObj)
       .then((user) => {
         console.log(user.data);
         alert("successfully registered...");
@@ -50,7 +50,7 @@ if (loginForm) {
     console.log("user", loginObj);
 
     axios
-      .post("http://localhost:5000/login", loginObj)
+      .post("/login", loginObj)
       .then((currentUser) => {
         console.log("currentUser", currentUser.data);
         userType = currentUser.data.user.userType;
@@ -98,7 +98,7 @@ if (loginForm) {
     console.log("resetFormEmail", resetEmail);
 
     const resetForm = await axios.post(
-      "http://localhost:5000/password/forgotpassword",
+      "/password/forgotpassword",
       {
         resetEmail,
       },
@@ -130,7 +130,7 @@ if (passwordResetForm) {
     console.log(userUpdatedPasswordObj);
 
     const passwordUpdate = await axios.post(
-      "http://localhost:5000/password/updatedPassword",
+      "/password/updatedPassword",
       userUpdatedPasswordObj,
     );
 
@@ -179,7 +179,7 @@ if (expenseForm) {
 
       console.log(expenseDescValue);
       const aiSuggestedCategory = await axios.post(
-        "http://localhost:5000/ai/category-suggestion",
+        "/ai/category-suggestion",
         { expenseDescValue },
       );
 
@@ -206,7 +206,7 @@ if (expenseForm) {
       };
 
       axios
-        .post("http://localhost:5000/expense/add-expense", expenseObject, {
+        .post("/expense/add-expense", expenseObject, {
           headers: { Authorization: token },
         })
         .then((expense) => {
@@ -235,7 +235,7 @@ if (expenseForm) {
       };
 
       axios
-        .put("http://localhost:5000/expense/update-expense", editExpenseObj, {
+        .put("/expense/update-expense", editExpenseObj, {
           headers: { Authorization: token },
         })
         .then((expense) => {
@@ -273,7 +273,7 @@ if (expenseForm) {
   window.addEventListener("DOMContentLoaded", () => {
     axios
       .get(
-        `http://localhost:5000/expense/user-expenses?page=${currentPage}&pageLimit=${expenseLimitPerPage}`,
+        `/expense/user-expenses?page=${currentPage}&pageLimit=${expenseLimitPerPage}`,
         {
           headers: { Authorization: token },
         },
@@ -364,7 +364,7 @@ rowsPerPageSelector.addEventListener("change", () => {
 function getExpenseData(pageNum, expenseLimitPerPage) {
   axios
     .get(
-      `http://localhost:5000/expense/user-expenses?page=${pageNum}&pageLimit=${expenseLimitPerPage}`,
+      `/expense/user-expenses?page=${pageNum}&pageLimit=${expenseLimitPerPage}`,
       {
         headers: { Authorization: token },
       },
@@ -434,7 +434,7 @@ function deleteExpense(event) {
   const expenseId = currentExpenseTr.id;
 
   axios
-    .delete(`http://localhost:5000/expense/delete-expense/${expenseId}`, {
+    .delete(`/expense/delete-expense/${expenseId}`, {
       headers: { Authorization: token },
     })
     .then((res) => {
@@ -467,7 +467,7 @@ function getEditExpense(event) {
 
   // console.log("expense Id",currentExpenseTr.id)
   axios
-    .get(`http://localhost:5000/expense/edit-expense/${expenseId}`, {
+    .get(`/expense/edit-expense/${expenseId}`, {
       headers: { Authorization: token },
     })
     .then((expense) => {
@@ -594,7 +594,7 @@ else if (userType == "non-premium") {
 async function downloadTableReport() {
   try {
     const response = await axios.get(
-      "http://localhost:5000/premium/report-download",
+      "/premium/report-download",
       { headers: { Authorization: token } },
     );
 
@@ -613,7 +613,7 @@ async function downloadTableReport() {
 async function oldDownloadedReportList() {
   try {
     const oldReportList = await axios.get(
-      "http://localhost:5000/premium/old-report-download",
+      "/premium/old-report-download",
       {
         headers: { Authorization: token },
       },
@@ -658,7 +658,7 @@ const leaderboardBtn = document.getElementById("leaderboard-btn");
 leaderboardBtn.addEventListener("click", async () => {
   try {
     const leaderboardExpensesList = await axios.get(
-      "http://localhost:5000/premium/leaderBoard",
+      "/premium/leaderBoard",
       { headers: { Authorization: token } },
     );
 

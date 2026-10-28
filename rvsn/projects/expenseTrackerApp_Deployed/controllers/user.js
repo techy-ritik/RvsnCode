@@ -128,7 +128,7 @@ exports.forgotPassword = async (req, res) => {
       UserId: user.id,
     });
 
-    const resetUrl = `http://localhost:5000/password/resetPassword/${resetPasswordRequest.id}`;
+    const resetUrl = `/password/resetPassword/${resetPasswordRequest.id}`;
 
      await tranEmailApi.sendTransacEmail({
       sender,

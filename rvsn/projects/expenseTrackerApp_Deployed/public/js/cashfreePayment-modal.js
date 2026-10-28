@@ -7,7 +7,7 @@ const cashfree = Cashfree({
 const token = localStorage.getItem("token");
 document.getElementById("renderBtn").addEventListener("click", () => {
   axios
-    .post("http://localhost:5000/payments/pay",{},{headers:{Authorization: token}})    // we should always keep header in third argument in post request and not in second argument as it will be considered as data to be sent in the request body even it can be empty object as in this case
+    .post("/payments/pay",{},{headers:{Authorization: token}})    // we should always keep header in third argument in post request and not in second argument as it will be considered as data to be sent in the request body even it can be empty object as in this case
     .then((paymentDetails) => {
       const paymentSessionId = paymentDetails.data.paymentSessionId;
       let checkoutOptions = {
@@ -36,7 +36,7 @@ document.getElementById("renderBtn").addEventListener("click", () => {
         console.log(result.paymentDetails.paymentMessage);
 
         axios
-          .get(`http://localhost:5000/payments/payment-status/${orderId}`)          // the return url which got stored in the metadata in services file is redirected from here and with this payment status route is executed for the passed orderId
+          .get(`/payments/payment-status/${orderId}`)          // the return url which got stored in the metadata in services file is redirected from here and with this payment status route is executed for the passed orderId
           .then((response) => {
             return response.json();
           })

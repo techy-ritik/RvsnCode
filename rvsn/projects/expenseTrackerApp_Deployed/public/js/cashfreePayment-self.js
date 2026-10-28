@@ -8,7 +8,7 @@ const token = localStorage.getItem("token");
 document.getElementById("renderBtn").addEventListener("click", () => {
   axios
     .post(
-      "http://localhost:5000/payments/pay",
+      "/payments/pay",
       {},
       { headers: { Authorization: token } },
     )
