@@ -167,6 +167,17 @@ let idToUpdate = null;
 let isEditing = false;
 
 if (expenseForm) {
+  /** user logout */
+  //-----------------
+
+  const logoutBtn = document.querySelector(".log-out");
+  logoutBtn.addEventListener("click", () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = "/login.html";
+  });
+
+
   /** Ai suggestion from description input */
   //-------------------------------------------
 
@@ -178,10 +189,9 @@ if (expenseForm) {
       const expenseDescValue = expenseDesc.value;
 
       console.log(expenseDescValue);
-      const aiSuggestedCategory = await axios.post(
-        "/ai/category-suggestion",
-        { expenseDescValue },
-      );
+      const aiSuggestedCategory = await axios.post("/ai/category-suggestion", {
+        expenseDescValue,
+      });
 
       expensCategory.value = aiSuggestedCategory.data;
     } catch (err) {
