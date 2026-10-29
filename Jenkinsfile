@@ -20,7 +20,6 @@ pipeline {
         stage('Verify') {
             steps {
                 echo 'Deployment completed successfully.'
-                sh 'sudo -u ubuntu pm2 status'
             }
         }
     }
