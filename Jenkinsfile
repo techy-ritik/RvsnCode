@@ -13,7 +13,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying Expense Tracker...'
-                sh 'sudo -u ubuntu /home/ubuntu/deploy-expense-tracker.sh'
+                sh 'sudo -u ubuntu /home/ubuntu/deploy-expense-tracker.sh "$WORKSPACE"'
             }
         }
 
