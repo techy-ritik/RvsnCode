@@ -162,7 +162,10 @@ if (registerForm || loginForm || passwordResetForm) {
 
 const expenseForm = document.querySelector("#ExpenseForm");
 
-const token = localStorage.getItem("token");
+function getToken(){
+  return localStorage.getItem("token");       // by fetching token through function call we save from using previous session stored token variable after logout
+}
+
 let idToUpdate = null;
 let isEditing = false;
 
@@ -217,7 +220,7 @@ if (expenseForm) {
 
       axios
         .post("/expense/add-expense", expenseObject, {
-          headers: { Authorization: token },
+          headers: { Authorization : getToken() },
         })
         .then((expense) => {
           console.log("newExpense", expense.data);
@@ -246,7 +249,7 @@ if (expenseForm) {
 
       axios
         .put("/expense/update-expense", editExpenseObj, {
-          headers: { Authorization: token },
+          headers: { Authorization : getToken() },
         })
         .then((expense) => {
           console.log("expense updated..........");
@@ -279,13 +282,14 @@ if (expenseForm) {
     expenseLimitPerPage = 5;
   }
   document.querySelector(".numOfRowsToShow").value = expenseLimitPerPage;
+  localStorage.setItem("rows_per_page", expenseLimitPerPage);
 
   window.addEventListener("DOMContentLoaded", () => {
     axios
       .get(
         `/expense/user-expenses?page=${currentPage}&pageLimit=${expenseLimitPerPage}`,
         {
-          headers: { Authorization: token },
+          headers: { Authorization : getToken() },
         },
       )
       .then((expenseData) => {
@@ -376,7 +380,7 @@ function getExpenseData(pageNum, expenseLimitPerPage) {
     .get(
       `/expense/user-expenses?page=${pageNum}&pageLimit=${expenseLimitPerPage}`,
       {
-        headers: { Authorization: token },
+        headers: { Authorization : getToken() },
       },
     )
     .then((expenseData) => {
@@ -445,7 +449,7 @@ function deleteExpense(event) {
 
   axios
     .delete(`/expense/delete-expense/${expenseId}`, {
-      headers: { Authorization: token },
+      headers: { Authorization : getToken() },
     })
     .then((res) => {
       currentExpenseTr.remove();
@@ -478,7 +482,7 @@ function getEditExpense(event) {
   // console.log("expense Id",currentExpenseTr.id)
   axios
     .get(`/expense/edit-expense/${expenseId}`, {
-      headers: { Authorization: token },
+      headers: { Authorization : getToken() },
     })
     .then((expense) => {
       // console.log("expense to edit", expense.data);
@@ -605,7 +609,7 @@ async function downloadTableReport() {
   try {
     const response = await axios.get(
       "/premium/report-download",
-      { headers: { Authorization: token } },
+      { headers: { Authorization : getToken() } },
     );
 
     const a = document.createElement("a");
@@ -625,7 +629,7 @@ async function oldDownloadedReportList() {
     const oldReportList = await axios.get(
       "/premium/old-report-download",
       {
-        headers: { Authorization: token },
+        headers: { Authorization : getToken() },
       },
     );
 
@@ -669,7 +673,7 @@ leaderboardBtn.addEventListener("click", async () => {
   try {
     const leaderboardExpensesList = await axios.get(
       "/premium/leaderBoard",
-      { headers: { Authorization: token } },
+      { headers: { Authorization : getToken() } },
     );
 
     const leaderboardList = leaderboardExpensesList.data;

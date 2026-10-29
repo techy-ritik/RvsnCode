@@ -14,10 +14,10 @@ rvsn/projects/expenseTrackerApp_Deployed/app.js
 rvsn/projects/expenseTrackerApp_Deployed/.env
 aws-key(ec2_instance_creation).ppk
 rvsn/projects/expenseTrackerApp_Deployed/controllers/premium.js
-keepItFiles/linuxInstallation_Note.md.pdf
-keepItFiles/linuxCommands.md.pdf
-keepItFiles/Installation_Node_PM2.md.pdf
-keepItFiles/InstallNginx.md.pdf
-keepItFiles/Jenkins Install.md
-keepItFiles/mySql_installationInEC2_commands.txt
 rvsn/projects/expenseTrackerApp_Deployed/access.log
+keepItFiles/setup command files after ec2 instance creation/Installation_Node_PM2.md.pdf
+keepItFiles/setup command files after ec2 instance creation/mySql_installationInEC2_commands.txt
+keepItFiles/setup command files after ec2 instance creation/linuxInstallation_Note.md.pdf
+keepItFiles/setup command files after ec2 instance creation/linuxCommands.md.pdf
+keepItFiles/setup command files after ec2 instance creation/Jenkins Install.md
+keepItFiles/setup command files after ec2 instance creation/InstallNginx.md.pdf
