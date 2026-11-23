@@ -97,12 +97,9 @@ if (loginForm) {
     const resetEmail = document.getElementById("resetEmail").value;
     console.log("resetFormEmail", resetEmail);
 
-    const resetForm = await axios.post(
-      "/password/forgotpassword",
-      {
-        resetEmail,
-      },
-    );
+    const resetForm = await axios.post("/password/forgotpassword", {
+      resetEmail,
+    });
 
     passwordResetFormOverlayDiv.classList.remove("show");
     passwordResetFormPopupDiv.classList.remove("show");
@@ -162,8 +159,8 @@ if (registerForm || loginForm || passwordResetForm) {
 
 const expenseForm = document.querySelector("#ExpenseForm");
 
-function getToken(){
-  return localStorage.getItem("token");       // by fetching token through function call we save from using previous session stored token variable after logout
+function getToken() {
+  return localStorage.getItem("token"); // by fetching token through function call we save from using previous session stored token variable after logout
 }
 
 let idToUpdate = null;
@@ -179,7 +176,6 @@ if (expenseForm) {
     sessionStorage.clear();
     window.location.href = "/login.html";
   });
-
 
   /** Ai suggestion from description input */
   //-------------------------------------------
@@ -220,7 +216,7 @@ if (expenseForm) {
 
       axios
         .post("/expense/add-expense", expenseObject, {
-          headers: { Authorization : getToken() },
+          headers: { Authorization: getToken() },
         })
         .then((expense) => {
           console.log("newExpense", expense.data);
@@ -249,7 +245,7 @@ if (expenseForm) {
 
       axios
         .put("/expense/update-expense", editExpenseObj, {
-          headers: { Authorization : getToken() },
+          headers: { Authorization: getToken() },
         })
         .then((expense) => {
           console.log("expense updated..........");
@@ -274,40 +270,46 @@ if (expenseForm) {
   });
 
   /** get 1st page expenses of loggedIn user*/
-  //--------------------------------------
+  //---------------------------------------
 
-  const currentPage = 1;
-  let expenseLimitPerPage = localStorage.getItem("rows_per_page");
-  if (!expenseLimitPerPage) {
-    expenseLimitPerPage = 5;
-  }
-  document.querySelector(".numOfRowsToShow").value = expenseLimitPerPage;
-  localStorage.setItem("rows_per_page", expenseLimitPerPage);
+firstPageLoad();
 
-  window.addEventListener("DOMContentLoaded", () => {
-    axios
-      .get(
-        `/expense/user-expenses?page=${currentPage}&pageLimit=${expenseLimitPerPage}`,
-        {
-          headers: { Authorization : getToken() },
-        },
-      )
-      .then((expenseData) => {
-        console.log("expenses", expenseData);
-
-        pagination(expenseData.data);
-
-        expenseDisplay(expenseData.data.expenses);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  });
 }
 
 //---------------------------
 /** pagination of expenses */
 //---------------------------
+
+  function firstPageLoad() {
+    const currentPage = 1;
+    let expenseLimitPerPage = localStorage.getItem("rows_per_page");
+    if (!expenseLimitPerPage) {
+      expenseLimitPerPage = 5;
+    }
+    document.querySelector(".numOfRowsToShow").value = expenseLimitPerPage;
+    localStorage.setItem("rows_per_page", expenseLimitPerPage);
+
+    window.addEventListener("DOMContentLoaded", () => {
+      axios
+        .get(
+          `/expense/user-expenses?page=${currentPage}&pageLimit=${expenseLimitPerPage}`,
+          {
+            headers: { Authorization: getToken() },
+          },
+        )
+        .then((expenseData) => {
+          console.log("expenses", expenseData);
+
+          pagination(expenseData.data);
+
+          expenseDisplay(expenseData.data.expenses);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  }
+
 
 function pagination({
   currentPage,
@@ -324,8 +326,14 @@ function pagination({
   //   currentIsLastPage + "\n" + "last page" , totalPage
   // );
 
-  localStorage.setItem("Last_page", totalPage);
+  if(totalPage == 0){
+    totalPage = 1;
+    currentPage = 1;
+    currentIsLastPage = true;
+  }
 
+  localStorage.setItem("Last_page", totalPage);
+  
   const PageBtnDiv = document.querySelector(".page-Btn");
   const expenseLimitPerPage = localStorage.getItem("rows_per_page");
 
@@ -380,11 +388,11 @@ function getExpenseData(pageNum, expenseLimitPerPage) {
     .get(
       `/expense/user-expenses?page=${pageNum}&pageLimit=${expenseLimitPerPage}`,
       {
-        headers: { Authorization : getToken() },
+        headers: { Authorization: getToken() },
       },
     )
     .then((expenseData) => {
-      console.log("expenses", expenseData);
+      console.log("expenses data", expenseData.data);
 
       pagination(expenseData.data);
       expenseDisplay(expenseData.data.expenses);
@@ -449,7 +457,7 @@ function deleteExpense(event) {
 
   axios
     .delete(`/expense/delete-expense/${expenseId}`, {
-      headers: { Authorization : getToken() },
+      headers: { Authorization: getToken() },
     })
     .then((res) => {
       currentExpenseTr.remove();
@@ -482,7 +490,7 @@ function getEditExpense(event) {
   // console.log("expense Id",currentExpenseTr.id)
   axios
     .get(`/expense/edit-expense/${expenseId}`, {
-      headers: { Authorization : getToken() },
+      headers: { Authorization: getToken() },
     })
     .then((expense) => {
       // console.log("expense to edit", expense.data);
@@ -607,10 +615,9 @@ else if (userType == "non-premium") {
 /** report download (using backend mechanism) */
 async function downloadTableReport() {
   try {
-    const response = await axios.get(
-      "/premium/report-download",
-      { headers: { Authorization : getToken() } },
-    );
+    const response = await axios.get("/premium/report-download", {
+      headers: { Authorization: getToken() },
+    });
 
     const a = document.createElement("a");
     a.href = response.data.fileUrl;
@@ -626,12 +633,9 @@ async function downloadTableReport() {
 
 async function oldDownloadedReportList() {
   try {
-    const oldReportList = await axios.get(
-      "/premium/old-report-download",
-      {
-        headers: { Authorization : getToken() },
-      },
-    );
+    const oldReportList = await axios.get("/premium/old-report-download", {
+      headers: { Authorization: getToken() },
+    });
 
     const oldReportsOverlay = document.querySelector(".oldReports-overlay");
     const oldReportListPopUp = document.querySelector(
@@ -655,7 +659,7 @@ async function oldDownloadedReportList() {
         oldReportListPopUp.classList.remove("show");
         oldReportListUl.innerHTML = "";
       },
-      { once: true },   // when we add {once:true} then only one eventListner attach to the btn as it makes sure that old eventlistner get removed from btn and new one get attached each time if we don't add this then a new eventListener get attached to the btn each time which does not ahve any visible effect but is not good for application
+      { once: true }, // when we add {once:true} then only one eventListner attach to the btn as it makes sure that old eventlistner get removed from btn and new one get attached each time if we don't add this then a new eventListener get attached to the btn each time which does not ahve any visible effect but is not good for application
     );
 
     oldReportsOverlay.classList.add("show");
@@ -671,10 +675,9 @@ async function oldDownloadedReportList() {
 const leaderboardBtn = document.getElementById("leaderboard-btn");
 leaderboardBtn.addEventListener("click", async () => {
   try {
-    const leaderboardExpensesList = await axios.get(
-      "/premium/leaderBoard",
-      { headers: { Authorization : getToken() } },
-    );
+    const leaderboardExpensesList = await axios.get("/premium/leaderBoard", {
+      headers: { Authorization: getToken() },
+    });
 
     const leaderboardList = leaderboardExpensesList.data;
 
