@@ -65,6 +65,7 @@ exports.paymentStatus = async (orderId) => {
     } else {
       orderStatus = "Failed";
     }
+    console.log("orderStatus",orderStatus)
     return orderStatus;       // from here, after returning the orderStatus, the control goes back to controller.
     
   } catch (error) {
