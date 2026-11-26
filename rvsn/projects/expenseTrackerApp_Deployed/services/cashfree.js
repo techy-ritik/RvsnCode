@@ -1,4 +1,6 @@
 const { Cashfree, CFEnvironment } = require("cashfree-pg");
+const dotenv = require('dotenv');
+dotenv.config();
 
 const cashfree = new Cashfree( //  we have to create this object only once and then can be used in every function
   CFEnvironment.SANDBOX,
@@ -26,7 +28,7 @@ exports.createOrder = (
       customer_phone: customerPhone,
     },
     order_meta: {
-      return_url: `http://localhost:5000/payments/payment-status/${orderId}`, //  the return url got hit only after the patyment reaches the redirect stage , till then it get stored in in the metadata with order , after that browser got redirected to this url where paymentStatus route is hit
+      return_url: `${process.env.HOST_IP}/payments/payment-status/${orderId}`, //  the return url got hit only after the patyment reaches the redirect stage , till then it get stored in in the metadata with order , after that browser got redirected to this url where paymentStatus route is hit
       payment_methods: "cc,dc,upi",
     },
     order_expiry_time: formattedExpiryDate,

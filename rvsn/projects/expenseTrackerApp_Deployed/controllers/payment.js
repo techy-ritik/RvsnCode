@@ -3,8 +3,6 @@ const orderModel = require("../models/order");
 const userModel = require("../models/user");
 const path = require("path");
 const rootDir = require("../util/path");
-const dotenv = require('dotenv');
-dotenv.config();
 
 exports.getPaymentPage = (req, res) => {
   res.sendFile(path.join(rootDir, "views/payment.html"));
@@ -50,7 +48,7 @@ exports.getPaymentStatus = async (req, res) => {
       await userModel.update({ userType: "premium" },{ where: { id: userId.userId } }); 
     }
     console.log("orderStatus",orderStatus);
-    res.redirect(`${process.env.HOST_IP}/payment.html?orderId=${orderId}&status=${orderStatus}`);  // here we are redirecting to the payment.html page with the orderId and status as query params so that we can show the status of the payment to the user
+    res.redirect(`/payment.html?orderId=${orderId}&status=${orderStatus}`);  // here we are redirecting to the payment.html page with the orderId and status as query params so that we can show the status of the payment to the user
   }
   catch(err){
     console.log(err);

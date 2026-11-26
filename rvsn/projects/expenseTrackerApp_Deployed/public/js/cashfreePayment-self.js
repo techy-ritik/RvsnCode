@@ -27,10 +27,12 @@ document.getElementById("renderBtn").addEventListener("click", () => {
 });
 
 window.addEventListener("DOMContentLoaded", () => {
+  console.log('domContentLoaded')
   const params = new URLSearchParams(window.location.search);
 
-  console.log(window.location.href);
-  console.log(new URLSearchParams(window.location.search).get("status"));
+
+  console.log("href",window.location.href);
+  console.log("params",params);
 
   const orderId = params.get("orderId");
   const status = params.get("status");
