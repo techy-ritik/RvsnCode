@@ -25,6 +25,7 @@ exports.processPayment = (req, res) => {
         orderAmount,
         orderCurrency,
         paymentStatus: "Pending",
+        UserId : userId
       })
       res.json({ paymentSessionId, orderId });  // here now we will send the session id to frontend and then PG will get generated from there 
     })
@@ -44,8 +45,11 @@ exports.getPaymentStatus = async (req, res) => {
 
 
     if(orderStatus == "Success"){
-      const userId = await orderModel.findOne({where:{orderId:orderId}});  // here we are fetching the userId from the order table for the passed orderId
-      await userModel.update({ userType: "premium" },{ where: { id: userId.userId } }); 
+      const currentPendingOrder = await orderModel.findOne({where:{orderId:orderId}});  // here we are fetching the userId from the order table for the passed orderId
+      await userModel.update(
+        { userType: "premium" },
+        { where: { id: currentPendingOrder.UserId } },
+      ); 
     }
     console.log("orderStatus",orderStatus);
     res.redirect(`/payment.html?orderId=${orderId}&status=${orderStatus}`);  // here we are redirecting to the payment.html page with the orderId and status as query params so that we can show the status of the payment to the user
