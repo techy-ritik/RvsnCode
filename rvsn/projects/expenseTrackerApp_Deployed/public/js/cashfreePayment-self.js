@@ -58,9 +58,16 @@ window.addEventListener("DOMContentLoaded", () => {
       <h2>Payment Successful</h2>
       <p>Your membership has been activated.</p>
       <p>Order ID: ${orderId}</p>
+      <button type="button" id="homePageRedirect">go to home page</button>
     `;
 
     row.style.display = "none";
+
+    const homeRedirectBtn = document.querySelector("#homePageRedirect");
+    homeRedirectBtn.addEventListener('click',()=>{
+      localStorage.setItem("userType", "premium");
+      window.location.href = "/expense/expense-page";})
+
   } else if (status.toLowerCase() === "pending") {
     statusElement.className = "pending";
 
