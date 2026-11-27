@@ -7,11 +7,7 @@ const cashfree = Cashfree({
 const token = localStorage.getItem("token");
 document.getElementById("renderBtn").addEventListener("click", () => {
   axios
-    .post(
-      "/payments/pay",
-      {},
-      { headers: { Authorization: token } },
-    )
+    .post("/payments/pay", {}, { headers: { Authorization: token } })
     .then((paymentDetails) => {
       const paymentSessionId = paymentDetails.data.paymentSessionId;
       let checkoutOptions = {
@@ -27,12 +23,11 @@ document.getElementById("renderBtn").addEventListener("click", () => {
 });
 
 window.addEventListener("DOMContentLoaded", () => {
-  console.log('domContentLoaded')
+  console.log("domContentLoaded");
   const params = new URLSearchParams(window.location.search);
 
-
-  console.log("href",window.location.href);
-  console.log("params",params);
+  console.log("href", window.location.href);
+  console.log("params", params);
 
   const orderId = params.get("orderId");
   const status = params.get("status");
@@ -58,15 +53,16 @@ window.addEventListener("DOMContentLoaded", () => {
       <h2>Payment Successful</h2>
       <p>Your membership has been activated.</p>
       <p>Order ID: ${orderId}</p>
-      <button type="button" id="homePageRedirect">go to home page</button>
+      <button type="button" id="successHomePageRedirect">Go to Home Page</button>
     `;
 
-    row.style.display = "none";
-
-    const homeRedirectBtn = document.querySelector("#homePageRedirect");
-    homeRedirectBtn.addEventListener('click',()=>{
+    const homeRedirectBtn = document.querySelector("#successHomePageRedirect");
+    homeRedirectBtn.addEventListener("click", () => {
       localStorage.setItem("userType", "premium");
-      window.location.href = "/expense/expense-page";})
+      window.location.href = "/expense/expense-page";
+    });
+
+    row.style.display = "none";
 
   } else if (status.toLowerCase() === "pending") {
     statusElement.className = "pending";
@@ -76,7 +72,14 @@ window.addEventListener("DOMContentLoaded", () => {
       <h2>Payment Pending</h2>
       <p>Your payment is still being processed.</p>
       <p>Order ID: ${orderId}</p>
+      <button type="button" id="pendingHomePageRedirect">Go to Home Page</button>
     `;
+
+    const homeRedirectBtn = document.querySelector("#pendingHomePageRedirect");
+    homeRedirectBtn.addEventListener("click", () => {
+      window.location.href = "/expense/expense-page";
+    });
+
     row.style.display = "none";
   } else if (status.toLowerCase() === "failed") {
     statusElement.className = "failed";
@@ -86,10 +89,17 @@ window.addEventListener("DOMContentLoaded", () => {
       <h2>Payment Failed</h2>
       <p>Your payment was not successful.</p>
       <p>Order ID: ${orderId}</p>
+      <button type="button" id="failedHomePageRedirect">Go to Home Page</button>
     `;
+
+    const homeRedirectBtn = document.querySelector("#failedHomePageRedirect");
+    homeRedirectBtn.addEventListener("click", () => {
+      window.location.href = "/expense/expense-page";
+    });
+
     row.style.display = "flex";
     payInstruction.style.display = "none";
-    payBtn.style.display = "block";
-    payBtn.textContent = "Retry Payment";
+    payBtn.id = "retryPmntBtn";
+    payBtn.textContent = "Retry Payment";  
   }
 });
